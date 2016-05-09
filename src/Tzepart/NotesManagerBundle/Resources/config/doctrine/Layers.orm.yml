@@ -1,0 +1,59 @@
+Tzepart\NotesManagerBundle\Entity\Layers:
+    type: entity
+    table: layers
+    indexes:
+        fk_layers_circle1_idx:
+            columns:
+                - circle_id
+        fk_layers_colors1_idx:
+            columns:
+                - colors_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        beginRadius:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: begin_radius
+        endRadius:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: end_radius
+        dateCreate:
+            type: datetime
+            nullable: true
+            column: date_create
+        dateUpdate:
+            type: datetime
+            nullable: true
+            column: date_update
+    manyToOne:
+        circle:
+            targetEntity: Circle
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                circle_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        colors:
+            targetEntity: Colors
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                colors_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

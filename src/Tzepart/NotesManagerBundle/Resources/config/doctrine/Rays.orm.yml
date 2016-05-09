@@ -1,0 +1,40 @@
+Tzepart\NotesManagerBundle\Entity\Rays:
+    type: entity
+    table: rays
+    indexes:
+        fk_rays_sectors1_idx:
+            columns:
+                - sectors_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        angle:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+        dateCreate:
+            type: datetime
+            nullable: true
+            column: date_create
+        dateUpdate:
+            type: datetime
+            nullable: true
+            column: date_update
+    manyToOne:
+        sectors:
+            targetEntity: Sectors
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sectors_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

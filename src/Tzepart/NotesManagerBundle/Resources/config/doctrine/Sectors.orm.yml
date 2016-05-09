@@ -1,0 +1,69 @@
+Tzepart\NotesManagerBundle\Entity\Sectors:
+    type: entity
+    table: sectors
+    indexes:
+        fk_sectors_circle1_idx:
+            columns:
+                - circle_id
+        fk_sectors_colors1_idx:
+            columns:
+                - colors_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        beginAngle:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: begin_angle
+        endAngle:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: end_angle
+        name:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+        parentSectorId:
+            type: integer
+            nullable: true
+            unsigned: false
+            column: parent_sector_id
+        dateCreate:
+            type: datetime
+            nullable: true
+            column: date_create
+        dateUpdate:
+            type: datetime
+            nullable: true
+            column: date_update
+    manyToOne:
+        circle:
+            targetEntity: Circle
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                circle_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        colors:
+            targetEntity: Colors
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                colors_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
