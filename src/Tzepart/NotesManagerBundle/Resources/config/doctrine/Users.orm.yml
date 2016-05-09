@@ -1,0 +1,36 @@
+Tzepart\NotesManagerBundle\Entity\Users:
+    type: entity
+    table: users
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        email:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+        login:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+        password:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+        dateCreate:
+            type: datetime
+            nullable: false
+            column: date_create
+        dateUpdate:
+            type: datetime
+            nullable: false
+            column: date_update
+    lifecycleCallbacks: {  }

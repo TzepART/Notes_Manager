@@ -1,0 +1,47 @@
+Tzepart\NotesManagerBundle\Entity\Labels:
+    type: entity
+    table: labels
+    indexes:
+        fk_labels_rays1_idx:
+            columns:
+                - rays_id
+        fk_labels_radius1_idx:
+            columns:
+                - radius_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        dateCreate:
+            type: datetime
+            nullable: true
+            column: date_create
+        dateUpdate:
+            type: datetime
+            nullable: true
+            column: date_update
+    manyToOne:
+        rays:
+            targetEntity: Rays
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rays_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        radius:
+            targetEntity: Radius
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                radius_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

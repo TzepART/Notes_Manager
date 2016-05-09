@@ -1,0 +1,40 @@
+Tzepart\NotesManagerBundle\Entity\Radius:
+    type: entity
+    table: radius
+    indexes:
+        fk_radius_layers1_idx:
+            columns:
+                - layers_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        radius:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+        dateCreate:
+            type: datetime
+            nullable: true
+            column: date_create
+        dateUpdate:
+            type: datetime
+            nullable: true
+            column: date_update
+    manyToOne:
+        layers:
+            targetEntity: Layers
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                layers_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
