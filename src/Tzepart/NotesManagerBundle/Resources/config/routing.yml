@@ -1,3 +1,7 @@
+notes_manager_circle:
+    resource: "@NotesManagerBundle/Resources/config/routing/circle.yml"
+    prefix:   /circle
+
 notes_manager_homepage:
     path:     /
-    defaults: { _controller: NotesManagerBundle:Default:index }
+    defaults: { _controller: NotesManagerBundle:Circle:index }

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Notes</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ note.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ note.name }}</td>
+            </tr>
+            <tr>
+                <th>Text</th>
+                <td>{{ note.text }}</td>
+            </tr>
+            <tr>
+                <th>Datecreate</th>
+                <td>{% if note.dateCreate %}{{ note.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Dateupdate</th>
+                <td>{% if note.dateUpdate %}{{ note.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('notes_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('notes_edit', { 'id': note.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

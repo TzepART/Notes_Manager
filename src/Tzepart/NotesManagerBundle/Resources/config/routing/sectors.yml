@@ -1,0 +1,24 @@
+sectors_index:
+    path:     /
+    defaults: { _controller: "NotesManagerBundle:Sectors:index" }
+    methods:  GET
+
+sectors_show:
+    path:     /{id}/show
+    defaults: { _controller: "NotesManagerBundle:Sectors:show" }
+    methods:  GET
+
+sectors_new:
+    path:     /new
+    defaults: { _controller: "NotesManagerBundle:Sectors:new" }
+    methods:  [GET, POST]
+
+sectors_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "NotesManagerBundle:Sectors:edit" }
+    methods:  [GET, POST]
+
+sectors_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "NotesManagerBundle:Sectors:delete" }
+    methods:  DELETE
