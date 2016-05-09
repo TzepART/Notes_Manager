@@ -56,4 +56,106 @@ class Labels
     private $radius;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set dateCreate
+     *
+     * @param \DateTime $dateCreate
+     * @return Labels
+     */
+    public function setDateCreate($dateCreate)
+    {
+        $this->dateCreate = $dateCreate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreate
+     *
+     * @return \DateTime 
+     */
+    public function getDateCreate()
+    {
+        return $this->dateCreate;
+    }
+
+    /**
+     * Set dateUpdate
+     *
+     * @param \DateTime $dateUpdate
+     * @return Labels
+     */
+    public function setDateUpdate($dateUpdate)
+    {
+        $this->dateUpdate = $dateUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateUpdate
+     *
+     * @return \DateTime 
+     */
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
+    }
+
+    /**
+     * Set rays
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\Rays $rays
+     * @return Labels
+     */
+    public function setRays(\Tzepart\NotesManagerBundle\Entity\Rays $rays = null)
+    {
+        $this->rays = $rays;
+
+        return $this;
+    }
+
+    /**
+     * Get rays
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\Rays 
+     */
+    public function getRays()
+    {
+        return $this->rays;
+    }
+
+    /**
+     * Set radius
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\Radius $radius
+     * @return Labels
+     */
+    public function setRadius(\Tzepart\NotesManagerBundle\Entity\Radius $radius = null)
+    {
+        $this->radius = $radius;
+
+        return $this;
+    }
+
+    /**
+     * Get radius
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\Radius 
+     */
+    public function getRadius()
+    {
+        return $this->radius;
+    }
 }

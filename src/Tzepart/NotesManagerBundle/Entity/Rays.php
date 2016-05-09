@@ -53,4 +53,106 @@ class Rays
     private $sectors;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set angle
+     *
+     * @param float $angle
+     * @return Rays
+     */
+    public function setAngle($angle)
+    {
+        $this->angle = $angle;
+
+        return $this;
+    }
+
+    /**
+     * Get angle
+     *
+     * @return float 
+     */
+    public function getAngle()
+    {
+        return $this->angle;
+    }
+
+    /**
+     * Set dateCreate
+     *
+     * @param \DateTime $dateCreate
+     * @return Rays
+     */
+    public function setDateCreate($dateCreate)
+    {
+        $this->dateCreate = $dateCreate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreate
+     *
+     * @return \DateTime 
+     */
+    public function getDateCreate()
+    {
+        return $this->dateCreate;
+    }
+
+    /**
+     * Set dateUpdate
+     *
+     * @param \DateTime $dateUpdate
+     * @return Rays
+     */
+    public function setDateUpdate($dateUpdate)
+    {
+        $this->dateUpdate = $dateUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateUpdate
+     *
+     * @return \DateTime 
+     */
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
+    }
+
+    /**
+     * Set sectors
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\Sectors $sectors
+     * @return Rays
+     */
+    public function setSectors(\Tzepart\NotesManagerBundle\Entity\Sectors $sectors = null)
+    {
+        $this->sectors = $sectors;
+
+        return $this;
+    }
+
+    /**
+     * Get sectors
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\Sectors 
+     */
+    public function getSectors()
+    {
+        return $this->sectors;
+    }
 }

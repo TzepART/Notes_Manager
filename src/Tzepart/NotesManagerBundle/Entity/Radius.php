@@ -53,4 +53,106 @@ class Radius
     private $layers;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set radius
+     *
+     * @param float $radius
+     * @return Radius
+     */
+    public function setRadius($radius)
+    {
+        $this->radius = $radius;
+
+        return $this;
+    }
+
+    /**
+     * Get radius
+     *
+     * @return float 
+     */
+    public function getRadius()
+    {
+        return $this->radius;
+    }
+
+    /**
+     * Set dateCreate
+     *
+     * @param \DateTime $dateCreate
+     * @return Radius
+     */
+    public function setDateCreate($dateCreate)
+    {
+        $this->dateCreate = $dateCreate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateCreate
+     *
+     * @return \DateTime 
+     */
+    public function getDateCreate()
+    {
+        return $this->dateCreate;
+    }
+
+    /**
+     * Set dateUpdate
+     *
+     * @param \DateTime $dateUpdate
+     * @return Radius
+     */
+    public function setDateUpdate($dateUpdate)
+    {
+        $this->dateUpdate = $dateUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateUpdate
+     *
+     * @return \DateTime 
+     */
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
+    }
+
+    /**
+     * Set layers
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\Layers $layers
+     * @return Radius
+     */
+    public function setLayers(\Tzepart\NotesManagerBundle\Entity\Layers $layers = null)
+    {
+        $this->layers = $layers;
+
+        return $this;
+    }
+
+    /**
+     * Get layers
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\Layers 
+     */
+    public function getLayers()
+    {
+        return $this->layers;
+    }
 }
