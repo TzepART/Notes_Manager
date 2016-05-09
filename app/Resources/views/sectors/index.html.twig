@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Sectors list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Beginangle</th>
+                <th>Endangle</th>
+                <th>Name</th>
+                <th>Parentsectorid</th>
+                <th>Datecreate</th>
+                <th>Dateupdate</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sector in sectors %}
+            <tr>
+                <td><a href="{{ path('sectors_show', { 'id': sector.id }) }}">{{ sector.id }}</a></td>
+                <td>{{ sector.beginAngle }}</td>
+                <td>{{ sector.endAngle }}</td>
+                <td>{{ sector.name }}</td>
+                <td>{{ sector.parentSectorId }}</td>
+                <td>{% if sector.dateCreate %}{{ sector.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if sector.dateUpdate %}{{ sector.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('sectors_show', { 'id': sector.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('sectors_edit', { 'id': sector.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('sectors_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
