@@ -1,0 +1,3 @@
+notes_manager_homepage:
+    path:     /
+    defaults: { _controller: NotesManagerBundle:Default:index }
