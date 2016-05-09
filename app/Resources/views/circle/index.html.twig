@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Circle list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Datecreate</th>
+                <th>Dateupdate</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for circle in circles %}
+            <tr>
+                <td><a href="{{ path('circle_show', { 'id': circle.id }) }}">{{ circle.id }}</a></td>
+                <td>{{ circle.name }}</td>
+                <td>{% if circle.dateCreate %}{{ circle.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if circle.dateUpdate %}{{ circle.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('circle_show', { 'id': circle.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('circle_edit', { 'id': circle.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('circle_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
