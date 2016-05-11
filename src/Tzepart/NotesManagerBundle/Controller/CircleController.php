@@ -23,7 +23,6 @@ class CircleController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
-
         return $this->render('circle/index.html.twig', array(
             'circles' => $circles,
         ));
