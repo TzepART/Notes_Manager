@@ -5,3 +5,7 @@ notes_manager:
 user_registration:
     path:     /register
     defaults: { _controller: NotesManagerBundle:Registration:register }
+
+user_login:
+    path:     /login
+    defaults: { _controller: NotesManagerBundle:Security:login }
