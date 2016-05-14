@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="users")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Users
 {
@@ -38,9 +39,41 @@ class Users
     /**
      * @var string
      *
+     * @ORM\Column(name="roles", type="string", length=45, nullable=false)
+     */
+    private $roles;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="homepage", type="string", length=256, , nullable=false)
+     */
+    private $homepage;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="active", type="tinyint", length=1, nullable=false)
+     */
+    private $active;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="password", type="string", length=45, nullable=false)
      */
     private $password;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="logged", type="datetime", nullable=false)
+     */
+    private $logged;
+
 
     /**
      * @var \DateTime
@@ -55,7 +88,7 @@ class Users
      * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
     private $dateUpdate;
-
+    
 
 
     /**
@@ -181,5 +214,181 @@ class Users
     public function getDateUpdate()
     {
         return $this->dateUpdate;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $updated;
+
+    /**
+     * @var string
+     */
+    private $gravatar;
+
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Users
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Users
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set logged
+     *
+     * @param \DateTime $logged
+     * @return Users
+     */
+    public function setLogged($logged)
+    {
+        $this->logged = $logged;
+
+        return $this;
+    }
+
+    /**
+     * Get logged
+     *
+     * @return \DateTime 
+     */
+    public function getLogged()
+    {
+        return $this->logged;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param string $roles
+     * @return Users
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return string 
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set homepage
+     *
+     * @param string $homepage
+     * @return Users
+     */
+    public function setHomepage($homepage)
+    {
+        $this->homepage = $homepage;
+
+        return $this;
+    }
+
+    /**
+     * Get homepage
+     *
+     * @return string 
+     */
+    public function getHomepage()
+    {
+        return $this->homepage;
+    }
+
+    /**
+     * Set active
+     *
+     * @param boolean $active
+     * @return Users
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * Get active
+     *
+     * @return boolean 
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * Set gravatar
+     *
+     * @param string $gravatar
+     * @return Users
+     */
+    public function setGravatar($gravatar)
+    {
+        $this->gravatar = $gravatar;
+
+        return $this;
+    }
+
+    /**
+     * Get gravatar
+     *
+     * @return string 
+     */
+    public function getGravatar()
+    {
+        return $this->gravatar;
     }
 }
