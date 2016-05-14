@@ -27,6 +27,11 @@ class RegistrationController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
+            $user->setCreated(new \DateTime('now'));
+            $user->setUpdated(new \DateTime('now'));
+            $user->setRoles("USER");
+            $user->setActive(true);
+            $user->setGravatar("none");
 
             // 4) save the User!
             $em = $this->getDoctrine()->getManager();
@@ -36,7 +41,7 @@ class RegistrationController extends Controller
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
 
-            return $this->redirectToRoute('replace_with_some_route');
+            return $this->redirectToRoute('notes_manager_homepage');
         }
 
         return $this->render(

@@ -50,7 +50,7 @@ class Users implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="homepage", type="string", length=256, , nullable=false)
+     * @ORM\Column(name="homepage", type="string", length=256, nullable=false)
      */
     private $homepage;
 
