@@ -1,6 +1,9 @@
 <?php
 
 namespace Tzepart\NotesManagerBundle\Entity;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class Users
+class Users implements UserInterface
 {
     /**
      * @var integer
@@ -66,6 +69,12 @@ class Users
      * @ORM\Column(name="password", type="string", length=45, nullable=false)
      */
     private $password;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @var \DateTime
@@ -124,13 +133,23 @@ class Users
         return $this->email;
     }
 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+    }
+
     /**
      * Set login
      *
      * @param string $login
      * @return Users
      */
-    public function setLogin($login)
+    public function setUsername($login)
     {
         $this->login = $login;
 
@@ -142,7 +161,7 @@ class Users
      *
      * @return string 
      */
-    public function getLogin()
+    public function getUsername()
     {
         return $this->login;
     }
@@ -390,5 +409,17 @@ class Users
     public function getGravatar()
     {
         return $this->gravatar;
+    }
+
+    public function getSalt()
+    {
+        // The bcrypt algorithm doesn't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+        return;
     }
 }

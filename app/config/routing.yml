@@ -1,3 +1,7 @@
 notes_manager:
     resource: "@NotesManagerBundle/Resources/config/routing.yml"
     prefix:   /
+
+user_registration:
+    path:     /register
+    defaults: { _controller: NotesManagerBundle:Registration:register }
