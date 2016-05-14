@@ -1,6 +1,8 @@
 <?php
 
 namespace Tzepart\NotesManagerBundle\Entity;
+
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
-class Users implements UserInterface
+class Users implements UserInterface, \Serializable
 {
     /**
      * @var integer
@@ -86,18 +88,20 @@ class Users implements UserInterface
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=false)
      */
-    private $dateCreate;
+    private $created;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
-    private $dateUpdate;
-    
+    private $updated;
+
+    /**
+     * @var string
+     */
+    private $gravatar;
+
+
 
 
     /**
@@ -152,7 +156,6 @@ class Users implements UserInterface
     public function setUsername($login)
     {
         $this->login = $login;
-
         return $this;
     }
 
@@ -175,7 +178,6 @@ class Users implements UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -189,66 +191,6 @@ class Users implements UserInterface
         return $this->password;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Users
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
-
-    /**
-     * Get dateCreate
-     *
-     * @return \DateTime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Users
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $updated;
-
-    /**
-     * @var string
-     */
-    private $gravatar;
-
 
     /**
      * Set created
@@ -259,7 +201,6 @@ class Users implements UserInterface
     public function setCreated($created)
     {
         $this->created = $created;
-
         return $this;
     }
 
@@ -282,7 +223,6 @@ class Users implements UserInterface
     public function setUpdated($updated)
     {
         $this->updated = $updated;
-
         return $this;
     }
 
@@ -305,7 +245,6 @@ class Users implements UserInterface
     public function setLogged($logged)
     {
         $this->logged = $logged;
-
         return $this;
     }
 
@@ -328,7 +267,6 @@ class Users implements UserInterface
     public function setRoles($roles)
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -339,7 +277,7 @@ class Users implements UserInterface
      */
     public function getRoles()
     {
-        return $this->roles;
+        return array($this->roles);
     }
 
     /**
@@ -351,7 +289,6 @@ class Users implements UserInterface
     public function setHomepage($homepage)
     {
         $this->homepage = $homepage;
-
         return $this;
     }
 
@@ -374,7 +311,6 @@ class Users implements UserInterface
     public function setActive($active)
     {
         $this->active = $active;
-
         return $this;
     }
 
@@ -422,4 +358,36 @@ class Users implements UserInterface
     {
         return;
     }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->login,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->login,
+            $this->password,
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
+    }
+
+    public function __construct()
+    {
+        $this->active = true;
+        // may not be needed, see section on salt below
+        // $this->salt = md5(uniqid(null, true));
+    }
+
 }

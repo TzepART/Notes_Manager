@@ -6,22 +6,18 @@ security:
         Tzepart\NotesManagerBundle\Entity\Users: bcrypt
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory:
-            memory: ~
-
+        webservice:
+            id: userProvider
+                # if you're using multiple entity managers
+                # manager_name: customer
     firewalls:
-        main:
+        login_firewall:
+            pattern:   ^/login$
             anonymous: ~
-            form_login:
-                login_path: login
-                check_path: login
-
-        main:
+        regster_firewall:
+            pattern:   ^/register$
             anonymous: ~
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+        main:
+            pattern:    ^/
+            http_basic: ~
+            provider: webservice
