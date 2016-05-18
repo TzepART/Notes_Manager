@@ -40,9 +40,9 @@ class UserProvider implements UserProviderInterface
             throw new UsernameNotFoundException('Username is empty.');
         }
 
-//  @TODO сделать выборку users по условию login=$username
+//  @TODO сделать выборку users по условию 	username=$username
 
-        $r['username'] = $username;
+        $r['username'] = "artem";
         $r['password'] = '$2y$13$PPFBavHa55dsmWQJxCRUFuPKlWe1SAyJL1qsPw';
         $r['role'] = 'USER';
 //        if(empty($r)){
@@ -53,10 +53,7 @@ class UserProvider implements UserProviderInterface
         $user->setUsername($r['username']);
         $user->setRoles($r['role']);
         $user->setPassword($r['password']);// напомню, это хэш пароля (как его создать - читай ниже)
-//        echo "<pre>";
-//        var_dump($user);
-//        echo "</pre>";
-//        die();
+
         return $user;
     }
 
@@ -73,7 +70,7 @@ class UserProvider implements UserProviderInterface
         if (!$user instanceof Users) {
             throw new UnsupportedUserException( sprintf( 'Instances of "%s" are not supported.', get_class( $user ) ) );
         }
-        return $this->loadUserByUsername( $user->getUsername() );
+        return $this->loadUserByUsername($user->getUsername());
     }
 
     /**

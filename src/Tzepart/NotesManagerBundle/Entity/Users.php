@@ -37,9 +37,9 @@ class Users implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="login", type="string", length=45, nullable=false)
+     * @ORM\Column(name="username", type="string", length=45, nullable=false)
      */
-    private $login;
+    private $username;
 
     /**
      * @var string
@@ -60,9 +60,9 @@ class Users implements UserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="active", type="tinyint", length=1, nullable=false)
+     * @ORM\Column(name="is_active", type="boolean")
      */
-    private $active;
+    private $isActive;
 
 
     /**
@@ -148,25 +148,25 @@ class Users implements UserInterface, \Serializable
     }
 
     /**
-     * Set login
+     * Set username
      *
-     * @param string $login
+     * @param string $username
      * @return Users
      */
-    public function setUsername($login)
+    public function setUsername($username)
     {
-        $this->login = $login;
+        $this->username = $username;
         return $this;
     }
 
     /**
-     * Get login
+     * Get username
      *
      * @return string 
      */
     public function getUsername()
     {
-        return $this->login;
+        return $this->username;
     }
 
     /**
@@ -303,25 +303,25 @@ class Users implements UserInterface, \Serializable
     }
 
     /**
-     * Set active
+     * Set isActive
      *
-     * @param boolean $active
+     * @param boolean $isActive
      * @return Users
      */
-    public function setActive($active)
+    public function setIsActive($isActive)
     {
-        $this->active = $active;
+        $this->isActive = $isActive;
         return $this;
     }
 
     /**
-     * Get active
+     * Get isActive
      *
      * @return boolean 
      */
-    public function getActive()
+    public function getIsActive()
     {
-        return $this->active;
+        return $this->isActive;
     }
 
     /**
@@ -359,12 +359,32 @@ class Users implements UserInterface, \Serializable
         return;
     }
 
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
+    }
+
     /** @see \Serializable::serialize() */
     public function serialize()
     {
         return serialize(array(
             $this->id,
-            $this->login,
+            $this->username,
             $this->password,
             // see section on salt below
             // $this->salt,
@@ -376,7 +396,7 @@ class Users implements UserInterface, \Serializable
     {
         list (
             $this->id,
-            $this->login,
+            $this->username,
             $this->password,
             // see section on salt below
             // $this->salt
@@ -385,7 +405,7 @@ class Users implements UserInterface, \Serializable
 
     public function __construct()
     {
-        $this->active = true;
+        $this->isActive = true;
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid(null, true));
     }

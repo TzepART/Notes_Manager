@@ -23,7 +23,7 @@ USE `symfony` ;
 CREATE TABLE IF NOT EXISTS `symfony`.`users` (
   `id` INT NOT NULL COMMENT '',
   `email` VARCHAR(45) NOT NULL COMMENT '',
-  `login` VARCHAR(45) NOT NULL COMMENT '',
+  `username` VARCHAR(45) NOT NULL COMMENT '',
   `password` VARCHAR(45) NOT NULL COMMENT '',
   `created` DATETIME NOT NULL COMMENT '',
   `updated` DATETIME NOT NULL COMMENT '',

@@ -9,3 +9,7 @@ user_registration:
 user_login:
     path:     /login
     defaults: { _controller: NotesManagerBundle:Security:login }
+
+user_admin:
+    path:     /admin
+    defaults: { _controller: NotesManagerBundle:Default:admin }

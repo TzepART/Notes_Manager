@@ -30,7 +30,7 @@ class RegistrationController extends Controller
             $user->setCreated(new \DateTime('now'));
             $user->setUpdated(new \DateTime('now'));
             $user->setRoles("USER");
-            $user->setActive(true);
+            $user->setIsActive(true);
             $user->setGravatar("none");
 
             // 4) save the User!

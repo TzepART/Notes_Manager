@@ -16,7 +16,7 @@ class UsersRepository extends EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                "SELECT u FROM NotesManagerBundle:Users u WHERE login = $username"
+                "SELECT u FROM NotesManagerBundle:Users u WHERE username = $username"
             )
             ->getResult();
     }

@@ -15,7 +15,7 @@ Tzepart\NotesManagerBundle\Entity\Users:
             nullable: false
             length: 45
             fixed: false
-        login:
+        username:
             type: string
             nullable: false
             length: 45
@@ -44,7 +44,7 @@ Tzepart\NotesManagerBundle\Entity\Users:
             nullable: true
             length: 256
             fixed: false
-        active:
+        is_active:
             type: boolean
             nullable: false
         gravatar:
