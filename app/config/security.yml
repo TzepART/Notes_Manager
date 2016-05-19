@@ -14,7 +14,7 @@ security:
         our_db_provider:
             entity:
                 class: NotesManagerBundle:Users
-                property: username
+#                property: username
                 # if you're using multiple entity managers
                 # manager_name: customer
     firewalls:
@@ -27,20 +27,17 @@ security:
 #        login_firewall:
 #            pattern:   ^/login$
 #            anonymous: ~
-        regster_firewall:
-            pattern:   ^/register$
-            anonymous: ~
-
-#        main:
-#            pattern:    ^/
-#            http_basic: ~
-#            provider: our_db_provider
+#        regster_firewall:
+#            pattern:   ^/register$
+#            anonymous: ~
 
         main:
-            anonymous: ~
-            form_login:
-              login_path: user_login
-              check_path: user_login
+            pattern:    ^/
+            http_basic: ~
+            provider: our_db_provider
+#            form_login:
+#              login_path: user_login
+#              check_path: user_login
 
 #    access_control:
 #    # require ROLE_ADMIN for /admin*

@@ -12,12 +12,13 @@ use Doctrine\ORM\EntityRepository;
 
 class UsersRepository extends EntityRepository
 {
-    public function findAllUsersByName($username)
+    public function loadUserByUsername($username)
     {
-        return $this->getEntityManager()
-            ->createQuery(
-                "SELECT u FROM NotesManagerBundle:Users u WHERE username = $username"
-            )
-            ->getResult();
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username OR u.email = :email')
+            ->setParameter('username', $username)
+            ->setParameter('email', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

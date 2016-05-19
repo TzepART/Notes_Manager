@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `symfony`.`users` (
   `logged` DATETIME NULL COMMENT '',
   `roles` VARCHAR(45) NULL COMMENT '',
   `homepage` VARCHAR(256) NULL COMMENT '',
-  `active` TINYINT(1) NOT NULL COMMENT '',
+  `is_active` TINYINT(1) NOT NULL COMMENT '',
   `gravatar` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;

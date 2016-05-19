@@ -62,7 +62,7 @@ class Users implements UserInterface, \Serializable
      *
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive;
+    private $is_active;
 
 
     /**
@@ -303,25 +303,25 @@ class Users implements UserInterface, \Serializable
     }
 
     /**
-     * Set isActive
+     * Set is_active
      *
-     * @param boolean $isActive
+     * @param boolean $is_active
      * @return Users
      */
-    public function setIsActive($isActive)
+    public function setIsActive($is_active)
     {
-        $this->isActive = $isActive;
+        $this->is_active = $is_active;
         return $this;
     }
 
     /**
-     * Get isActive
+     * Get is_active
      *
      * @return boolean 
      */
     public function getIsActive()
     {
-        return $this->isActive;
+        return $this->is_active;
     }
 
     /**
@@ -376,7 +376,7 @@ class Users implements UserInterface, \Serializable
 
     public function isEnabled()
     {
-        return $this->isActive;
+        return $this->is_active;
     }
 
     /** @see \Serializable::serialize() */
@@ -386,6 +386,7 @@ class Users implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->is_active,
             // see section on salt below
             // $this->salt,
         ));
@@ -398,6 +399,7 @@ class Users implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->is_active,
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized);
@@ -405,7 +407,7 @@ class Users implements UserInterface, \Serializable
 
     public function __construct()
     {
-        $this->isActive = true;
+        $this->is_active = true;
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid(null, true));
     }
