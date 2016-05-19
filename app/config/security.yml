@@ -27,14 +27,17 @@ security:
 #        login_firewall:
 #            pattern:   ^/login$
 #            anonymous: ~
-#        regster_firewall:
-#            pattern:   ^/register$
-#            anonymous: ~
+        regster_firewall:
+            pattern:   ^/register$
+            anonymous: ~
 
         main:
             pattern:    ^/
             http_basic: ~
             provider: our_db_provider
+#
+#        main:
+#            anonymous: ~
 #            form_login:
 #              login_path: user_login
 #              check_path: user_login

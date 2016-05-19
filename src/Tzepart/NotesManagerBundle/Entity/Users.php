@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Users
  *
  * @ORM\Table(name="users")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tzepart\NotesManagerBundle\Entity\UsersRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Users implements UserInterface, \Serializable
@@ -258,17 +258,17 @@ class Users implements UserInterface, \Serializable
         return $this->logged;
     }
 
-    /**
-     * Set roles
-     *
-     * @param string $roles
-     * @return Users
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-        return $this;
-    }
+//    /**
+//     * Set roles
+//     *
+//     * @param string $roles
+//     * @return Users
+//     */
+//    public function setRoles($roles)
+//    {
+//        $this->roles = $roles;
+//        return $this;
+//    }
 
     /**
      * Get roles
@@ -277,7 +277,7 @@ class Users implements UserInterface, \Serializable
      */
     public function getRoles()
     {
-        return array($this->roles);
+        return array('ROLE_USER');
     }
 
     /**
