@@ -2,6 +2,11 @@
 
 namespace Tzepart\NotesManagerBundle\Entity;
 
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,8 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="users")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
-class Users
+class Users implements UserInterface, \Serializable
 {
     /**
      * @var integer
@@ -31,9 +37,33 @@ class Users
     /**
      * @var string
      *
-     * @ORM\Column(name="login", type="string", length=45, nullable=false)
+     * @ORM\Column(name="username", type="string", length=45, nullable=false)
      */
-    private $login;
+    private $username;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="roles", type="string", length=45, nullable=false)
+     */
+    private $roles;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="homepage", type="string", length=256, nullable=false)
+     */
+    private $homepage;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $is_active;
+
 
     /**
      * @var string
@@ -43,18 +73,34 @@ class Users
     private $password;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
      */
-    private $dateCreate;
+    private $plainPassword;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
+     * @ORM\Column(name="logged", type="datetime", nullable=false)
      */
-    private $dateUpdate;
+    private $logged;
+
+
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $updated;
+
+    /**
+     * @var string
+     */
+    private $gravatar;
+
 
 
 
@@ -91,27 +137,36 @@ class Users
         return $this->email;
     }
 
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword($password)
+    {
+        $this->plainPassword = $password;
+    }
+
     /**
-     * Set login
+     * Set username
      *
-     * @param string $login
+     * @param string $username
      * @return Users
      */
-    public function setLogin($login)
+    public function setUsername($username)
     {
-        $this->login = $login;
-
+        $this->username = $username;
         return $this;
     }
 
     /**
-     * Get login
+     * Get username
      *
      * @return string 
      */
-    public function getLogin()
+    public function getUsername()
     {
-        return $this->login;
+        return $this->username;
     }
 
     /**
@@ -123,7 +178,6 @@ class Users
     public function setPassword($password)
     {
         $this->password = $password;
-
         return $this;
     }
 
@@ -137,49 +191,225 @@ class Users
         return $this->password;
     }
 
+
     /**
-     * Set dateCreate
+     * Set created
      *
-     * @param \DateTime $dateCreate
+     * @param \DateTime $created
      * @return Users
      */
-    public function setDateCreate($dateCreate)
+    public function setCreated($created)
     {
-        $this->dateCreate = $dateCreate;
+        $this->created = $created;
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return Users
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set logged
+     *
+     * @param \DateTime $logged
+     * @return Users
+     */
+    public function setLogged($logged)
+    {
+        $this->logged = $logged;
+        return $this;
+    }
+
+    /**
+     * Get logged
+     *
+     * @return \DateTime 
+     */
+    public function getLogged()
+    {
+        return $this->logged;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param string $roles
+     * @return Users
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    /**
+     * Get roles
+     *
+     * @return string 
+     */
+    public function getRoles()
+    {
+        return array($this->roles);
+    }
+
+    /**
+     * Set homepage
+     *
+     * @param string $homepage
+     * @return Users
+     */
+    public function setHomepage($homepage)
+    {
+        $this->homepage = $homepage;
+        return $this;
+    }
+
+    /**
+     * Get homepage
+     *
+     * @return string 
+     */
+    public function getHomepage()
+    {
+        return $this->homepage;
+    }
+
+    /**
+     * Set is_active
+     *
+     * @param boolean $is_active
+     * @return Users
+     */
+    public function setIsActive($is_active)
+    {
+        $this->is_active = $is_active;
+        return $this;
+    }
+
+    /**
+     * Get is_active
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->is_active;
+    }
+
+    /**
+     * Set gravatar
+     *
+     * @param string $gravatar
+     * @return Users
+     */
+    public function setGravatar($gravatar)
+    {
+        $this->gravatar = $gravatar;
 
         return $this;
     }
 
     /**
-     * Get dateCreate
+     * Get gravatar
      *
-     * @return \DateTime 
+     * @return string 
      */
-    public function getDateCreate()
+    public function getGravatar()
     {
-        return $this->dateCreate;
+        return $this->gravatar;
     }
 
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Users
-     */
-    public function setDateUpdate($dateUpdate)
+    public function getSalt()
     {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
+        // The bcrypt algorithm doesn't require a separate salt.
+        // You *may* need a real salt if you choose a different encoder.
+        return null;
     }
 
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
+    public function eraseCredentials()
     {
-        return $this->dateUpdate;
+        return;
     }
+
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->is_active;
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->is_active,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->is_active,
+            // see section on salt below
+            // $this->salt
+            ) = unserialize($serialized);
+    }
+
+    public function __construct()
+    {
+        $this->is_active = true;
+        // may not be needed, see section on salt below
+        // $this->salt = md5(uniqid(null, true));
+    }
+
 }

@@ -22,9 +22,17 @@ class CircleController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        $user = "NO_AUTH";
+        $securityContext = $this->container->get('security.authorization_checker');
+        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            // authenticated REMEMBERED, FULLY will imply REMEMBERED (NON anonymous)
+            $user = "AUTH";
+        }
+
         $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
         return $this->render('circle/index.html.twig', array(
             'circles' => $circles,
+            'user'=>$user,
         ));
     }
 

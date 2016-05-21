@@ -15,7 +15,7 @@ Tzepart\NotesManagerBundle\Entity\Users:
             nullable: false
             length: 45
             fixed: false
-        login:
+        username:
             type: string
             nullable: false
             length: 45
@@ -25,12 +25,31 @@ Tzepart\NotesManagerBundle\Entity\Users:
             nullable: false
             length: 45
             fixed: false
-        dateCreate:
+        created:
             type: datetime
             nullable: false
-            column: date_create
-        dateUpdate:
+        updated:
             type: datetime
             nullable: false
-            column: date_update
+        logged:
+            type: datetime
+            nullable: true
+        roles:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+        homepage:
+            type: string
+            nullable: true
+            length: 256
+            fixed: false
+        is_active:
+            type: boolean
+            nullable: false
+        gravatar:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
     lifecycleCallbacks: {  }
