@@ -2,8 +2,8 @@
 
 namespace Tzepart\NotesManagerBundle\Controller;
 
-use Tzepart\NotesManagerBundle\Form\UsersType;
-use Tzepart\NotesManagerBundle\Entity\Users;
+use Tzepart\NotesManagerBundle\Form\UserType;
+use Tzepart\NotesManagerBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +16,8 @@ class RegistrationController extends Controller
     public function registerAction(Request $request)
     {
         // 1) build the form
-        $user = new Users();
-        $form = $this->createForm(UsersType::class, $user);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
 
         // 2) handle the submit (will only happen on POST)
         $form->handleRequest($request);
@@ -27,11 +27,11 @@ class RegistrationController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
-            $user->setCreated(new \DateTime('now'));
-            $user->setUpdated(new \DateTime('now'));
-            $user->setRoles("USER");
+//            $user->setCreated(new \DateTime('now'));
+//            $user->setUpdated(new \DateTime('now'));
+//            $user->setRoles("USER");
             $user->setIsActive(true);
-            $user->setGravatar("none");
+//            $user->setGravatar("none");
 
             // 4) save the User!
             $em = $this->getDoctrine()->getManager();

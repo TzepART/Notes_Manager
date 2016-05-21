@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityRepository;
 
 
-class UsersRepository extends EntityRepository implements UserLoaderInterface
+class UserRepository extends EntityRepository implements UserLoaderInterface
 {
     public function loadUserByUsername($username)
     {

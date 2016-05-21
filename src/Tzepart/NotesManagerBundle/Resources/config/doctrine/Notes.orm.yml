@@ -37,7 +37,7 @@ Tzepart\NotesManagerBundle\Entity\Notes:
             column: date_update
     manyToOne:
         users:
-            targetEntity: Users
+            targetEntity: User
             cascade: {  }
             mappedBy: null
             inversedBy: null

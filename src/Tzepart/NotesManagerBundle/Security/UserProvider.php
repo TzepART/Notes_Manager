@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityManager;
 
-use Tzepart\NotesManagerBundle\Entity\Users;
+use Tzepart\NotesManagerBundle\Entity\User;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,7 +31,7 @@ class UserProvider implements UserProviderInterface
      * находит и возвращает экземпляр класса User или выбрасывает Exception
      * @param string $username - мыло пользователя
      *
-     * @return false|Users|\Symfony\Component\Security\Core\User\UserInterface
+     * @return false|User|\Symfony\Component\Security\Core\User\UserInterface
      * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function loadUserByUsername( $username = '' )
@@ -49,7 +49,7 @@ class UserProvider implements UserProviderInterface
 //            throw new UsernameNotFoundException(sprintf('Username "%s" does not exist.', $username));
 //        }
 
-        $user = new Users();
+        $user = new User();
         $user->setUsername($r['username']);
         $user->setRoles($r['role']);
         $user->setPassword($r['password']);// напомню, это хэш пароля (как его создать - читай ниже)
@@ -62,12 +62,12 @@ class UserProvider implements UserProviderInterface
      *
      * @param UserInterface $user
      *
-     * @return Users|UserInterface
+     * @return User|UserInterface
      * @throws \Symfony\Component\Security\Core\Exception\UnsupportedUserException
      */
     public function refreshUser( UserInterface $user )
     {
-        if (!$user instanceof Users) {
+        if (!$user instanceof User) {
             throw new UnsupportedUserException( sprintf( 'Instances of "%s" are not supported.', get_class( $user ) ) );
         }
         return $this->loadUserByUsername($user->getUsername());
@@ -83,6 +83,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass( $class )
     {
-        return $class === 'Tzepart\\NotesManagerBundle\\Entity\\Users';
+        return $class === 'Tzepart\\NotesManagerBundle\\Entity\\User';
     }
 }

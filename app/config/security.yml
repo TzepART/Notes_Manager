@@ -3,30 +3,21 @@
 security:
 
     encoders:
-        Tzepart\NotesManagerBundle\Entity\Users:
-          algorithm: bcrypt
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
-#    providers:
-#        webservice:
-#            id: userProvider
+        Tzepart\NotesManagerBundle\Entity\User:
+          algorithm: plaintext
 
     providers:
         our_db_provider:
             entity:
-                class: NotesManagerBundle:Users
-#                property: username
-                # if you're using multiple entity managers
-                # manager_name: customer
+                class: NotesManagerBundle:User
+                property: username
     firewalls:
-
-
-#      default:
-#        anonymous: ~
-#        http_basic: ~
-
-#        login_firewall:
-#            pattern:   ^/login$
-#            anonymous: ~
+        login_firewall:
+            pattern:   ^/login$
+            anonymous: ~
+            form_login:
+              login_path: user_login
+              check_path: user_login
         regster_firewall:
             pattern:   ^/register$
             anonymous: ~
@@ -35,12 +26,7 @@ security:
             pattern:    ^/
             http_basic: ~
             provider: our_db_provider
-#
-#        main:
-#            anonymous: ~
-#            form_login:
-#              login_path: user_login
-#              check_path: user_login
+            logout: true
 
 #    access_control:
 #    # require ROLE_ADMIN for /admin*
