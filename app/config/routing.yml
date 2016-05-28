@@ -7,8 +7,8 @@ user_registration:
     defaults: { _controller: NotesManagerBundle:Registration:register }
 
 default_security_target:
-    path:     /notes
-    defaults: { _controller: NotesManagerBundle:Notes:index }
+    path:     /circle
+    defaults: { _controller: NotesManagerBundle:Circle:index }
 
 login:
     path:     /login
