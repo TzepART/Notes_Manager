@@ -115,19 +115,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
      * Get email
      *
      * @return string 
@@ -140,6 +127,16 @@ class User implements UserInterface, \Serializable
     public function getPlainPassword()
     {
         return $this->plainPassword;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
     }
 
     public function setPlainPassword($password)
@@ -156,6 +153,19 @@ class User implements UserInterface, \Serializable
     public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return string
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
 
         return $this;
     }
@@ -186,13 +196,9 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Get isActive
-     *
-     * @return boolean 
-     */
-    public function getIsActive()
+    public function __toString()
     {
-        return $this->isActive;
+        return strval($this->getId());
     }
+
 }
