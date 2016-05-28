@@ -1,33 +1,17 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
 security:
-
     encoders:
         Tzepart\NotesManagerBundle\Entity\User:
-          algorithm: plaintext
+          algorithm: bcrypt
 
     providers:
         our_db_provider:
             entity:
                 class: NotesManagerBundle:User
                 property: username
+
     firewalls:
-        login_firewall:
-            pattern:   ^/login$
+        main:
             anonymous: ~
             form_login:
-              login_path: user_login
-              check_path: user_login
-        regster_firewall:
-            pattern:   ^/register$
-            anonymous: ~
-
-        main:
-            pattern:    ^/
-            http_basic: ~
-            provider: our_db_provider
-            logout: true
-
-#    access_control:
-#    # require ROLE_ADMIN for /admin*
-#    - { path: ^/admin, roles: ROLE_ADMIN }
+                login_path: login
+                check_path: login

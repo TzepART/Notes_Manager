@@ -1,14 +1,23 @@
 notes_manager:
     resource: "@NotesManagerBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix: /
 
 user_registration:
     path:     /register
     defaults: { _controller: NotesManagerBundle:Registration:register }
 
-user_login:
+default_security_target:
+    path:     /notes
+    defaults: { _controller: NotesManagerBundle:Notes:index }
+
+login:
     path:     /login
     defaults: { _controller: NotesManagerBundle:Security:login }
 
 logout:
     path: /logout
+    defaults: { _controller: NotesManagerBundle:Security:logout }
+
+notes_manager_homepage:
+    path:     /
+    defaults: { _controller: NotesManagerBundle:Circle:homepage }
