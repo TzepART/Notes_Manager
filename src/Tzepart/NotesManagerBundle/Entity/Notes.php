@@ -50,14 +50,14 @@ class Notes
     private $dateUpdate;
 
     /**
-     * @var \Tzepart\NotesManagerBundle\Entity\Users
+     * @var \Tzepart\NotesManagerBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Users")
+     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\User")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="users_id", referencedColumnName="id")
      * })
      */
-    private $users;
+    private $user;
 
     /**
      * @var \Tzepart\NotesManagerBundle\Entity\Labels
@@ -176,12 +176,12 @@ class Notes
     /**
      * Set users
      *
-     * @param \Tzepart\NotesManagerBundle\Entity\Users $users
+     * @param \Tzepart\NotesManagerBundle\Entity\User $users
      * @return Notes
      */
-    public function setUsers(\Tzepart\NotesManagerBundle\Entity\Users $users = null)
+    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $users = null)
     {
-        $this->users = $users;
+        $this->user = $user;
 
         return $this;
     }
@@ -189,11 +189,11 @@ class Notes
     /**
      * Get users
      *
-     * @return \Tzepart\NotesManagerBundle\Entity\Users 
+     * @return \Tzepart\NotesManagerBundle\Entity\User 
      */
-    public function getUsers()
+    public function getUser()
     {
-        return $this->users;
+        return $this->user;
     }
 
     /**
@@ -217,5 +217,33 @@ class Notes
     public function getLabels()
     {
         return $this->labels;
+    }
+    /**
+     * @var \Tzepart\NotesManagerBundle\Entity\User
+     */
+    private $users;
+
+
+    /**
+     * Set users
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\User $users
+     * @return Notes
+     */
+    public function setUsers(\Tzepart\NotesManagerBundle\Entity\User $users = null)
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\User 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }

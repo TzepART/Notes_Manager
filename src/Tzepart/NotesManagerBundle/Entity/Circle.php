@@ -43,9 +43,9 @@ class Circle
     private $dateUpdate;
 
     /**
-     * @var \Tzepart\NotesManagerBundle\Entity\Users
+     * @var \Tzepart\NotesManagerBundle\Entity\User
      *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Users")
+     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\User")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="users_id", referencedColumnName="id")
      * })
@@ -136,10 +136,33 @@ class Circle
     /**
      * Set users
      *
-     * @param \Tzepart\NotesManagerBundle\Entity\Users $users
+     * @param \Tzepart\NotesManagerBundle\Entity\User $users
      * @return Circle
      */
-    public function setUsers(\Tzepart\NotesManagerBundle\Entity\Users $users = null)
+    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $users = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set users
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\User $users
+     * @return Circle
+     */
+    public function setUsers(\Tzepart\NotesManagerBundle\Entity\User $users = null)
     {
         $this->users = $users;
 
@@ -149,7 +172,7 @@ class Circle
     /**
      * Get users
      *
-     * @return \Tzepart\NotesManagerBundle\Entity\Users 
+     * @return \Tzepart\NotesManagerBundle\Entity\User 
      */
     public function getUsers()
     {

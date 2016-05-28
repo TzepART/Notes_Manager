@@ -10,6 +10,3 @@ notes_manager_sectors:
     resource: "@NotesManagerBundle/Resources/config/routing/sectors.yml"
     prefix:   /sectors
 
-notes_manager_homepage:
-    path:     /
-    defaults: { _controller: NotesManagerBundle:Circle:index }

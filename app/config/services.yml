@@ -4,5 +4,6 @@ parameters:
 #    parameter_name: value
 
 services:
-    userProvider:
-        class: Tzepart\NotesManagerBundle\Security\UserProvider
+    time_authenticator:
+        class:     Tzepart\NotesManagerBundle\Security\TimeAuthenticator
+        arguments: ["@security.password_encoder"]

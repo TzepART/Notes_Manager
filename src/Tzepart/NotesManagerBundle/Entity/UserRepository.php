@@ -8,9 +8,12 @@
 
 namespace Tzepart\NotesManagerBundle\Entity;
 
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\EntityRepository;
 
-class UsersRepository extends EntityRepository
+
+class UserRepository extends EntityRepository implements UserLoaderInterface
 {
     public function loadUserByUsername($username)
     {

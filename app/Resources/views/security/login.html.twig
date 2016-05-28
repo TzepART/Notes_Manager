@@ -5,7 +5,7 @@
 {% endif %}
 <p>{{ last_username }}</p>
 
-<form action="{{ path('user_login') }}" method="post">
+<form action="{{ path('login') }}" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="_username" value="{{ last_username }}" />
 
