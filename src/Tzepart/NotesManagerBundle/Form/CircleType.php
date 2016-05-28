@@ -5,6 +5,7 @@ namespace Tzepart\NotesManagerBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class CircleType extends AbstractType
 {
@@ -14,9 +15,11 @@ class CircleType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+
         $builder
             ->add('name')
-        ;
+            ->add('count_sectors');
     }
     
     /**
@@ -24,8 +27,10 @@ class CircleType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Tzepart\NotesManagerBundle\Entity\Circle'
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'Tzepart\NotesManagerBundle\Entity\Circle',
+            )
+        );
     }
 }

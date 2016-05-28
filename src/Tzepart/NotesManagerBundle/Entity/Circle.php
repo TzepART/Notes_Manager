@@ -53,6 +53,29 @@ class Circle
     private $users;
 
 
+    /**
+     * @var string
+     *
+     */
+    private $count_sectors;
+
+    /**
+     * @return string
+     */
+    public function getCountSectors()
+    {
+        return $this->count_sectors;
+    }
+
+    /**
+     * @param mixed $count_sectors
+     */
+    public function setCountSectors($count_sectors)
+    {
+        $this->count_sectors = $count_sectors;
+    }
+
+
 
     /**
      * Get id
