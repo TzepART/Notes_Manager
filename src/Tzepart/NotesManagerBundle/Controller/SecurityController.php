@@ -30,18 +30,6 @@ class SecurityController extends Controller
     public function logoutAction()
     {
         $this->container->get('security.context')->setToken(null);
-
-        $user = "NO_AUTH";
-        $securityContext = $this->container->get('security.authorization_checker');
-
-        if ($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            // authenticated REMEMBERED, FULLY will imply REMEMBERED (NON anonymous)
-            $user = "AUTH";
-        }
-
-        return $this->render('circle/index.html.twig', array(
-            'circles' => "",
-            'user'=>$user,
-        ));
+        return $this->redirectToRoute('login');
     }
 }

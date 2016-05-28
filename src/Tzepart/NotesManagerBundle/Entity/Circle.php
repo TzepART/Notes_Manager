@@ -132,29 +132,7 @@ class Circle
     {
         return $this->dateUpdate;
     }
-
-    /**
-     * Set users
-     *
-     * @param \Tzepart\NotesManagerBundle\Entity\User $users
-     * @return Circle
-     */
-    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $users = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get users
-     *
-     * @return \Tzepart\NotesManagerBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
+    
 
     /**
      * Set users

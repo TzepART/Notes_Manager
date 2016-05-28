@@ -43,9 +43,35 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=60, unique=true)
+     */
+    private $roles;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="logged", type="datetime", nullable=false)
+     */
+    private $logged;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated;
 
     public function __construct()
     {
@@ -115,19 +141,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
      * Get email
      *
      * @return string 
@@ -140,6 +153,16 @@ class User implements UserInterface, \Serializable
     public function getPlainPassword()
     {
         return $this->plainPassword;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
     }
 
     public function setPlainPassword($password)
@@ -156,6 +179,19 @@ class User implements UserInterface, \Serializable
     public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return string
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
 
         return $this;
     }
@@ -186,13 +222,91 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * Get isActive
-     *
-     * @return boolean 
-     */
-    public function getIsActive()
+    public function __toString()
     {
-        return $this->isActive;
+        return strval($this->getId());
+    }
+
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return User
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     * @return User
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime 
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set logged
+     *
+     * @param \DateTime $logged
+     * @return User
+     */
+    public function setLogged($logged)
+    {
+        $this->logged = $logged;
+
+        return $this;
+    }
+
+    /**
+     * Get logged
+     *
+     * @return \DateTime 
+     */
+    public function getLogged()
+    {
+        return $this->logged;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param string $roles
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 }

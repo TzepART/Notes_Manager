@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Form\CircleType;
+use \Tzepart\NotesManagerBundle\Entity\User;
 
 /**
  * Circle controller.
@@ -42,6 +43,16 @@ class CircleController extends Controller
     }
 
     /**
+     * Get user id
+     * @return integer $userId
+     */
+    protected function getCurrentUserObject()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        return $user;
+    }
+
+    /**
      * Creates a new Circle entity.
      *
      */
@@ -51,7 +62,11 @@ class CircleController extends Controller
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()){
+            $user = $this->getCurrentUserObject();
+            $circle->setUsers($user);
+            $circle ->setDateCreate(new \DateTime('now'));
+            $circle ->setDateUpdate(new \DateTime('now'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
             $em->flush();

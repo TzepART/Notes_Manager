@@ -16,9 +16,6 @@ class CircleType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('dateCreate', 'datetime')
-            ->add('dateUpdate', 'datetime')
-            ->add('users')
         ;
     }
     
