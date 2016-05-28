@@ -28,4 +28,18 @@ Tzepart\NotesManagerBundle\Entity\User:
         isActive:
             type: boolean
             nullable: false
+        created:
+            type: datetime
+            nullable: false
+        updated:
+            type: datetime
+            nullable: false
+        logged:
+            type: datetime
+            nullable: true
+        roles:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
     lifecycleCallbacks: {  }
