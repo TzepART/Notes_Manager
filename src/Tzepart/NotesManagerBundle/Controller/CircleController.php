@@ -58,6 +58,8 @@ class CircleController extends Controller
 
     /**
      * create N layers in circle
+     * @param mixed $circle
+     * @param int $n - count layers
      * @return integer $userId
      */
     protected function createLayers($circle,$n = 1)
@@ -74,6 +76,33 @@ class CircleController extends Controller
             $em->persist($layers);
             $em->flush();
         }
+        return true;
+    }
+
+    /**
+     * @param mixed $circle
+     * @param string $name
+     * @param float $beginAngle
+     * @param float $endAngle
+     * @param string $color
+     * @param int $parentSector
+     * @return bool
+     */
+    protected function createSector($circle,$name,$beginAngle,$endAngle,$color,$parentSector = 0)
+    {
+        $sector = new Sectors();
+        $sector->setName($name);
+        $sector->setCircle($circle);
+        $sector->setBeginAngle($beginAngle);
+        $sector->setEndAngle($endAngle);
+        $sector->setParentSectorId($parentSector);
+        $sector->setColor($color);
+        $sector ->setDateCreate(new \DateTime('now'));
+        $sector ->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sector);
+        $em->flush();
+
         return true;
     }
 
@@ -96,6 +125,14 @@ class CircleController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
             $em->flush();
+
+            $arSectorName = $request->get("sector_name");
+            $arBeginAngle = $request->get("begin_angle");
+            $arEndAngle = $request->get("end_angle");
+            $arColor = $request->get("sector_color");
+            foreach ($arSectorName as $key => $sectorName) {
+                $this->createSector($circle,$sectorName,$arBeginAngle[$key],$arEndAngle[$key],$arColor[$key]);
+            }
 
             $this->createLayers($circle,$request->get("layers_number"));
 
