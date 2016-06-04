@@ -9,6 +9,7 @@ use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Sectors;
 use Tzepart\NotesManagerBundle\Form\CircleType;
 use \Tzepart\NotesManagerBundle\Entity\User;
+use Tzepart\NotesManagerBundle\Form\SectorsType;
 
 /**
  * Circle controller.
@@ -80,6 +81,7 @@ class CircleController extends Controller
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()){
             $user = $this->getCurrentUserObject();
             $circle->setUsers($user);
@@ -89,7 +91,7 @@ class CircleController extends Controller
             $em->persist($circle);
             $em->flush();
 
-            $this->createSector($circle,$circle->getCountSectors());
+            $this->createSector($circle,$request->get("sectors"));
 
             return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
         }
