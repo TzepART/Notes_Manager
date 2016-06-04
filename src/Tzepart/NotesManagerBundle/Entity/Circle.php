@@ -52,31 +52,7 @@ class Circle
      */
     private $users;
 
-
-//    /**
-//     * @var string
-//     *
-//     */
-//    private $count_sectors;
-//
-//    /**
-//     * @return string
-//     */
-//    public function getCountSectors()
-//    {
-//        return $this->count_sectors;
-//    }
-//
-//    /**
-//     * @param mixed $count_sectors
-//     */
-//    public function setCountSectors($count_sectors)
-//    {
-//        $this->count_sectors = $count_sectors;
-//    }
-
-
-
+    
     /**
      * Get id
      *
@@ -178,5 +154,33 @@ class Circle
     public function getUsers()
     {
         return $this->users;
+    }
+    /**
+     * @var \Tzepart\NotesManagerBundle\Entity\User
+     */
+    private $user;
+
+
+    /**
+     * Set user
+     *
+     * @param \Tzepart\NotesManagerBundle\Entity\User $user
+     * @return Circle
+     */
+    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Tzepart\NotesManagerBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

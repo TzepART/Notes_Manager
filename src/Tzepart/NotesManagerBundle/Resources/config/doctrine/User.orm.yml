@@ -1,6 +1,6 @@
 Tzepart\NotesManagerBundle\Entity\User:
     type: entity
-    table: users
+    table: user
     id:
         id:
             type: integer
@@ -25,9 +25,6 @@ Tzepart\NotesManagerBundle\Entity\User:
             nullable: false
             length: 64
             fixed: false
-        isActive:
-            type: boolean
-            nullable: false
         created:
             type: datetime
             nullable: false
@@ -42,4 +39,8 @@ Tzepart\NotesManagerBundle\Entity\User:
             nullable: true
             length: 45
             fixed: false
+        isActive:
+            type: boolean
+            nullable: false
+            column: is_active
     lifecycleCallbacks: {  }

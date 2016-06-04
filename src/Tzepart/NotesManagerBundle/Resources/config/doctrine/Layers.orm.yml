@@ -5,9 +5,6 @@ Tzepart\NotesManagerBundle\Entity\Layers:
         fk_layers_circle1_idx:
             columns:
                 - circle_id
-        fk_layers_colors1_idx:
-            columns:
-                - colors_id
     id:
         id:
             type: integer
@@ -37,6 +34,11 @@ Tzepart\NotesManagerBundle\Entity\Layers:
             type: datetime
             nullable: true
             column: date_update
+        color:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
     manyToOne:
         circle:
             targetEntity: Circle
@@ -45,15 +47,6 @@ Tzepart\NotesManagerBundle\Entity\Layers:
             inversedBy: null
             joinColumns:
                 circle_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        colors:
-            targetEntity: Colors
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                colors_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
