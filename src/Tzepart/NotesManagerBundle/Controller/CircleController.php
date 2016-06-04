@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Sectors;
+use Tzepart\NotesManagerBundle\Entity\Layers;
 use Tzepart\NotesManagerBundle\Form\CircleType;
 use \Tzepart\NotesManagerBundle\Entity\User;
 use Tzepart\NotesManagerBundle\Form\SectorsType;
@@ -54,21 +55,55 @@ class CircleController extends Controller
         return $user;
     }
 
-    protected function createSector($circle,$n)
+
+    /**
+     * create N layers in circle
+     * @param mixed $circle
+     * @param int $n - count layers
+     * @return integer $userId
+     */
+    protected function createLayers($circle,$n = 1)
     {
-//        @TODO Добавить выборку цвета
+        for($i = 0;$i<$n;$i++){
+            $layers = new Layers();
+            $layers->setCircle($circle);
+            $layers->setBeginRadius(0);
+            $layers->setEndRadius(180);
+            $layers->setColor("#FFDEAD");
+            $layers->setDateCreate(new \DateTime('now'));
+            $layers->setDateUpdate(new \DateTime('now'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($layers);
+            $em->flush();
+        }
+        return true;
+    }
+
+    /**
+     * @param mixed $circle
+     * @param string $name
+     * @param float $beginAngle
+     * @param float $endAngle
+     * @param string $color
+     * @param int $parentSector
+     * @return bool
+     */
+    protected function createSector($circle,$name,$beginAngle,$endAngle,$color,$parentSector = 0)
+    {
         $sector = new Sectors();
-        $sector->setName("Default");
+        $sector->setName($name);
         $sector->setCircle($circle);
-        $sector->setBeginAngle(0);
-        $sector->setEndAngle(180);
-        $sector->setParentSectorId($n);
-        $sector->setColor("#FFDEAD");
+        $sector->setBeginAngle($beginAngle);
+        $sector->setEndAngle($endAngle);
+        $sector->setParentSectorId($parentSector);
+        $sector->setColor($color);
         $sector ->setDateCreate(new \DateTime('now'));
         $sector ->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
         $em->flush();
+
+        return true;
     }
 
     /**
@@ -82,7 +117,7 @@ class CircleController extends Controller
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))){
             $user = $this->getCurrentUserObject();
             $circle->setUser($user);
             $circle ->setDateCreate(new \DateTime('now'));
@@ -91,7 +126,15 @@ class CircleController extends Controller
             $em->persist($circle);
             $em->flush();
 
-            $this->createSector($circle,$request->get("sectors"));
+            $arSectorName = $request->get("sector_name");
+            $arBeginAngle = $request->get("begin_angle");
+            $arEndAngle = $request->get("end_angle");
+            $arColor = $request->get("sector_color");
+            foreach ($arSectorName as $key => $sectorName) {
+                $this->createSector($circle,$sectorName,$arBeginAngle[$key],$arEndAngle[$key],$arColor[$key]);
+            }
+
+            $this->createLayers($circle,$request->get("layers_number"));
 
             return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
         }

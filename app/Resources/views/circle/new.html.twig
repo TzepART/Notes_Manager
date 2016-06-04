@@ -6,7 +6,20 @@
     {{ form_start(form) }}
         {{ form_widget(form) }}
 
-    <input type="text" name="sectors" placeholder="Количество уровней"><br>
+    <input type="text" name="layers_number" placeholder="Количество уровней"><br>
+
+    <p>
+        <input type="text" name="sector_name[]" placeholder="Название сектора">
+        <input type="text" name="begin_angle[]" placeholder="Начальный угол">
+        <input type="text" name="end_angle[]" placeholder="Конечный угол">
+        <input type="text" name="color[]" placeholder="Цвет">
+    </p>
+    <p>
+        <input type="text" name="sector_name[]" placeholder="Название сектора">
+        <input type="text" name="begin_angle[]" placeholder="Начальный угол">
+        <input type="text" name="end_angle[]" placeholder="Конечный угол">
+        <input type="text" name="sector_color[]" placeholder="Цвет">
+    </p>
 
     <input type="submit" value="Create" />
     {{ form_end(form) }}
