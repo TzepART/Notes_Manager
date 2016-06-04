@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Sectors;
+use Tzepart\NotesManagerBundle\Entity\Layers;
 use Tzepart\NotesManagerBundle\Form\CircleType;
 use \Tzepart\NotesManagerBundle\Entity\User;
 use Tzepart\NotesManagerBundle\Form\SectorsType;
@@ -54,21 +55,26 @@ class CircleController extends Controller
         return $user;
     }
 
-    protected function createSector($circle,$n)
+
+    /**
+     * create N layers in circle
+     * @return integer $userId
+     */
+    protected function createLayers($circle,$n = 1)
     {
-//        @TODO Добавить выборку цвета
-        $sector = new Sectors();
-        $sector->setName("Default");
-        $sector->setCircle($circle);
-        $sector->setBeginAngle(0);
-        $sector->setEndAngle(180);
-        $sector->setParentSectorId($n);
-        $sector->setColor("#FFDEAD");
-        $sector ->setDateCreate(new \DateTime('now'));
-        $sector ->setDateUpdate(new \DateTime('now'));
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($sector);
-        $em->flush();
+        for($i = 0;$i<$n;$i++){
+            $layers = new Layers();
+            $layers->setCircle($circle);
+            $layers->setBeginRadius(0);
+            $layers->setEndRadius(180);
+            $layers->setColor("#FFDEAD");
+            $layers->setDateCreate(new \DateTime('now'));
+            $layers->setDateUpdate(new \DateTime('now'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($layers);
+            $em->flush();
+        }
+        return true;
     }
 
     /**
@@ -82,7 +88,7 @@ class CircleController extends Controller
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))){
             $user = $this->getCurrentUserObject();
             $circle->setUser($user);
             $circle ->setDateCreate(new \DateTime('now'));
@@ -91,7 +97,7 @@ class CircleController extends Controller
             $em->persist($circle);
             $em->flush();
 
-            $this->createSector($circle,$request->get("sectors"));
+            $this->createLayers($circle,$request->get("layers_number"));
 
             return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
         }
