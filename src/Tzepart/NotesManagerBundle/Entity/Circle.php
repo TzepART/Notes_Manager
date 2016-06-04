@@ -7,17 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Circle
  *
- * @ORM\Table(name="circle", indexes={@ORM\Index(name="fk_circle_users1_idx", columns={"users_id"})})
+ * @ORM\Table(name="circle", indexes={@ORM\Index(name="fk_circle_users1_idx", columns={"user_id"})})
  * @ORM\Entity
  */
 class Circle
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
@@ -47,13 +45,12 @@ class Circle
      *
      * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="users_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * })
      */
-    private $users;
+    private $user;
 
-
-
+    
     /**
      * Get id
      *
@@ -135,25 +132,27 @@ class Circle
     
 
     /**
-     * Set users
+     * Set user
      *
-     * @param \Tzepart\NotesManagerBundle\Entity\User $users
+     * @param \Tzepart\NotesManagerBundle\Entity\User $user
      * @return Circle
      */
-    public function setUsers(\Tzepart\NotesManagerBundle\Entity\User $users = null)
+    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $user = null)
     {
-        $this->users = $users;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get users
+     * Get user
      *
      * @return \Tzepart\NotesManagerBundle\Entity\User 
      */
-    public function getUsers()
+    public function getUser()
     {
-        return $this->users;
+        return $this->user;
     }
+
+
 }

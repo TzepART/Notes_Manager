@@ -6,8 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Circle;
+use Tzepart\NotesManagerBundle\Entity\Sectors;
 use Tzepart\NotesManagerBundle\Form\CircleType;
 use \Tzepart\NotesManagerBundle\Entity\User;
+use Tzepart\NotesManagerBundle\Form\SectorsType;
 
 /**
  * Circle controller.
@@ -52,6 +54,23 @@ class CircleController extends Controller
         return $user;
     }
 
+    protected function createSector($circle,$n)
+    {
+//        @TODO Добавить выборку цвета
+        $sector = new Sectors();
+        $sector->setName("Default");
+        $sector->setCircle($circle);
+        $sector->setBeginAngle(0);
+        $sector->setEndAngle(180);
+        $sector->setParentSectorId($n);
+        $sector->setColor("#FFDEAD");
+        $sector ->setDateCreate(new \DateTime('now'));
+        $sector ->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sector);
+        $em->flush();
+    }
+
     /**
      * Creates a new Circle entity.
      *
@@ -62,14 +81,17 @@ class CircleController extends Controller
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()){
             $user = $this->getCurrentUserObject();
-            $circle->setUsers($user);
+            $circle->setUser($user);
             $circle ->setDateCreate(new \DateTime('now'));
             $circle ->setDateUpdate(new \DateTime('now'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
             $em->flush();
+
+            $this->createSector($circle,$request->get("sectors"));
 
             return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
         }

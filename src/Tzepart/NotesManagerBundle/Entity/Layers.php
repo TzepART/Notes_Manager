@@ -6,69 +6,45 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Layers
- *
- * @ORM\Table(name="layers", indexes={@ORM\Index(name="fk_layers_circle1_idx", columns={"circle_id"}), @ORM\Index(name="fk_layers_colors1_idx", columns={"colors_id"})})
- * @ORM\Entity
  */
 class Layers
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="begin_radius", type="float", precision=10, scale=0, nullable=true)
      */
     private $beginRadius;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="end_radius", type="float", precision=10, scale=0, nullable=true)
      */
     private $endRadius;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=true)
      */
     private $dateCreate;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="date_update", type="datetime", nullable=true)
      */
     private $dateUpdate;
 
     /**
-     * @var \Tzepart\NotesManagerBundle\Entity\Circle
-     *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Circle")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="circle_id", referencedColumnName="id")
-     * })
+     * @var string
      */
-    private $circle;
+    private $color;
 
     /**
-     * @var \Tzepart\NotesManagerBundle\Entity\Colors
-     *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Colors")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="colors_id", referencedColumnName="id")
-     * })
+     * @var \Tzepart\NotesManagerBundle\Entity\Circle
      */
-    private $colors;
-
+    private $circle;
 
 
     /**
@@ -174,6 +150,29 @@ class Layers
     }
 
     /**
+     * Set color
+     *
+     * @param string $color
+     * @return Layers
+     */
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return string 
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
      * Set circle
      *
      * @param \Tzepart\NotesManagerBundle\Entity\Circle $circle
@@ -194,28 +193,5 @@ class Layers
     public function getCircle()
     {
         return $this->circle;
-    }
-
-    /**
-     * Set colors
-     *
-     * @param \Tzepart\NotesManagerBundle\Entity\Colors $colors
-     * @return Layers
-     */
-    public function setColors(\Tzepart\NotesManagerBundle\Entity\Colors $colors = null)
-    {
-        $this->colors = $colors;
-
-        return $this;
-    }
-
-    /**
-     * Get colors
-     *
-     * @return \Tzepart\NotesManagerBundle\Entity\Colors 
-     */
-    public function getColors()
-    {
-        return $this->colors;
     }
 }
