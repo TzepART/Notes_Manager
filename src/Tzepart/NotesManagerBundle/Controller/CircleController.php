@@ -63,7 +63,7 @@ class CircleController extends Controller
         $sector->setBeginAngle(0);
         $sector->setEndAngle(180);
         $sector->setParentSectorId($n);
-//        $sector->setColors(1);
+        $sector->setColor("#FFDEAD");
         $sector ->setDateCreate(new \DateTime('now'));
         $sector ->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();

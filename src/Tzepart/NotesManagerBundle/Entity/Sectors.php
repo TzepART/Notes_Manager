@@ -10,7 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Sectors
 {
     /**
-     * @var integer
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
