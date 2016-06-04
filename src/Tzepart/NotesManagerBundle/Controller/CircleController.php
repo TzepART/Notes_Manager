@@ -84,7 +84,7 @@ class CircleController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()){
             $user = $this->getCurrentUserObject();
-            $circle->setUsers($user);
+            $circle->setUser($user);
             $circle ->setDateCreate(new \DateTime('now'));
             $circle ->setDateUpdate(new \DateTime('now'));
             $em = $this->getDoctrine()->getManager();
