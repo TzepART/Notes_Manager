@@ -116,7 +116,7 @@ class CircleController extends Controller
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
-
+        //@TODO Добавить вычисление углов и радиусов oв зависимости от коллисества уровней и секторов
         if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))){
             $user = $this->getCurrentUserObject();
             $circle->setUser($user);
