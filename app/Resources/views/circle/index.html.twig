@@ -1,5 +1,24 @@
 {% extends 'base.html.twig' %}
 
+
+{% block main %}
+    <div class="row">
+        <div class="jumbotron col-md-4 col-md-offset-4">
+            <h2 class="circle_list_title">Список Ваших окружностей</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><a href="detail_circle.html">Общая</a></li>
+                <li class="list-group-item"><a href="">Семья</a></li>
+                <li class="list-group-item"><a href="">Работа</a></li>
+                <li class="list-group-item"><a href="">Путешествия</a></li>
+                <li class="list-group-item">...</li>
+            </ul>
+            <p><a class="btn btn-primary btn-lg circle_list_button" href="create_circle.html" role="button">Создать
+                    окружность</a></p>
+        </div>
+    </div>
+{% endblock %}
+
+
 {% block body %}
     <h1>Circle list</h1>
     <div>{{ user }}</div>
