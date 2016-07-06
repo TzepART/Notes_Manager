@@ -6,6 +6,11 @@
         <div class="jumbotron col-md-4 col-md-offset-4">
             <h2 class="circle_list_title">Список Ваших окружностей</h2>
             <ul class="list-group">
+                {% for circle in circles%}
+                    <li class="list-group-item">
+                        <a href="{{ path('circle_show', { 'id': circle.id }) }}">{{ circle.name }}</a>
+                    </li>
+                {% endfor %}
                 <li class="list-group-item"><a href="detail_circle.html">Общая</a></li>
                 <li class="list-group-item"><a href="">Семья</a></li>
                 <li class="list-group-item"><a href="">Работа</a></li>
