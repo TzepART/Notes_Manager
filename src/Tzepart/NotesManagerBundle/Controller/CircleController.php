@@ -40,6 +40,9 @@ class CircleController extends Controller
     }
 
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function homepageAction()
     {
         return $this->indexAction();
@@ -127,8 +130,10 @@ class CircleController extends Controller
             $em->flush();
 
             $arSectorName = $request->get("sector_name");
-            $arBeginAngle = $request->get("begin_angle");
-            $arEndAngle = $request->get("end_angle");
+
+            $arAnlges = $this->anglesBySectors($request->get("layers_number"));
+            $arBeginAngle = $arAnlges['begin'];
+            $arEndAngle = $arAnlges['end'];
             $arColor = $request->get("sector_color");
             foreach ($arSectorName as $key => $sectorName) {
                 $this->createSector($circle,$sectorName,$arBeginAngle[$key],$arEndAngle[$key],$arColor[$key]);
@@ -143,6 +148,27 @@ class CircleController extends Controller
             'circle' => $circle,
             'form' => $form->createView(),
         ));
+    }
+
+
+    /**
+     * @param int $sectorsNumber
+     * @return array
+     */
+    protected function anglesBySectors($sectorsNumber)
+    {
+        $arAnlges = [];
+        $sectorAngle = 360/$sectorsNumber;
+        $beginAngle = 0;
+        $endAngle = $sectorAngle;
+
+        for($i = 1; $i<$sectorsNumber; $i++){
+            $arAnlges["begin"][$i] = $beginAngle;
+            $arAnlges["end"][$i] = $endAngle;
+            $beginAngle += $sectorAngle;
+            $endAngle += $sectorAngle;
+        }
+        return $arAnlges;
     }
 
     /**
