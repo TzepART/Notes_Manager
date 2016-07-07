@@ -124,13 +124,14 @@ class CircleController extends Controller
             $circle->setUser($user);
             $circle ->setDateCreate(new \DateTime('now'));
             $circle ->setDateUpdate(new \DateTime('now'));
+            $circle ->setName($request->get("name"));
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
             $em->flush();
 
             $arSectorName = $request->get("sector_name");
 
-            $sectorsNumber = count($request->get("sector_name"));
+            $sectorsNumber = count($arSectorName);
             $arAnlges = $this->anglesBySectors($sectorsNumber);
             $arBeginAngle = $arAnlges['begin'];
             $arEndAngle = $arAnlges['end'];
@@ -162,7 +163,7 @@ class CircleController extends Controller
         $beginAngle = 0;
         $endAngle = $sectorAngle;
 
-        for($i = 1; $i<$sectorsNumber; $i++){
+        for($i = 1; $i<=$sectorsNumber; $i++){
             $arAnlges["begin"][$i] = $beginAngle;
             $arAnlges["end"][$i] = $endAngle;
             $beginAngle += $sectorAngle;
