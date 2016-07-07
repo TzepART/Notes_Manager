@@ -1,5 +1,23 @@
 {% extends 'base.html.twig' %}
 
+{% block main %}
+    <div class="row">
+        <div class="col-md-7 col-md-offset-2">
+            <canvas id="canvas" width="630" height="630"></canvas>
+            <div>
+                <a class="btn btn-primary btn-lg btn-block" id="pop_label_link" href="" style="display: none">Посмотреть заметку</a>
+                <a href="create_note.html?id=1" id="create_label_link" class="btn btn-primary btn-lg btn-block">Добавить
+                    заметку</a>
+                <a href="list_notes.html?id=1" class="btn btn-primary btn-lg btn-block">Список заметок</a>
+                <a href="circles_edit.html?id=1" class="btn btn-default btn-lg btn-block">Редактировать
+                    окружность</a>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
 {% block body %}
     <h1>Circle</h1>
 
