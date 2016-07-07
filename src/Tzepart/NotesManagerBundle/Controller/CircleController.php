@@ -28,15 +28,19 @@ class CircleController extends Controller
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
-        }else{
+        } else {
             echo "You authorize!";
         }
 
         $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
-        return $this->render('circle/index.html.twig', array(
-            'circles' => $circles,
-            'user'=>"",
-        ));
+
+        return $this->render(
+            'circle/index.html.twig',
+            array(
+                'circles' => $circles,
+                'user' => "",
+            )
+        );
     }
 
 
@@ -55,6 +59,7 @@ class CircleController extends Controller
     protected function getCurrentUserObject()
     {
         $user = $this->get('security.context')->getToken()->getUser();
+
         return $user;
     }
 
@@ -65,20 +70,22 @@ class CircleController extends Controller
      * @param int $n - count layers
      * @return integer $userId
      */
-    protected function createLayers($circle,$n = 1)
+    protected function createLayers($circle, $n = 1)
     {
-        for($i = 0;$i<$n;$i++){
+        $arRadius = $this->radiusByLayers($n);
+        for ($i = 1; $i <= $n; $i++) {
             $layers = new Layers();
             $layers->setCircle($circle);
-            $layers->setBeginRadius(0);
-            $layers->setEndRadius(180);
-            $layers->setColor("#FFDEAD");
+            $layers->setBeginRadius($arRadius['begin'][$i]);
+            $layers->setEndRadius($arRadius['end'][$i]);
+            $layers->setColor("#FFF");
             $layers->setDateCreate(new \DateTime('now'));
             $layers->setDateUpdate(new \DateTime('now'));
             $em = $this->getDoctrine()->getManager();
             $em->persist($layers);
             $em->flush();
         }
+
         return true;
     }
 
@@ -91,7 +98,7 @@ class CircleController extends Controller
      * @param int $parentSector
      * @return bool
      */
-    protected function createSector($circle,$name,$beginAngle,$endAngle,$color,$parentSector = 0)
+    protected function createSector($circle, $name, $beginAngle, $endAngle, $color, $parentSector = 0)
     {
         $sector = new Sectors();
         $sector->setName($name);
@@ -100,8 +107,8 @@ class CircleController extends Controller
         $sector->setEndAngle($endAngle);
         $sector->setParentSectorId($parentSector);
         $sector->setColor($color);
-        $sector ->setDateCreate(new \DateTime('now'));
-        $sector ->setDateUpdate(new \DateTime('now'));
+        $sector->setDateCreate(new \DateTime('now'));
+        $sector->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
         $em->flush();
@@ -116,15 +123,15 @@ class CircleController extends Controller
     public function newAction(Request $request)
     {
         $circle = new Circle();
-        $form = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
+        $form   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))){
+        if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))) {
             $user = $this->getCurrentUserObject();
             $circle->setUser($user);
-            $circle ->setDateCreate(new \DateTime('now'));
-            $circle ->setDateUpdate(new \DateTime('now'));
-            $circle ->setName($request->get("name"));
+            $circle->setDateCreate(new \DateTime('now'));
+            $circle->setDateUpdate(new \DateTime('now'));
+            $circle->setName($request->get("name"));
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
             $em->flush();
@@ -132,23 +139,26 @@ class CircleController extends Controller
             $arSectorName = $request->get("sector_name");
 
             $sectorsNumber = count($arSectorName);
-            $arAnlges = $this->anglesBySectors($sectorsNumber);
-            $arBeginAngle = $arAnlges['begin'];
-            $arEndAngle = $arAnlges['end'];
-            $arColor = $request->get("sector_color");
+            $arAngles      = $this->anglesBySectors($sectorsNumber);
+            $arBeginAngle  = $arAngles['begin'];
+            $arEndAngle    = $arAngles['end'];
+            $arColor       = $request->get("sector_color");
             foreach ($arSectorName as $key => $sectorName) {
-                $this->createSector($circle,$sectorName,$arBeginAngle[$key],$arEndAngle[$key],$arColor[$key]);
+                $this->createSector($circle, $sectorName, $arBeginAngle[$key], $arEndAngle[$key], $arColor[$key]);
             }
 
-            $this->createLayers($circle,$request->get("layers_number"));
+            $this->createLayers($circle, $request->get("layers_number"));
 
             return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
         }
 
-        return $this->render('circle/new.html.twig', array(
-            'circle' => $circle,
-            'form' => $form->createView(),
-        ));
+        return $this->render(
+            'circle/new.html.twig',
+            array(
+                'circle' => $circle,
+                'form' => $form->createView(),
+            )
+        );
     }
 
 
@@ -158,18 +168,40 @@ class CircleController extends Controller
      */
     protected function anglesBySectors($sectorsNumber = 1)
     {
-        $arAnlges = [];
-        $sectorAngle = 360/$sectorsNumber;
-        $beginAngle = 0;
-        $endAngle = $sectorAngle;
+        $arAngles    = [];
+        $sectorAngle = 360 / $sectorsNumber;
+        $beginAngle  = 0;
+        $endAngle    = $sectorAngle;
 
-        for($i = 1; $i<=$sectorsNumber; $i++){
-            $arAnlges["begin"][$i] = $beginAngle;
-            $arAnlges["end"][$i] = $endAngle;
+        for ($i = 1; $i <= $sectorsNumber; $i++) {
+            $arAngles["begin"][$i] = $beginAngle;
+            $arAngles["end"][$i]   = $endAngle;
             $beginAngle += $sectorAngle;
             $endAngle += $sectorAngle;
         }
-        return $arAnlges;
+
+        return $arAngles;
+    }
+
+    /**
+     * @param int $layersNumber
+     * @return array
+     */
+    protected function radiusByLayers($layersNumber = 1)
+    {
+        $arRadius = [];
+        $layerRad = 1 / $layersNumber;
+        $beginRad = 0;
+        $endRad   = $layerRad;
+
+        for ($i = 1; $i <= $layersNumber; $i++) {
+            $arRadius["begin"][$i] = $beginRad;
+            $arRadius["end"][$i]   = $endRad;
+            $beginRad += $layerRad;
+            $endRad += $layerRad;
+        }
+
+        return $arRadius;
     }
 
     /**
@@ -180,10 +212,13 @@ class CircleController extends Controller
     {
         $deleteForm = $this->createDeleteForm($circle);
 
-        return $this->render('circle/show.html.twig', array(
-            'circle' => $circle,
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render(
+            'circle/show.html.twig',
+            array(
+                'circle' => $circle,
+                'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -193,7 +228,7 @@ class CircleController extends Controller
     public function editAction(Request $request, Circle $circle)
     {
         $deleteForm = $this->createDeleteForm($circle);
-        $editForm = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
+        $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -204,11 +239,14 @@ class CircleController extends Controller
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
         }
 
-        return $this->render('circle/edit.html.twig', array(
-            'circle' => $circle,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $this->render(
+            'circle/edit.html.twig',
+            array(
+                'circle' => $circle,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            )
+        );
     }
 
     /**
@@ -241,7 +279,6 @@ class CircleController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('circle_delete', array('id' => $circle->getId())))
             ->setMethod('DELETE')
-            ->getForm()
-        ;
+            ->getForm();
     }
 }
