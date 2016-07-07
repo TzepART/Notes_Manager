@@ -63,6 +63,51 @@ class CircleController extends Controller
         return $user;
     }
 
+    /**
+     * Creates a new Circle entity.
+     *
+     */
+    public function newAction(Request $request)
+    {
+        $circle = new Circle();
+        $form   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))) {
+            $user = $this->getCurrentUserObject();
+            $circle->setUser($user);
+            $circle->setDateCreate(new \DateTime('now'));
+            $circle->setDateUpdate(new \DateTime('now'));
+            $circle->setName($request->get("name"));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($circle);
+            $em->flush();
+
+            $arSectorName = $request->get("sector_name");
+
+            $sectorsNumber = count($arSectorName);
+            $arAngles      = $this->anglesBySectors($sectorsNumber);
+            $arBeginAngle  = $arAngles['begin'];
+            $arEndAngle    = $arAngles['end'];
+            $arColor       = $request->get("sector_color");
+            foreach ($arSectorName as $key => $sectorName) {
+                $this->createSector($circle, $sectorName, $arBeginAngle[$key], $arEndAngle[$key], $arColor[$key]);
+            }
+
+            $this->createLayers($circle, $request->get("layers_number"));
+
+            return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
+        }
+
+        return $this->render(
+            'circle/new.html.twig',
+            array(
+                'circle' => $circle,
+                'form' => $form->createView(),
+            )
+        );
+    }
+
 
     /**
      * create N layers in circle
@@ -114,51 +159,6 @@ class CircleController extends Controller
         $em->flush();
 
         return true;
-    }
-
-    /**
-     * Creates a new Circle entity.
-     *
-     */
-    public function newAction(Request $request)
-    {
-        $circle = new Circle();
-        $form   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))) {
-            $user = $this->getCurrentUserObject();
-            $circle->setUser($user);
-            $circle->setDateCreate(new \DateTime('now'));
-            $circle->setDateUpdate(new \DateTime('now'));
-            $circle->setName($request->get("name"));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($circle);
-            $em->flush();
-
-            $arSectorName = $request->get("sector_name");
-
-            $sectorsNumber = count($arSectorName);
-            $arAngles      = $this->anglesBySectors($sectorsNumber);
-            $arBeginAngle  = $arAngles['begin'];
-            $arEndAngle    = $arAngles['end'];
-            $arColor       = $request->get("sector_color");
-            foreach ($arSectorName as $key => $sectorName) {
-                $this->createSector($circle, $sectorName, $arBeginAngle[$key], $arEndAngle[$key], $arColor[$key]);
-            }
-
-            $this->createLayers($circle, $request->get("layers_number"));
-
-            return $this->redirectToRoute('circle_show', array('id' => $circle->getId()));
-        }
-
-        return $this->render(
-            'circle/new.html.twig',
-            array(
-                'circle' => $circle,
-                'form' => $form->createView(),
-            )
-        );
     }
 
 
