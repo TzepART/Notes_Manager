@@ -119,7 +119,6 @@ class CircleController extends Controller
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
-        //@TODO Добавить вычисление углов и радиусов oв зависимости от коллисества уровней и секторов
         if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))){
             $user = $this->getCurrentUserObject();
             $circle->setUser($user);
@@ -131,7 +130,8 @@ class CircleController extends Controller
 
             $arSectorName = $request->get("sector_name");
 
-            $arAnlges = $this->anglesBySectors($request->get("layers_number"));
+            $sectorsNumber = count($request->get("sector_name"));
+            $arAnlges = $this->anglesBySectors($sectorsNumber);
             $arBeginAngle = $arAnlges['begin'];
             $arEndAngle = $arAnlges['end'];
             $arColor = $request->get("sector_color");
@@ -155,7 +155,7 @@ class CircleController extends Controller
      * @param int $sectorsNumber
      * @return array
      */
-    protected function anglesBySectors($sectorsNumber)
+    protected function anglesBySectors($sectorsNumber = 1)
     {
         $arAnlges = [];
         $sectorAngle = 360/$sectorsNumber;
