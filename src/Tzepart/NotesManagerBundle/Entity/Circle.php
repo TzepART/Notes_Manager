@@ -55,13 +55,25 @@ class Circle
     /**
      * @ORM\OneToMany(targetEntity="Tzepart\NotesManagerBundle\Entity\Sectors", mappedBy="circle")
      */
-    private $sectors;
+    private $sectors;    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Tzepart\NotesManagerBundle\Entity\Layers", mappedBy="circle")
+     */
+    private $layers;
 
     public function __construct() {
         $this->sectors = new ArrayCollection();
+        $this->layers = new ArrayCollection();
     }
 
     public function getSectors()
+    {
+        return $this->sectors;
+    }    
+    
+    
+    public function getLayers()
     {
         return $this->sectors;
     }
