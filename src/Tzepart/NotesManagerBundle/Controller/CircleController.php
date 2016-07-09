@@ -115,14 +115,6 @@ class CircleController extends Controller
      */
     public function showAction(Circle $circle)
     {
-
-        $sectors = $circle->getSectors();
-
-        foreach ($sectors as $index => $sector) {
-            echo "<pre>";
-            var_dump($sector->GetId());
-            echo "</pre>";
-  }
         $deleteForm = $this->createDeleteForm($circle);
 
         return $this->render(
@@ -144,6 +136,17 @@ class CircleController extends Controller
         $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $editForm->handleRequest($request);
 
+
+        $sectors = $circle->getSectors();
+
+        $arSectors =[];
+         foreach ($sectors as $index => $sector) {
+              $arSectors[$index]["id"] = $sector->GetId();
+              $arSectors[$index]["name"] = $sector->GetName();
+              $arSectors[$index]["color"] = $sector->GetColor();
+         }
+
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
@@ -155,6 +158,7 @@ class CircleController extends Controller
         return $this->render(
             'circle/edit.html.twig',
             array(
+                'sectors' => $arSectors,
                 'circle' => $circle,
                 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
