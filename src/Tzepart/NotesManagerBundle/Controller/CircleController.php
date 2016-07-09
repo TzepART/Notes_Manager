@@ -136,8 +136,10 @@ class CircleController extends Controller
         $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $editForm->handleRequest($request);
 
-
+        $layers = $circle->getLayers();
         $sectors = $circle->getSectors();
+        
+        $countLayers = count($layers);
 
         $arSectors =[];
          foreach ($sectors as $index => $sector) {
@@ -158,6 +160,7 @@ class CircleController extends Controller
         return $this->render(
             'circle/edit.html.twig',
             array(
+                'countLayers' => $countLayers,
                 'sectors' => $arSectors,
                 'circle' => $circle,
                 'edit_form' => $editForm->createView(),
