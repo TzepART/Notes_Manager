@@ -62,7 +62,7 @@ class Notes
      *
      * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Labels")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="labels_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="labels_id", referencedColumnName="id")
      * })
      */
     private $labels;

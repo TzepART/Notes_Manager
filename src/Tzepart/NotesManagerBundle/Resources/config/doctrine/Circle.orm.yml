@@ -37,4 +37,8 @@ Tzepart\NotesManagerBundle\Entity\Circle:
                 user_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        sectors:
+            targetEntity: Sectors
+            mappedBy: circle
     lifecycleCallbacks: {  }

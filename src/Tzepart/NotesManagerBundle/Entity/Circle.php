@@ -3,6 +3,7 @@
 namespace Tzepart\NotesManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Circle
@@ -45,10 +46,25 @@ class Circle
      *
      * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * })
      */
     private $user;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Tzepart\NotesManagerBundle\Entity\Sectors", mappedBy="circle")
+     */
+    private $sectors;
+
+    public function __construct() {
+        $this->sectors = new ArrayCollection();
+    }
+
+    public function getSectors()
+    {
+        return $this->sectors;
+    }
 
     
     /**

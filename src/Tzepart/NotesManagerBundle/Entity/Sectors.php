@@ -53,6 +53,10 @@ class Sectors
 
     /**
      * @var \Tzepart\NotesManagerBundle\Entity\Circle
+     * 
+     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Circle", inversedBy="sectors")
+     * @ORM\JoinColumn(name="circle_id", referencedColumnName="id")
+     *
      */
     private $circle;
 

@@ -85,6 +85,7 @@ class CircleController extends Controller
 
             $arSectorName = $request->get("sector_name");
 
+            //  @TODO Change create sectors like create layers
             $sectorsNumber = count($arSectorName);
             $arAngles      = $this->anglesBySectors($sectorsNumber);
             $arBeginAngle  = $arAngles['begin'];
@@ -108,108 +109,20 @@ class CircleController extends Controller
         );
     }
 
-
-    /**
-     * create N layers in circle
-     * @param mixed $circle
-     * @param int $n - count layers
-     * @return integer $userId
-     */
-    protected function createLayers($circle, $n = 1)
-    {
-        $arRadius = $this->radiusByLayers($n);
-        for ($i = 1; $i <= $n; $i++) {
-            $layers = new Layers();
-            $layers->setCircle($circle);
-            $layers->setBeginRadius($arRadius['begin'][$i]);
-            $layers->setEndRadius($arRadius['end'][$i]);
-            $layers->setColor("#FFF");
-            $layers->setDateCreate(new \DateTime('now'));
-            $layers->setDateUpdate(new \DateTime('now'));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($layers);
-            $em->flush();
-        }
-
-        return true;
-    }
-
-    /**
-     * @param mixed $circle
-     * @param string $name
-     * @param float $beginAngle
-     * @param float $endAngle
-     * @param string $color
-     * @param int $parentSector
-     * @return bool
-     */
-    protected function createSector($circle, $name, $beginAngle, $endAngle, $color, $parentSector = 0)
-    {
-        $sector = new Sectors();
-        $sector->setName($name);
-        $sector->setCircle($circle);
-        $sector->setBeginAngle($beginAngle);
-        $sector->setEndAngle($endAngle);
-        $sector->setParentSectorId($parentSector);
-        $sector->setColor($color);
-        $sector->setDateCreate(new \DateTime('now'));
-        $sector->setDateUpdate(new \DateTime('now'));
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($sector);
-        $em->flush();
-
-        return true;
-    }
-
-
-    /**
-     * @param int $sectorsNumber
-     * @return array
-     */
-    protected function anglesBySectors($sectorsNumber = 1)
-    {
-        $arAngles    = [];
-        $sectorAngle = 360 / $sectorsNumber;
-        $beginAngle  = 0;
-        $endAngle    = $sectorAngle;
-
-        for ($i = 1; $i <= $sectorsNumber; $i++) {
-            $arAngles["begin"][$i] = $beginAngle;
-            $arAngles["end"][$i]   = $endAngle;
-            $beginAngle += $sectorAngle;
-            $endAngle += $sectorAngle;
-        }
-
-        return $arAngles;
-    }
-
-    /**
-     * @param int $layersNumber
-     * @return array
-     */
-    protected function radiusByLayers($layersNumber = 1)
-    {
-        $arRadius = [];
-        $layerRad = 1 / $layersNumber;
-        $beginRad = 0;
-        $endRad   = $layerRad;
-
-        for ($i = 1; $i <= $layersNumber; $i++) {
-            $arRadius["begin"][$i] = $beginRad;
-            $arRadius["end"][$i]   = $endRad;
-            $beginRad += $layerRad;
-            $endRad += $layerRad;
-        }
-
-        return $arRadius;
-    }
-
     /**
      * Finds and displays a Circle entity.
      *
      */
     public function showAction(Circle $circle)
     {
+
+        $sectors = $circle->getSectors();
+
+        foreach ($sectors as $index => $sector) {
+            echo "<pre>";
+            var_dump($sector->GetId());
+            echo "</pre>";
+  }
         $deleteForm = $this->createDeleteForm($circle);
 
         return $this->render(
@@ -280,5 +193,101 @@ class CircleController extends Controller
             ->setAction($this->generateUrl('circle_delete', array('id' => $circle->getId())))
             ->setMethod('DELETE')
             ->getForm();
+    }
+
+    /**
+     * create N layers in circle
+     * @param mixed $circle
+     * @param int $n - count layers
+     * @return integer $userId
+     */
+    protected function createLayers($circle, $n = 1)
+    {
+        $arRadius = $this->radiusByLayers($n);
+        for ($i = 1; $i <= $n; $i++) {
+            $layers = new Layers();
+            $layers->setCircle($circle);
+            $layers->setBeginRadius($arRadius['begin'][$i]);
+            $layers->setEndRadius($arRadius['end'][$i]);
+            $layers->setColor("#FFF");
+            $layers->setDateCreate(new \DateTime('now'));
+            $layers->setDateUpdate(new \DateTime('now'));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($layers);
+            $em->flush();
+        }
+
+        return true;
+    }
+
+    /**
+     * @param mixed $circle
+     * @param string $name
+     * @param float $beginAngle
+     * @param float $endAngle
+     * @param string $color
+     * @param int $parentSector
+     * @return bool
+     */
+    protected function createSector($circle, $name, $beginAngle, $endAngle, $color, $parentSector = 0)
+    {
+        $sector = new Sectors();
+        $sector->setCircle($circle);
+
+        $sector->setName($name);
+        $sector->setBeginAngle($beginAngle);
+        $sector->setEndAngle($endAngle);
+        $sector->setParentSectorId($parentSector);
+        $sector->setColor($color);
+        $sector->setDateCreate(new \DateTime('now'));
+        $sector->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sector);
+        $em->flush();
+
+        return true;
+    }
+
+
+    /**
+     * @param int $sectorsNumber
+     * @return array
+     */
+    protected function anglesBySectors($sectorsNumber = 1)
+    {
+        $arAngles    = [];
+        $sectorAngle = 360 / $sectorsNumber;
+        $beginAngle  = 0;
+        $endAngle    = $sectorAngle;
+
+        for ($i = 1; $i <= $sectorsNumber; $i++) {
+            $arAngles["begin"][$i] = $beginAngle;
+            $arAngles["end"][$i]   = $endAngle;
+            $beginAngle += $sectorAngle;
+            $endAngle += $sectorAngle;
+        }
+
+        return $arAngles;
+    }
+
+    /**
+     * @param int $layersNumber
+     * @return array
+     */
+    protected function radiusByLayers($layersNumber = 1)
+    {
+        $arRadius = [];
+        $layerRad = 1 / $layersNumber;
+        $beginRad = 0;
+        $endRad   = $layerRad;
+
+        for ($i = 1; $i <= $layersNumber; $i++) {
+            $arRadius["begin"][$i] = $beginRad;
+            $arRadius["end"][$i]   = $endRad;
+            $beginRad += $layerRad;
+            $endRad += $layerRad;
+        }
+
+        return $arRadius;
     }
 }
