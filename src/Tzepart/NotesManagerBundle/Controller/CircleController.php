@@ -142,11 +142,11 @@ class CircleController extends Controller
         $countLayers = count($layers);
 
         $arSectors =[];
-         foreach ($sectors as $index => $sector) {
+        foreach ($sectors as $index => $sector) {
               $arSectors[$index]["id"] = $sector->GetId();
               $arSectors[$index]["name"] = $sector->GetName();
               $arSectors[$index]["color"] = $sector->GetColor();
-         }
+        }
 
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -163,6 +163,7 @@ class CircleController extends Controller
                 'countLayers' => $countLayers,
                 'sectors' => $arSectors,
                 'circle' => $circle,
+                'circleName' => $circle->getName(),
                 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
             )

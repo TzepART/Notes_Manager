@@ -2,29 +2,45 @@
 {% form_theme edit_form 'bootstrap_3_horizontal_layout.html.twig' %}
 
 {% block main %}
-    <h1>Circle edit</h1>
 
-    {{ form_start(edit_form) }}
+    <div class="row">
+        {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
+        <div class="jumbotron col-md-6 col-md-offset-3 create_circle_form">
+            <h2 style="text-align: center">{{ circleName }}</h2>
+            <div class="form-group create_circle">
+                <input type="text" name="name" placeholder="Название окружности" class="form-control" value="{{ circleName }}"/>
+            </div>
 
-    {% for sector in sectors%}
-        <p>{{ sector.id }}</p>
-        <p>{{ sector.name }}</p>
-        <p>{{ sector.color }}</p>
-    {% endfor %}
+            <div class="form-group">
+                <input type="number" name="layers_number" placeholder="Колличество уровней" class="form-control" value="{{ countLayers }}"/>
+            </div>
 
-    <p>{{ countLayers }}</p>
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('circle_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+            <h2 style="text-align: center">Секторы</h2>
+
+            <div id="formCircleCreate">
+                {% for sector in sectors%}
+                    <div class="form-group create_sector">
+                        <input type="text" placeholder="Название сектора" name="sector_name[{{ sector.id }}]" class="form-control" value="{{ sector.name }}" autocomplete="off"/>
+                        <input type="color" placeholder="Цвет сектора"  name="sector_color[{{ sector.id }}]" class="form-control" value="{{ sector.color }}" autocomplete="off"/>
+                        <input type="button" class="form-control" onclick="return deleteField(this)" href="#" value="x">
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group form_submit" >
+                <a class="btn btn-primary btn-block" onclick="return addField()" href="#">Добавить сектор</a>
+                <input name="save" value="Сохранить" class="btn btn-success btn-block" type="submit">
+                <a type="button" href="{{ path('circle_index') }}" class="btn btn-primary btn-block">Назад</a>
+            </div>
+        </div>
+        {{ form_end(edit_form) }}
+
+        {{ form_start(delete_form) }}
+        <div class="form-group form_submit" >
+            <input name="save" value="Удалить" class="btn btn-danger btn-block" type="submit">
+        </div>
+        {{ form_end(delete_form) }}
+    </div>
 {% endblock %}
