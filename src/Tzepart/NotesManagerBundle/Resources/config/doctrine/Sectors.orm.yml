@@ -60,4 +60,8 @@ Tzepart\NotesManagerBundle\Entity\Sectors:
                 circle_id:
                   referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        labels:
+            targetEntity: Labels
+            mappedBy: sectors
     lifecycleCallbacks: {  }
