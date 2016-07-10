@@ -3,6 +3,8 @@
 namespace Tzepart\NotesManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * Layers
@@ -45,6 +47,20 @@ class Layers
      * @var \Tzepart\NotesManagerBundle\Entity\Circle
      */
     private $circle;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Tzepart\NotesManagerBundle\Entity\Labels", mappedBy="layers")
+     */
+    private $labels;
+
+    public function __construct() {
+        $this->labels = new ArrayCollection();
+    }
+
+    public function getLabels()
+    {
+        return $this->labels;
+    }
 
 
     /**
