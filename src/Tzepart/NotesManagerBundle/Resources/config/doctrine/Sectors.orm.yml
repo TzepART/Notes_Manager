@@ -52,11 +52,12 @@ Tzepart\NotesManagerBundle\Entity\Sectors:
     manyToOne:
         circle:
             targetEntity: Circle
+            inversedBy: sectors
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
                 circle_id:
-                    referencedColumnName: id
+                  referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

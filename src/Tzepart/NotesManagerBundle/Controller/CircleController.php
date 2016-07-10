@@ -85,6 +85,7 @@ class CircleController extends Controller
 
             $arSectorName = $request->get("sector_name");
 
+            //  @TODO Change create sectors like create layers
             $sectorsNumber = count($arSectorName);
             $arAngles      = $this->anglesBySectors($sectorsNumber);
             $arBeginAngle  = $arAngles['begin'];
@@ -108,6 +109,98 @@ class CircleController extends Controller
         );
     }
 
+    /**
+     * Finds and displays a Circle entity.
+     *
+     */
+    public function showAction(Circle $circle)
+    {
+        $deleteForm = $this->createDeleteForm($circle);
+
+        return $this->render(
+            'circle/show.html.twig',
+            array(
+                'circle' => $circle,
+                'delete_form' => $deleteForm->createView(),
+            )
+        );
+    }
+
+    /**
+     * Displays a form to edit an existing Circle entity.
+     *
+     */
+    public function editAction(Request $request, Circle $circle)
+    {
+        $deleteForm = $this->createDeleteForm($circle);
+        $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
+        $editForm->handleRequest($request);
+
+        $layers = $circle->getLayers();
+        $sectors = $circle->getSectors();
+        
+        $countLayers = count($layers);
+
+        $arSectors =[];
+         foreach ($sectors as $index => $sector) {
+              $arSectors[$index]["id"] = $sector->GetId();
+              $arSectors[$index]["name"] = $sector->GetName();
+              $arSectors[$index]["color"] = $sector->GetColor();
+         }
+
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($circle);
+            $em->flush();
+
+            return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
+        }
+
+        return $this->render(
+            'circle/edit.html.twig',
+            array(
+                'countLayers' => $countLayers,
+                'sectors' => $arSectors,
+                'circle' => $circle,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            )
+        );
+    }
+
+    /**
+     * Deletes a Circle entity.
+     *
+     */
+    public function deleteAction(Request $request, Circle $circle)
+    {
+        $form = $this->createDeleteForm($circle);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($circle);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('circle_index');
+    }
+
+    /**
+     * Creates a form to delete a Circle entity.
+     *
+     * @param Circle $circle The Circle entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Circle $circle)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('circle_delete', array('id' => $circle->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
 
     /**
      * create N layers in circle
@@ -146,8 +239,9 @@ class CircleController extends Controller
     protected function createSector($circle, $name, $beginAngle, $endAngle, $color, $parentSector = 0)
     {
         $sector = new Sectors();
-        $sector->setName($name);
         $sector->setCircle($circle);
+
+        $sector->setName($name);
         $sector->setBeginAngle($beginAngle);
         $sector->setEndAngle($endAngle);
         $sector->setParentSectorId($parentSector);
@@ -202,83 +296,5 @@ class CircleController extends Controller
         }
 
         return $arRadius;
-    }
-
-    /**
-     * Finds and displays a Circle entity.
-     *
-     */
-    public function showAction(Circle $circle)
-    {
-        $deleteForm = $this->createDeleteForm($circle);
-
-        return $this->render(
-            'circle/show.html.twig',
-            array(
-                'circle' => $circle,
-                'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing Circle entity.
-     *
-     */
-    public function editAction(Request $request, Circle $circle)
-    {
-        $deleteForm = $this->createDeleteForm($circle);
-        $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($circle);
-            $em->flush();
-
-            return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
-        }
-
-        return $this->render(
-            'circle/edit.html.twig',
-            array(
-                'circle' => $circle,
-                'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
-     * Deletes a Circle entity.
-     *
-     */
-    public function deleteAction(Request $request, Circle $circle)
-    {
-        $form = $this->createDeleteForm($circle);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($circle);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('circle_index');
-    }
-
-    /**
-     * Creates a form to delete a Circle entity.
-     *
-     * @param Circle $circle The Circle entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Circle $circle)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('circle_delete', array('id' => $circle->getId())))
-            ->setMethod('DELETE')
-            ->getForm();
     }
 }

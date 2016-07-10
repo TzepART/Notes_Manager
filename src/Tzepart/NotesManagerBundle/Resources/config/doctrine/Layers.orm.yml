@@ -42,6 +42,7 @@ Tzepart\NotesManagerBundle\Entity\Layers:
     manyToOne:
         circle:
             targetEntity: Circle
+            inversedBy: layers
             cascade: {  }
             mappedBy: null
             inversedBy: null
