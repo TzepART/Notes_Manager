@@ -75,7 +75,7 @@ class Circle
     
     public function getLayers()
     {
-        return $this->sectors;
+        return $this->layers;
     }
 
     

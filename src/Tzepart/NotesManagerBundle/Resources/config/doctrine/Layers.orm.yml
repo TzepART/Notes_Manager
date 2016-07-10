@@ -50,4 +50,8 @@ Tzepart\NotesManagerBundle\Entity\Layers:
                 circle_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToMany:
+        labels:
+            targetEntity: Labels
+            mappedBy: layers
     lifecycleCallbacks: {  }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Labels
  *
- * @ORM\Table(name="labels", indexes={@ORM\Index(name="fk_labels_rays1_idx", columns={"rays_id"}), @ORM\Index(name="fk_labels_radius1_idx", columns={"radius_id"})})
+ * @ORM\Table(name="labels", indexes={@ORM\Index(name="fk_labels_sectors1_idx", columns={"sectors_id"}), @ORM\Index(name="fk_labels_layers1_idx", columns={"layers_id"})})
  * @ORM\Entity
  */
 class Labels
@@ -18,6 +18,21 @@ class Labels
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="radius", type="float")
+     */
+    private $radius;
+
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="angle", type="float")
+     */
+    private $angle;
 
     /**
      * @var \DateTime
@@ -34,24 +49,24 @@ class Labels
     private $dateUpdate;
 
     /**
-     * @var \Tzepart\NotesManagerBundle\Entity\Rays
+     * @var \Tzepart\NotesManagerBundle\Entity\Sectors
      *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Rays")
+     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Sectors")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="rays_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sectors_id", referencedColumnName="id")
      * })
      */
-    private $rays;
+    private $sectors;
 
     /**
-     * @var \Tzepart\NotesManagerBundle\Entity\Radius
+     * @var \Tzepart\NotesManagerBundle\Entity\Layers
      *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Radius")
+     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Layers")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="radius_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="layers_id", referencedColumnName="id")
      * })
      */
-    private $radius;
+    private $layers;
 
 
 
@@ -63,6 +78,38 @@ class Labels
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return float
+     */
+    public function getRadius()
+    {
+        return $this->radius;
+    }
+
+    /**
+     * @param float $radius
+     */
+    public function setRadius($radius)
+    {
+        $this->radius = $radius;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAngle()
+    {
+        return $this->angle;
+    }
+
+    /**
+     * @param float $angle
+     */
+    public function setAngle($angle)
+    {
+        $this->angle = $angle;
     }
 
     /**
@@ -112,48 +159,48 @@ class Labels
     }
 
     /**
-     * Set rays
+     * Set sectors
      *
-     * @param \Tzepart\NotesManagerBundle\Entity\Rays $rays
+     * @param \Tzepart\NotesManagerBundle\Entity\Sectors $sectors
      * @return Labels
      */
-    public function setRays(\Tzepart\NotesManagerBundle\Entity\Rays $rays = null)
+    public function setSectors(\Tzepart\NotesManagerBundle\Entity\Sectors $sectors = null)
     {
-        $this->rays = $rays;
+        $this->sectors = $sectors;
 
         return $this;
     }
 
     /**
-     * Get rays
+     * Get sectors
      *
-     * @return \Tzepart\NotesManagerBundle\Entity\Rays 
+     * @return \Tzepart\NotesManagerBundle\Entity\Sectors
      */
-    public function getRays()
+    public function getSectors()
     {
-        return $this->rays;
+        return $this->sectors;
     }
 
     /**
-     * Set radius
+     * Set layers
      *
-     * @param \Tzepart\NotesManagerBundle\Entity\Radius $radius
+     * @param \Tzepart\NotesManagerBundle\Entity\Layers $layers
      * @return Labels
      */
-    public function setRadius(\Tzepart\NotesManagerBundle\Entity\Radius $radius = null)
+    public function setLayers(\Tzepart\NotesManagerBundle\Entity\Layers $layers = null)
     {
-        $this->radius = $radius;
+        $this->layers = $layers;
 
         return $this;
     }
 
     /**
-     * Get radius
+     * Get layers
      *
-     * @return \Tzepart\NotesManagerBundle\Entity\Radius 
+     * @return \Tzepart\NotesManagerBundle\Entity\Layers
      */
-    public function getRadius()
+    public function getLayers()
     {
-        return $this->radius;
+        return $this->layers;
     }
 }

@@ -26,8 +26,9 @@ Tzepart\NotesManagerBundle\Entity\Labels:
             nullable: true
             column: date_update
     manyToOne:
-        rays:
-            targetEntity: Rays
+        sectors:
+            targetEntity: Sectors
+            inversedBy: labels
             cascade: {  }
             mappedBy: null
             inversedBy: null
@@ -35,8 +36,9 @@ Tzepart\NotesManagerBundle\Entity\Labels:
                 rays_id:
                     referencedColumnName: id
             orphanRemoval: false
-        radius:
-            targetEntity: Radius
+        layers:
+            targetEntity: Layers
+            inversedBy: labels
             cascade: {  }
             mappedBy: null
             inversedBy: null
