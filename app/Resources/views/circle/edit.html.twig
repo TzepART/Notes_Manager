@@ -22,6 +22,7 @@
             <div id="formCircleCreate">
                 {% for sector in sectors%}
                     <div class="form-group create_sector">
+                        <p>{{ sector.labels }}</p>
                         <input type="text" placeholder="Название сектора" name="sector_name[{{ sector.id }}]" class="form-control" value="{{ sector.name }}" autocomplete="off"/>
                         <input type="color" placeholder="Цвет сектора"  name="sector_color[{{ sector.id }}]" class="form-control" value="{{ sector.color }}" autocomplete="off"/>
                         <input type="button" class="form-control" onclick="return deleteField(this)" href="#" value="x">

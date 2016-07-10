@@ -41,7 +41,6 @@ Tzepart\NotesManagerBundle\Entity\Circle:
         sectors:
             targetEntity: Sectors
             mappedBy: circle
-    oneToMany:
         layers:
             targetEntity: Layers
             mappedBy: circle

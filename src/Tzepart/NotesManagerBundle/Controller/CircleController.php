@@ -143,9 +143,10 @@ class CircleController extends Controller
 
         $arSectors =[];
         foreach ($sectors as $index => $sector) {
-              $arSectors[$index]["id"] = $sector->GetId();
-              $arSectors[$index]["name"] = $sector->GetName();
-              $arSectors[$index]["color"] = $sector->GetColor();
+              $arSectors[$index]["id"] = $sector->getId();
+              $arSectors[$index]["name"] = $sector->getName();
+              $arSectors[$index]["color"] = $sector->getColor();
+              $arSectors[$index]["labels"] = count($sector->getLabels());
         }
 
 

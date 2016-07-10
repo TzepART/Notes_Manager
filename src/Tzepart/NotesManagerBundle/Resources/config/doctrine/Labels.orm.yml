@@ -2,12 +2,12 @@ Tzepart\NotesManagerBundle\Entity\Labels:
     type: entity
     table: labels
     indexes:
-        fk_labels_rays1_idx:
+        fk_labels_sectors1_idx:
             columns:
-                - rays_id
-        fk_labels_radius1_idx:
+                - sectors_id
+        fk_labels_layers1_idx:
             columns:
-                - radius_id
+                - layers_id
     id:
         id:
             type: integer
@@ -33,7 +33,7 @@ Tzepart\NotesManagerBundle\Entity\Labels:
             mappedBy: null
             inversedBy: null
             joinColumns:
-                rays_id:
+                sectors_id:
                     referencedColumnName: id
             orphanRemoval: false
         layers:
@@ -43,7 +43,7 @@ Tzepart\NotesManagerBundle\Entity\Labels:
             mappedBy: null
             inversedBy: null
             joinColumns:
-                radius_id:
+                layers_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
