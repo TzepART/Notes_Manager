@@ -146,14 +146,37 @@ class CircleController extends Controller
               $arSectors[$index]["id"] = $sector->getId();
               $arSectors[$index]["name"] = $sector->getName();
               $arSectors[$index]["color"] = $sector->getColor();
-              $arSectors[$index]["labels"] = count($sector->getLabels());
+              $arSectorsObj[$sector->getId()] = $sector;
         }
 
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $circle->setDateUpdate(new \DateTime('now'));
+            $circle->setName($request->get("name"));
             $em->persist($circle);
             $em->flush();
+
+            $arSectorName = $request->get("sector_name");
+            $arSectorColor       = $request->get("sector_color");
+            $arSectorId       = $request->get("sector_id");
+
+
+            foreach ($arSectorId as $index => $sectorId) {
+                $arSectorParams = [];
+                $arSectorParams["name"] = $arSectorName[$index];
+                $arSectorParams["color"] = $arSectorColor[$index];
+                $this->updateSector($arSectorsObj[$sectorId],$arSectorParams);
+            }
+
+//            $sectorsNumber = count($arSectorName);
+//            $arAngles      = $this->anglesBySectors($sectorsNumber);
+//            $arBeginAngle  = $arAngles['begin'];
+//            $arEndAngle    = $arAngles['end'];
+//            foreach ($arSectorName as $key => $sectorName) {
+//                $this->createSector($circle, $sectorName, $arBeginAngle[$key], $arEndAngle[$key], $arColor[$key]);
+//            }
+            
 
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
         }
@@ -230,6 +253,41 @@ class CircleController extends Controller
     }
 
     /**
+     * @param mixed $layer
+     * @param array $arParams
+     * @return integer $userId
+     */
+    protected function updateLayer(Layers $layer, $arParams)
+    {
+        if(!empty($arParams["beginRadius"])){
+            $layer->setBeginRadius($arParams["beginRadius"]);
+        }
+        if(!empty($arParams["endRadius"])){
+            $layer->setEndRadius($arParams["endRadius"]);
+        }
+
+        $layer->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($layer);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param mixed $layer
+     * @return bool
+     */
+    protected function deleteLayer(Layers $layer)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($layer);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
      * @param mixed $circle
      * @param string $name
      * @param float $beginAngle
@@ -252,6 +310,49 @@ class CircleController extends Controller
         $sector->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param mixed $sector
+     * @param array $arParams
+     * @return bool
+     */
+    protected function updateSector(Sectors $sector, $arParams)
+    {
+        if(!empty($arParams["name"])){
+            $sector->setName($arParams["name"]);
+        }
+        if(!empty($arParams["beginAngle"])){
+            $sector->setBeginAngle($arParams["beginAngle"]);
+        }
+        if(!empty($arParams["endAngle"])){
+            $sector->setEndAngle($arParams["endAngle"]);
+        }
+        if(!empty($arParams["parentSector"])){
+            $sector->setParentSectorId($arParams["parentSector"]);
+        }
+        if(!empty($arParams["color"])){
+            $sector->setColor($arParams["color"]);
+        }
+        $sector->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sector);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param mixed $sector
+     * @return bool
+     */
+    protected function deleteSector(Sectors $sector)
+    {
+         $em = $this->getDoctrine()->getManager();
+        $em->remove($sector);
         $em->flush();
 
         return true;
