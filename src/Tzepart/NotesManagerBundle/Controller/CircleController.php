@@ -230,6 +230,41 @@ class CircleController extends Controller
     }
 
     /**
+     * @param mixed $layer
+     * @param array $arParams
+     * @return integer $userId
+     */
+    protected function updateLayer(Layers $layer, $arParams)
+    {
+        if(!empty($arParams["beginRadius"])){
+            $layer->setBeginRadius($arParams["beginRadius"]);
+        }
+        if(!empty($arParams["endRadius"])){
+            $layer->setEndRadius($arParams["endRadius"]);
+        }
+
+        $layer->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($layer);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param mixed $layer
+     * @return bool
+     */
+    protected function deleteLayer(Layers $layer)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($layer);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
      * @param mixed $circle
      * @param string $name
      * @param float $beginAngle
@@ -252,6 +287,49 @@ class CircleController extends Controller
         $sector->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param mixed $sector
+     * @param array $arParams
+     * @return bool
+     */
+    protected function updateSector(Sectors $sector, $arParams)
+    {
+        if(!empty($arParams["name"])){
+            $sector->setName($arParams["name"]);
+        }
+        if(!empty($arParams["beginAngle"])){
+            $sector->setBeginAngle($arParams["beginAngle"]);
+        }
+        if(!empty($arParams["endAngle"])){
+            $sector->setEndAngle($arParams["endAngle"]);
+        }
+        if(!empty($arParams["parentSector"])){
+            $sector->setParentSectorId($arParams["parentSector"]);
+        }
+        if(!empty($arParams["color"])){
+            $sector->setColor($arParams["color"]);
+        }
+        $sector->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sector);
+        $em->flush();
+
+        return true;
+    }
+
+    /**
+     * @param mixed $sector
+     * @return bool
+     */
+    protected function deleteSector(Sectors $sector)
+    {
+         $em = $this->getDoctrine()->getManager();
+        $em->remove($sector);
         $em->flush();
 
         return true;
