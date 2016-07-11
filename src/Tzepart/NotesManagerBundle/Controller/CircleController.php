@@ -146,14 +146,37 @@ class CircleController extends Controller
               $arSectors[$index]["id"] = $sector->getId();
               $arSectors[$index]["name"] = $sector->getName();
               $arSectors[$index]["color"] = $sector->getColor();
-              $arSectors[$index]["labels"] = count($sector->getLabels());
+              $arSectorsObj[$sector->getId()] = $sector;
         }
 
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $circle->setDateUpdate(new \DateTime('now'));
+            $circle->setName($request->get("name"));
             $em->persist($circle);
             $em->flush();
+
+            $arSectorName = $request->get("sector_name");
+            $arSectorColor       = $request->get("sector_color");
+            $arSectorId       = $request->get("sector_id");
+
+
+            foreach ($arSectorId as $index => $sectorId) {
+                $arSectorParams = [];
+                $arSectorParams["name"] = $arSectorName[$index];
+                $arSectorParams["color"] = $arSectorColor[$index];
+                $this->updateSector($arSectorsObj[$sectorId],$arSectorParams);
+            }
+
+//            $sectorsNumber = count($arSectorName);
+//            $arAngles      = $this->anglesBySectors($sectorsNumber);
+//            $arBeginAngle  = $arAngles['begin'];
+//            $arEndAngle    = $arAngles['end'];
+//            foreach ($arSectorName as $key => $sectorName) {
+//                $this->createSector($circle, $sectorName, $arBeginAngle[$key], $arEndAngle[$key], $arColor[$key]);
+//            }
+            
 
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
         }

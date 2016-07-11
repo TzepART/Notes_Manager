@@ -25,11 +25,11 @@
             <div id="formCircleCreate">
                 {% for sector in sectors %}
                     <div class="form-group create_sector">
-                        <input type="text" placeholder="Название сектора" name="sector_name[{{ sector.id }}]"
+                        <input type="text" placeholder="Название сектора" name="sector_name[]"
                                class="form-control" value="{{ sector.name }}" autocomplete="off"/>
-                        <input type="color" placeholder="Цвет сектора" name="sector_color[{{ sector.id }}]"
+                        <input type="color" placeholder="Цвет сектора" name="sector_color[]"
                                class="form-control" value="{{ sector.color }}" autocomplete="off"/>
-                        <input type="hidden" name="sector_id[{{ sector.id }}]" value="{{ sector.id }}"/>
+                        <input type="hidden" name="sector_id[]" value="{{ sector.id }}"/>
                         <input type="button" class="form-control" onclick="return deleteField(this)" href="#" value="x">
                     </div>
                 {% endfor %}
