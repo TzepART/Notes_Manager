@@ -63,8 +63,8 @@ class Circle
     private $layers;
 
     public function __construct() {
-        $this->sectors = new ArrayCollection();
         $this->layers = new ArrayCollection();
+        $this->sectors = new ArrayCollection();
     }
 
     public function getSectors()

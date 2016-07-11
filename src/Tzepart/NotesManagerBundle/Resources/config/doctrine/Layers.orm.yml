@@ -48,7 +48,7 @@ Tzepart\NotesManagerBundle\Entity\Layers:
             inversedBy: null
             joinColumns:
                 circle_id:
-                    referencedColumnName: id
+                  referencedColumnName: id
             orphanRemoval: false
     oneToMany:
         labels:

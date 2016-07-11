@@ -45,6 +45,10 @@ class Layers
 
     /**
      * @var \Tzepart\NotesManagerBundle\Entity\Circle
+     *
+     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Circle", inversedBy="layers")
+     * @ORM\JoinColumn(name="circle_id", referencedColumnName="id")
+     *
      */
     private $circle;
 
