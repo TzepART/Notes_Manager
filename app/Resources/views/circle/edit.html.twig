@@ -4,45 +4,52 @@
 {% block main %}
 
     <div class="row">
-        {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
         <div class="jumbotron col-md-6 col-md-offset-3 create_circle_form">
+
+            {{ form_start(edit_form) }}
+            {{ form_widget(edit_form) }}
             <h2 style="text-align: center">{{ circleName }}</h2>
             <div class="form-group create_circle">
-                <input type="text" name="name" placeholder="Название окружности" class="form-control" value="{{ circleName }}"/>
+                <input type="text" name="name" placeholder="Название окружности" class="form-control"
+                       value="{{ circleName }}"/>
             </div>
 
             <div class="form-group">
-                <input type="number" name="layers_number" placeholder="Колличество уровней" class="form-control" value="{{ countLayers }}"/>
+                <input type="number" name="layers_number" placeholder="Колличество уровней" class="form-control"
+                       value="{{ countLayers }}"/>
             </div>
 
 
             <h2 style="text-align: center">Секторы</h2>
 
             <div id="formCircleCreate">
-                {% for sector in sectors%}
+                {% for sector in sectors %}
                     <div class="form-group create_sector">
-                        <p>{{ sector.labels }}</p>
-                        <input type="text" placeholder="Название сектора" name="sector_name[{{ sector.id }}]" class="form-control" value="{{ sector.name }}" autocomplete="off"/>
-                        <input type="color" placeholder="Цвет сектора"  name="sector_color[{{ sector.id }}]" class="form-control" value="{{ sector.color }}" autocomplete="off"/>
+                        <input type="text" placeholder="Название сектора" name="sector_name[{{ sector.id }}]"
+                               class="form-control" value="{{ sector.name }}" autocomplete="off"/>
+                        <input type="color" placeholder="Цвет сектора" name="sector_color[{{ sector.id }}]"
+                               class="form-control" value="{{ sector.color }}" autocomplete="off"/>
                         <input type="hidden" name="sector_id[{{ sector.id }}]" value="{{ sector.id }}"/>
                         <input type="button" class="form-control" onclick="return deleteField(this)" href="#" value="x">
                     </div>
                 {% endfor %}
             </div>
 
-            <div class="form-group form_submit" >
+            <div class="form-group form_submit">
                 <a class="btn btn-primary btn-block" onclick="return addField()" href="#">Добавить сектор</a>
                 <input name="save" value="Сохранить" class="btn btn-success btn-block" type="submit">
-                <a type="button" href="{{ path('circle_index') }}" class="btn btn-primary btn-block">Назад</a>
             </div>
-        </div>
-        {{ form_end(edit_form) }}
+            {{ form_end(edit_form) }}
 
-        {{ form_start(delete_form) }}
-        <div class="form-group form_submit col-md-6 col-md-offset-3" >
-            <input name="save" value="Удалить" class="btn btn-danger btn-block" type="submit">
+            {{ form_start(delete_form) }}
+            <div class="form-group form_submit">
+                <input name="save" value="Удалить" class="btn btn-danger btn-block" type="submit">
+                <a type="button" href="{{ path('circle_index') }}" class="btn btn-primary btn-block">Назад</a>
+
+            </div>
+            {{ form_end(delete_form) }}
+
         </div>
-        {{ form_end(delete_form) }}
+
     </div>
 {% endblock %}
