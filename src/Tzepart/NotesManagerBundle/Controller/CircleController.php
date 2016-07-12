@@ -136,17 +136,18 @@ class CircleController extends Controller
         $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $editForm->handleRequest($request);
 
-        $layers = $circle->getLayers();
+        $layers  = $circle->getLayers();
         $sectors = $circle->getSectors();
-        
+
         $countLayers = count($layers);
 
-        $arSectors =[];
+        $arSectors = [];
         foreach ($sectors as $index => $sector) {
-              $arSectors[$index]["id"] = $sector->getId();
-              $arSectors[$index]["name"] = $sector->getName();
-              $arSectors[$index]["color"] = $sector->getColor();
-              $arSectorsObj[$sector->getId()] = $sector;
+            $arSectors[$index]["id"]        = $sector->getId();
+            $arSectors[$index]["name"]      = $sector->getName();
+            $arSectors[$index]["color"]     = $sector->getColor();
+            $arSectorsObj[$sector->getId()] = $sector;
+            $arCurrentSectorId[$index]      = $sector->getId();
         }
 
 
@@ -157,17 +158,45 @@ class CircleController extends Controller
             $em->persist($circle);
             $em->flush();
 
-            $arSectorName = $request->get("sector_name");
-            $arSectorColor       = $request->get("sector_color");
-            $arSectorId       = $request->get("sector_id");
+            $arSectorName  = $request->get("sector_name");
+            $arSectorColor = $request->get("sector_color");
+            $arSectorId    = $request->get("sector_id");
 
-
-            foreach ($arSectorId as $index => $sectorId) {
-                $arSectorParams = [];
-                $arSectorParams["name"] = $arSectorName[$index];
-                $arSectorParams["color"] = $arSectorColor[$index];
-                $this->updateSector($arSectorsObj[$sectorId],$arSectorParams);
+            if(count($arCurrentSectorId) < count($arSectorId)){
+                /*
+                 * Delete sectors
+                 * */
+                $arSectorIdDelete = array_diff($arCurrentSectorId, $arSectorId);
+                if (!empty($arSectorIdDelete)) {
+                    foreach ($arSectorIdDelete as $index => $sectorId) {
+                        $this->deleteSector($arSectorsObj[$sectorId]);
+                    }
+                }
             }
+
+            /*
+              * Update sectors
+              * */
+            
+            $sectorsNumber = count($arSectorName);
+            $arAngles      = $this->anglesBySectors($sectorsNumber);
+            $arBeginAngle  = $arAngles['begin'];
+            $arEndAngle    = $arAngles['end'];
+
+            foreach ($arSectorId as $key=>$sectorId) {
+                $arSectorParams          = [];
+                $arSectorParams["name"]  = $arSectorName[$index];
+                $arSectorParams["color"] = $arSectorColor[$index];
+                $arSectorParams["beginAngle"] = $arBeginAngle[$key];
+                $arSectorParams["endAngle"] = $arEndAngle[$key];
+                $this->updateSector($arSectorsObj[$sectorId], $arSectorParams);
+            }
+            
+
+            /*
+             * Create new sectors
+             * */
+
 
 //            $sectorsNumber = count($arSectorName);
 //            $arAngles      = $this->anglesBySectors($sectorsNumber);
@@ -176,7 +205,7 @@ class CircleController extends Controller
 //            foreach ($arSectorName as $key => $sectorName) {
 //                $this->createSector($circle, $sectorName, $arBeginAngle[$key], $arEndAngle[$key], $arColor[$key]);
 //            }
-            
+
 
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
         }
@@ -259,10 +288,10 @@ class CircleController extends Controller
      */
     protected function updateLayer(Layers $layer, $arParams)
     {
-        if(!empty($arParams["beginRadius"])){
+        if (!empty($arParams["beginRadius"])) {
             $layer->setBeginRadius($arParams["beginRadius"]);
         }
-        if(!empty($arParams["endRadius"])){
+        if (!empty($arParams["endRadius"])) {
             $layer->setEndRadius($arParams["endRadius"]);
         }
 
@@ -322,19 +351,19 @@ class CircleController extends Controller
      */
     protected function updateSector(Sectors $sector, $arParams)
     {
-        if(!empty($arParams["name"])){
+        if (!empty($arParams["name"])) {
             $sector->setName($arParams["name"]);
         }
-        if(!empty($arParams["beginAngle"])){
+        if (!empty($arParams["beginAngle"])) {
             $sector->setBeginAngle($arParams["beginAngle"]);
         }
-        if(!empty($arParams["endAngle"])){
+        if (!empty($arParams["endAngle"])) {
             $sector->setEndAngle($arParams["endAngle"]);
         }
-        if(!empty($arParams["parentSector"])){
+        if (!empty($arParams["parentSector"])) {
             $sector->setParentSectorId($arParams["parentSector"]);
         }
-        if(!empty($arParams["color"])){
+        if (!empty($arParams["color"])) {
             $sector->setColor($arParams["color"]);
         }
         $sector->setDateUpdate(new \DateTime('now'));
@@ -351,7 +380,7 @@ class CircleController extends Controller
      */
     protected function deleteSector(Sectors $sector)
     {
-         $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($sector);
         $em->flush();
 
