@@ -370,8 +370,8 @@ function addField() {
     var div = document.createElement("div");
     div.setAttribute("class", "form-group create_sector");
     // Добавляем HTML-контент с пом. свойства innerHTML
-    div.innerHTML =  "<input type=\"text\" placeholder=\"Название сектора\"  name=\"sector_name[" + curFieldNameId + "]\" class=\"form-control\" value=\"\" autocomplete=\"off\"/>" +
-        "<input type=\"color\" placeholder=\"Цвет сектора\"  name=\"sector_color[" + curFieldNameId + "]\" class=\"form-control\" value=\"#FFFAFA\" autocomplete=\"off\"/>" +
+    div.innerHTML =  "<input type=\"text\" placeholder=\"Название сектора\"  name=\"sector_name[]\" class=\"form-control\" value=\"\" autocomplete=\"off\"/>" +
+        "<input type=\"color\" placeholder=\"Цвет сектора\"  name=\"sector_color[]\" class=\"form-control\" value=\"#FFFAFA\" autocomplete=\"off\"/>" +
         " <input type=\"button\" class=\"form-control\" onclick=\"return deleteField(this)\" href=\"#\" value=\"x\">";
     // Добавляем новый узел в конец списка полей
     document.getElementById("formCircleCreate").appendChild(div);
