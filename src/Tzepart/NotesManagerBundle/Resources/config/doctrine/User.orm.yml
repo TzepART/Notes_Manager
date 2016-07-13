@@ -43,4 +43,8 @@ Tzepart\NotesManagerBundle\Entity\User:
             type: boolean
             nullable: false
             column: is_active
+    oneToMany:
+            labels:
+                targetEntity: Notes
+                mappedBy: user
     lifecycleCallbacks: {  }

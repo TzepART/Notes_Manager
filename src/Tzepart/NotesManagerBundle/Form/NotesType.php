@@ -20,7 +20,6 @@ class NotesType extends AbstractType
             ->add('dateCreate', 'datetime')
             ->add('dateUpdate', 'datetime')
             ->add('users')
-            ->add('labels')
         ;
     }
     

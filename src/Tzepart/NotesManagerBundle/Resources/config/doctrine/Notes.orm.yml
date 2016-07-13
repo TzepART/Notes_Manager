@@ -38,6 +38,7 @@ Tzepart\NotesManagerBundle\Entity\Notes:
     manyToOne:
         users:
             targetEntity: User
+            inversedBy: notes
             cascade: {  }
             mappedBy: null
             inversedBy: null
