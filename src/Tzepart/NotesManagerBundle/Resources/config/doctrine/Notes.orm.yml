@@ -36,7 +36,7 @@ Tzepart\NotesManagerBundle\Entity\Notes:
             nullable: true
             column: date_update
     manyToOne:
-        users:
+        user:
             targetEntity: User
             inversedBy: notes
             cascade: {  }
