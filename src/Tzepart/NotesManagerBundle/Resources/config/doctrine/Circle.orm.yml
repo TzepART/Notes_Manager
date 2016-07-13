@@ -30,9 +30,9 @@ Tzepart\NotesManagerBundle\Entity\Circle:
     manyToOne:
         user:
             targetEntity: User
+            inversedBy: circles
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 user_id:
                     referencedColumnName: id

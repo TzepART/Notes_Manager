@@ -43,4 +43,11 @@ Tzepart\NotesManagerBundle\Entity\User:
             type: boolean
             nullable: false
             column: is_active
+    oneToMany:
+            notes:
+                targetEntity: Notes
+                mappedBy: user
+            circles:
+                targetEntity: Circle
+                mappedBy: user
     lifecycleCallbacks: {  }

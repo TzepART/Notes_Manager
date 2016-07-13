@@ -45,7 +45,6 @@ Tzepart\NotesManagerBundle\Entity\Layers:
             inversedBy: layers
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 circle_id:
                   referencedColumnName: id

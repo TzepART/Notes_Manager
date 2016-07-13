@@ -30,6 +30,17 @@ class NotesController extends Controller
     }
 
     /**
+     * Get user id
+     * @return integer $userId
+     */
+    protected function getCurrentUserObject()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        return $user;
+    }
+
+    /**
      * Creates a new Notes entity.
      *
      */
@@ -39,8 +50,12 @@ class NotesController extends Controller
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $form->handleRequest($request);
 
+        $user = $this->getCurrentUserObject();
+        $countCircle = count($user->getNotes());
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $note->setUser($user);
             $em->persist($note);
             $em->flush();
 
@@ -49,6 +64,7 @@ class NotesController extends Controller
 
         return $this->render('notes/new.html.twig', array(
             'note' => $note,
+            'countCircle' => $countCircle,
             'form' => $form->createView(),
         ));
     }

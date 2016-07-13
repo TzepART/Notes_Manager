@@ -31,7 +31,6 @@ Tzepart\NotesManagerBundle\Entity\Labels:
             inversedBy: labels
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 sectors_id:
                     referencedColumnName: id
@@ -41,7 +40,6 @@ Tzepart\NotesManagerBundle\Entity\Labels:
             inversedBy: labels
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 layers_id:
                     referencedColumnName: id

@@ -172,12 +172,12 @@ class Notes
     }
 
     /**
-     * Set users
+     * Set user
      *
-     * @param \Tzepart\NotesManagerBundle\Entity\User $users
+     * @param \Tzepart\NotesManagerBundle\Entity\User $user
      * @return Notes
      */
-    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $users = null)
+    public function setUser(\Tzepart\NotesManagerBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -185,7 +185,7 @@ class Notes
     }
 
     /**
-     * Get users
+     * Get user
      *
      * @return \Tzepart\NotesManagerBundle\Entity\User 
      */
