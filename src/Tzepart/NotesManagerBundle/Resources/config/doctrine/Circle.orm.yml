@@ -33,7 +33,6 @@ Tzepart\NotesManagerBundle\Entity\Circle:
             inversedBy: circles
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 user_id:
                     referencedColumnName: id

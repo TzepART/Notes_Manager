@@ -41,7 +41,6 @@ Tzepart\NotesManagerBundle\Entity\Notes:
             inversedBy: notes
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 users_id:
                     referencedColumnName: id
@@ -51,6 +50,7 @@ Tzepart\NotesManagerBundle\Entity\Notes:
             cascade: {  }
             mappedBy: null
             inversedBy: null
+            nullable: true
             joinColumns:
                 labels_id:
                     referencedColumnName: id

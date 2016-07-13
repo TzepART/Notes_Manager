@@ -55,7 +55,6 @@ Tzepart\NotesManagerBundle\Entity\Sectors:
             inversedBy: sectors
             cascade: {  }
             mappedBy: null
-            inversedBy: null
             joinColumns:
                 circle_id:
                   referencedColumnName: id

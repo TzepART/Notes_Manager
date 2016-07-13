@@ -56,7 +56,6 @@ class NotesController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $note->setUser($user);
-            $note->setLabels(0);
             $em->persist($note);
             $em->flush();
 
