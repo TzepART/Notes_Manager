@@ -78,15 +78,36 @@ class User implements UserInterface, \Serializable
     /**
      * @ORM\OneToMany(targetEntity="Tzepart\NotesManagerBundle\Entity\Notes", mappedBy="user")
      */
-    private $notes;
+    private $notes;   
     
+    /**
+     * @ORM\OneToMany(targetEntity="Tzepart\NotesManagerBundle\Entity\Circle", mappedBy="user")
+     */
+    private $circles;
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->circles = new ArrayCollection();
         $this->isActive = true;
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid(null, true));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCircles()
+    {
+        return $this->circles;
     }
 
     public function getUsername()
