@@ -219,13 +219,6 @@ class CircleController extends Controller
             $newCountLayers = $request->get("layers_number");
 
             if($newCountLayers < $countCurrentLayers){
-                //delete
-                //@TODO add check radius by layers
-                $reversArLayersObj = array_reverse($layers);
-                $countDelete = $countCurrentLayers - $newCountLayers;
-                for($i = 0;$i<$countDelete;$i++){
-                    $this->deleteLayer($reversArLayersObj[$i]);
-                }
                 //recount
                 //update
                 $arRadius = $this->radiusByLayers($newCountLayers);
@@ -234,6 +227,12 @@ class CircleController extends Controller
                     $arLayerParams["beginRadius"] = $arRadius['begin'][$i];
                     $arLayerParams["endRadius"] = $arRadius['end'][$i];
                     $this->updateLayer($layers[$i],$arLayerParams);
+                }
+                //delete
+                //@TODO add check radius by layers
+                $beginDelete = $newCountLayers;
+                for($i = $beginDelete;$i<$countCurrentLayers;$i++){
+                    $this->deleteLayer($layers[$i]);
                 }
             }elseif($newCountLayers > $countCurrentLayers){
                 //recount
@@ -246,7 +245,7 @@ class CircleController extends Controller
                     $this->updateLayer($layers[$i],$arLayerParams);
                 }
                 //create
-                $numberBegin = $countCurrentLayers+1;
+                $numberBegin = $countCurrentLayers;
                 for ($i = $numberBegin; $i < $newCountLayers; $i++) {
                     $this->createLayer($circle,$arRadius['begin'][$i],$arRadius['end'][$i]);
                 }
