@@ -137,9 +137,9 @@ class CircleController extends Controller
         $editForm->handleRequest($request);
 
         $layers  = $circle->getLayers();
-        $sectors = $circle->getSectors();
+        $countCurrentLayers = count($layers);
 
-        $countLayers = count($layers);
+        $sectors = $circle->getSectors();
 
         $arSectors = [];
         foreach ($sectors as $index => $sector) {
@@ -157,6 +157,10 @@ class CircleController extends Controller
             $circle->setName($request->get("name"));
             $em->persist($circle);
             $em->flush();
+
+            /*
+            * Block logic for sectors
+            * */
 
             $arSectorName  = $request->get("sector_name");
             $arSectorColor = $request->get("sector_color");
@@ -205,6 +209,50 @@ class CircleController extends Controller
                 }
             }
 
+            /*
+              * End block logic for sectors
+              * */
+
+            /*
+             * Block logic for layers
+             * */
+            $newCountLayers = $request->get("layers_number");
+
+            if($newCountLayers < $countCurrentLayers){
+                //recount
+                //update
+                $arRadius = $this->radiusByLayers($newCountLayers);
+                for ($i = 0; $i < $newCountLayers; $i++) {
+                    $arLayerParams = [];
+                    $arLayerParams["beginRadius"] = $arRadius['begin'][$i];
+                    $arLayerParams["endRadius"] = $arRadius['end'][$i];
+                    $this->updateLayer($layers[$i],$arLayerParams);
+                }
+                //delete
+                //@TODO add check radius by layers
+                $beginDelete = $newCountLayers;
+                for($i = $beginDelete;$i<$countCurrentLayers;$i++){
+                    $this->deleteLayer($layers[$i]);
+                }
+            }elseif($newCountLayers > $countCurrentLayers){
+                //recount
+                //update
+                $arRadius = $this->radiusByLayers($newCountLayers);
+                for ($i = 0; $i < $countCurrentLayers; $i++) {
+                    $arLayerParams = [];
+                    $arLayerParams["beginRadius"] = $arRadius['begin'][$i];
+                    $arLayerParams["endRadius"] = $arRadius['end'][$i];
+                    $this->updateLayer($layers[$i],$arLayerParams);
+                }
+                //create
+                $numberBegin = $countCurrentLayers;
+                for ($i = $numberBegin; $i < $newCountLayers; $i++) {
+                    $this->createLayer($circle,$arRadius['begin'][$i],$arRadius['end'][$i]);
+                }
+            }
+            /*
+              * End block logic for layers
+              * */
 
 
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
@@ -213,7 +261,7 @@ class CircleController extends Controller
         return $this->render(
             'circle/edit.html.twig',
             array(
-                'countLayers' => $countLayers,
+                'countLayers' => $countCurrentLayers,
                 'sectors' => $arSectors,
                 'circle' => $circle,
                 'circleName' => $circle->getName(),
@@ -266,17 +314,22 @@ class CircleController extends Controller
     {
         $arRadius = $this->radiusByLayers($n);
         for ($i = 0; $i < $n; $i++) {
-            $layers = new Layers();
-            $layers->setCircle($circle);
-            $layers->setBeginRadius($arRadius['begin'][$i]);
-            $layers->setEndRadius($arRadius['end'][$i]);
-            $layers->setColor("#FFF");
-            $layers->setDateCreate(new \DateTime('now'));
-            $layers->setDateUpdate(new \DateTime('now'));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($layers);
-            $em->flush();
+            $this->createLayer($circle,$arRadius['begin'][$i],$arRadius['end'][$i]);
         }
+        return true;
+    }
+
+    protected function createLayer(Circle $circle, $radiusBegin,$radiusEnd){
+        $layers = new Layers();
+        $layers->setCircle($circle);
+        $layers->setBeginRadius($radiusBegin);
+        $layers->setEndRadius($radiusEnd);
+        $layers->setColor("#FFF");
+        $layers->setDateCreate(new \DateTime('now'));
+        $layers->setDateUpdate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($layers);
+        $em->flush();
 
         return true;
     }
