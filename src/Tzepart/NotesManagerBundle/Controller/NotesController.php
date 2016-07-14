@@ -49,11 +49,20 @@ class NotesController extends Controller
     public function newAction(Request $request)
     {
         $note = new Notes();
+        $arCircle = [];
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $form->handleRequest($request);
 
         $user = $this->getCurrentUserObject();
-        $countCircle = count($user->getCircles());
+        $arCircles = $user->getCircles();
+
+        $arLayers = $arCircles[0]->getLayers();
+        $arSectors = $arCircles[0]->getSectors();
+        $arCircle["countLayers"] = count($arLayers);
+        foreach ($arSectors as $key => $arSector) {
+            $arCircle["sectors"][$key]["id"] = $arSector->getId();
+            $arCircle["sectors"][$key]["name"] = $arSector->getName();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -66,7 +75,7 @@ class NotesController extends Controller
 
         return $this->render('notes/new.html.twig', array(
             'note' => $note,
-            'countCircle' => $countCircle,
+            'arCircle' => $arCircle,
             'form' => $form->createView(),
         ));
     }
