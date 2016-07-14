@@ -82,6 +82,10 @@ class NotesController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $note->setUser($user);
+            $note->setDateCreate(new \DateTime('now'));
+            $note->setDateUpdate(new \DateTime('now'));
+            $note->setName($request->get("name"));
+            $note->setText($request->get("text"));
             $em->persist($note);
             $em->flush();
 
