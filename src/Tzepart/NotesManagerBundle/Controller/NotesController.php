@@ -3,6 +3,8 @@
 namespace Tzepart\NotesManagerBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Notes;
@@ -51,7 +53,7 @@ class NotesController extends Controller
         $form->handleRequest($request);
 
         $user = $this->getCurrentUserObject();
-        $countCircle = count($user->getNotes());
+        $countCircle = count($user->getCircles());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -124,6 +126,32 @@ class NotesController extends Controller
         }
 
         return $this->redirectToRoute('notes_index');
+    }
+
+    
+
+    public function editAjaxAction(Request $request)
+    {
+        if ($request->isXMLHttpRequest()) {
+            $arResult = [];
+            $user = $this->getCurrentUserObject();
+            $arCircles = $user->getCircles();
+            foreach ($arCircles as $index => $arCircle) {
+                if($arCircle->getId() == $request->get("circleId")){
+                    $arLayers = $arCircle->getLayers();
+                    $arSectors = $arCircle->getSectors();
+                    $arResult["countLayers"] = count($arLayers);
+                    foreach ($arSectors as $key => $arSector) {
+                        $arResult["sectors"][$key]["id"] = $arSector->getId();
+                        $arResult["sectors"][$key]["name"] = $arSector->getName();
+                    }
+                }
+            }
+
+            return new JsonResponse($arResult);
+        }
+
+        return new Response('This is not ajax!', 400);
     }
 
     /**

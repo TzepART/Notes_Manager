@@ -22,3 +22,8 @@ notes_delete:
     path:     /{id}/delete
     defaults: { _controller: "NotesManagerBundle:Notes:delete" }
     methods:  DELETE
+
+notes_edit_ajax:
+    path:     /editAjax
+    defaults: { _controller: "NotesManagerBundle:Notes:editAjax" }
+    methods:  [GET, POST]
