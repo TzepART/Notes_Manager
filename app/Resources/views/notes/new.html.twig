@@ -4,8 +4,8 @@
     <h1>Notes creation</h1>
 
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+    {{ form_widget(form) }}
+    <input type="submit" value="Create"/>
     {{ form_end(form) }}
 
     <p>
@@ -35,24 +35,21 @@
             <div class="form-group">
                 <select class="form-control" name="select_circle">
                     <option>Выберите окружность</option>
-                    <option>Путешествие</option>
-                    <option>Общая</option>
-                    <option>Работа</option>
+                    <option value="12">Путешествие</option>
+                    <option value="15">Общая</option>
+                    <option value="13">Работа</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <select class="form-control" name="select_sector">
                     <option>Выберите сектор</option>
-                    <option>Виза</option>
-                    <option>Язык</option>
-                    <option>Деньги на сувениры</option>
                 </select>
             </div>
 
 
             <div class="form-group">
-                <input type="number" name="layers_number" placeholder="Уровень срочности" class="form-control"/>
+                <input type="number" name="layers_number" min="0" placeholder="Уровень срочности" class="form-control"/>
             </div>
 
             <div class="form-group form_submit">
@@ -61,21 +58,34 @@
         </form>
     </div>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
+            $('select[name=select_circle]').change(function () {
+                var circleId = $('select[name=select_circle]').val();
+                addSectorsAndLayers(circleId);
+            });
+        });
+
+        function addSectorsAndLayers(circleId) {
             $.post(
                     "{{ path('notes_edit_ajax') }}",
                     {
-                        circleId: 15
+                        circleId: circleId
                     },
-                    onAjaxSuccess
+                    createSectorsAndLayers
             );
-        });
+        }
 
-
-        function onAjaxSuccess(data)
-        {
-            // Здесь мы получаем данные, отправленные сервером и выводим их на экран.
-            console.log(data);
+        function createSectorsAndLayers(data) {
+            $('select[name=select_sector]').find('option')
+                    .remove()
+                    .end();
+            $.each(data['sectors'], function(key, value) {
+                $('select[name=select_sector]')
+                        .append($("<option></option>")
+                                .attr("value",value.id)
+                                .text(value.name));
+            });
+            $('input[name=layers_number]').attr("max",data.countLayers);
         }
     </script>
 {% endblock %}
