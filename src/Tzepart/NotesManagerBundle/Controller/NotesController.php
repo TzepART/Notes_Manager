@@ -49,15 +49,43 @@ class NotesController extends Controller
     public function newAction(Request $request)
     {
         $note = new Notes();
+        $arSectors = [];
+        $arCircles = [];
+        $arSectorsObjects = [];
+        $arLayersObjects = [];
+        $countLayers = 5;
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $form->handleRequest($request);
 
         $user = $this->getCurrentUserObject();
-        $countCircle = count($user->getCircles());
+        $arCirclesObjects = $user->getCircles();
+
+        foreach ($arCirclesObjects as $key => $circlesObject) {
+            $arCircles[$key]["id"] = $circlesObject->getId();
+            $arCircles[$key]["name"] = $circlesObject->getName();
+            if($key == 0){
+                $arLayersObjects = $circlesObject->getLayers();
+                $arSectorsObjects = $circlesObject->getSectors();
+            }
+        }
+
+     
+        if(!empty($arLayersObjects) && !empty($arSectorsObjects)){
+            $countLayers = count($arLayersObjects);
+            foreach ($arSectorsObjects as $key => $arSectorObj) {
+                $arSectors[$key]["id"] = $arSectorObj->getId();
+                $arSectors[$key]["name"] = $arSectorObj->getName();
+            } 
+        }
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $note->setUser($user);
+            $note->setDateCreate(new \DateTime('now'));
+            $note->setDateUpdate(new \DateTime('now'));
+            $note->setName($request->get("name"));
+            $note->setText($request->get("text"));
             $em->persist($note);
             $em->flush();
 
@@ -66,7 +94,9 @@ class NotesController extends Controller
 
         return $this->render('notes/new.html.twig', array(
             'note' => $note,
-            'countCircle' => $countCircle,
+            'arSectors' => $arSectors,
+            'countLayers' => $countLayers,
+            'arCircles' => $arCircles,
             'form' => $form->createView(),
         ));
     }

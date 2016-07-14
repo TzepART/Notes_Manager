@@ -14,12 +14,6 @@ class NotesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name')
-            ->add('text')
-            ->add('dateCreate', 'datetime')
-            ->add('dateUpdate', 'datetime')
-        ;
     }
     
     /**
