@@ -61,6 +61,21 @@
         </form>
     </div>
     <script>
+        $(document).ready(function(){
+            $.post(
+                    "{{ path('notes_edit_ajax') }}",
+                    {
+                        circleId: 15
+                    },
+                    onAjaxSuccess
+            );
+        });
 
+
+        function onAjaxSuccess(data)
+        {
+            // Здесь мы получаем данные, отправленные сервером и выводим их на экран.
+            console.log(data);
+        }
     </script>
 {% endblock %}
