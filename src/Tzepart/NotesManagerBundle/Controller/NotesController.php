@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Tzepart\NotesManagerBundle\Entity\Labels;
 use Tzepart\NotesManagerBundle\Entity\Notes;
 use Tzepart\NotesManagerBundle\Form\NotesType;
 
@@ -81,6 +82,15 @@ class NotesController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            if(!empty($request->get("select_circle")) && !empty($request->get("layers_number")) && !empty($request->get("select_sector"))){
+                $circleId = $request->get("select_circle");
+                $numberLayer = $request->get("layers_number");
+                $sectorId = $request->get("select_sector");
+                $label = $this->createLabel($circleId,$sectorId,$numberLayer);
+                $note->setLabels($label);
+            }
+
             $note->setUser($user);
             $note->setDateCreate(new \DateTime('now'));
             $note->setDateUpdate(new \DateTime('now'));
@@ -158,8 +168,11 @@ class NotesController extends Controller
         return $this->redirectToRoute('notes_index');
     }
 
-    
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|Response
+     */
     public function editAjaxAction(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
@@ -182,6 +195,18 @@ class NotesController extends Controller
         }
 
         return new Response('This is not ajax!', 400);
+    }
+
+    /**
+     * Create labels
+     * @param int $circleId
+     * @param int $sectorId
+     * @param int $numberLayer
+     * @return Labels
+     */
+    protected function createLabel($circleId,$sectorId,$numberLayer){
+        $label = new Labels();
+        return $label;
     }
 
     /**
