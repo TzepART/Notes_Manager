@@ -3,6 +3,8 @@
 namespace Tzepart\NotesManagerBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Notes;
@@ -124,6 +126,17 @@ class NotesController extends Controller
         }
 
         return $this->redirectToRoute('notes_index');
+    }
+
+    
+
+    public function editAjaxAction(Request $request)
+    {
+        if ($request->isXMLHttpRequest()) {
+            return new JsonResponse(array('data' => 'this is a json response'));
+        }
+
+        return new Response('This is not ajax!', 400);
     }
 
     /**
