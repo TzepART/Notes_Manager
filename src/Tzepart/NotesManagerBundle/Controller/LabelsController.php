@@ -15,8 +15,8 @@ class LabelsController extends Controller
     public function newAction($arParams)
     {
         $label = new Labels();
-
         $em = $this->getDoctrine()->getManager();
+        
         $label->setAngle($arParams["angle"]);
         $label->setRadius($arParams["radius"]);
         $label->setLayers($arParams["layer"]);
