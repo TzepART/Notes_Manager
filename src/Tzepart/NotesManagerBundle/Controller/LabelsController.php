@@ -17,16 +17,16 @@ class LabelsController extends Controller
         $label = new Labels();
 
         $em = $this->getDoctrine()->getManager();
-        $label->setAngle($arParams["Angle"]);
-        $label->setRadius($arParams["Radius"]);
-        $label->setLayers($arParams["Layer"]);
-        $label->setSectors($arParams["Sector"]);
+        $label->setAngle($arParams["angle"]);
+        $label->setRadius($arParams["radius"]);
+        $label->setLayers($arParams["layer"]);
+        $label->setSectors($arParams["sector"]);
         $label->setDateCreate(new \DateTime('now'));
         $label->setDateUpdate(new \DateTime('now'));
         $em->persist($label);
         $em->flush();
 
-        return $label->getId();
+        return $label;
     }
 
 
@@ -38,17 +38,17 @@ class LabelsController extends Controller
     public function editAction(Labels $label,$arParams)
     {
         $em = $this->getDoctrine()->getManager();
-        if(!empty($arParams["Angle"])){
-            $label->setAngle($arParams["Angle"]);
+        if(!empty($arParams["angle"])){
+            $label->setAngle($arParams["angle"]);
         }
-        if(!empty($arParams["Radius"])){
-            $label->setRadius($arParams["Radius"]);
+        if(!empty($arParams["radius"])){
+            $label->setRadius($arParams["radius"]);
         }
-        if(!empty($arParams["Layer"])){
-            $label->setLayers($arParams["Layer"]);
+        if(!empty($arParams["layer"])){
+            $label->setLayers($arParams["layer"]);
         }
-        if(!empty($arParams["Sector"])){
-            $label->setSectors($arParams["Sector"]);
+        if(!empty($arParams["sector"])){
+            $label->setSectors($arParams["sector"]);
         }
         $label->setDateUpdate(new \DateTime('now'));
         $em->persist($label);

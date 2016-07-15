@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Labels;
 use Tzepart\NotesManagerBundle\Entity\Notes;
-use Tzepart\NotesManagerBundle\Form\NotesType;
+use Tzepart\NotesManagerBundle\Controller\LabelsController;
 
 /**
  * Notes controller.
@@ -63,6 +63,7 @@ class NotesController extends Controller
         $arCircles = [];
         $arSectorsObjects = [];
         $arLayersObjects = [];
+        $arLayersId = [];
         $countLayers = 5;
         $form = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $form->handleRequest($request);
@@ -82,6 +83,10 @@ class NotesController extends Controller
      
         if(!empty($arLayersObjects) && !empty($arSectorsObjects)){
             $countLayers = count($arLayersObjects);
+            foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
+                $arLayersId[$keyLayer]=$arLayersObject->getId();
+            }
+
             foreach ($arSectorsObjects as $key => $arSectorObj) {
                 $arSectors[$key]["id"] = $arSectorObj->getId();
                 $arSectors[$key]["name"] = $arSectorObj->getName();
@@ -93,10 +98,10 @@ class NotesController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             if(!empty($request->get("select_circle")) && !empty($request->get("layers_number")) && !empty($request->get("select_sector"))){
-                $circleId = $request->get("select_circle");
                 $numberLayer = $request->get("layers_number");
                 $sectorId = $request->get("select_sector");
-                $label = $this->createLabel($circleId,$sectorId,$numberLayer);
+                $layerId = $arLayersId[$numberLayer];
+                $label = $this->createLabel($sectorId,$layerId);
                 $note->setLabels($label);
             }
 
@@ -210,13 +215,27 @@ class NotesController extends Controller
 
     /**
      * Create labels
-     * @param int $circleId
      * @param int $sectorId
-     * @param int $numberLayer
+     * @param int $layerId
      * @return Labels
      */
-    protected function createLabel($circleId,$sectorId,$numberLayer){
-        $label = new Labels();
+    protected function createLabel($sectorId,$layerId){
+        $arParams = [];
+        $labelController = new LabelsController();
+
+        $em = $this->getDoctrine()->getManager();
+        $sector = $em->getRepository('NotesManagerBundle:Sectors')->find($sectorId);
+        $layer = $em->getRepository('NotesManagerBundle:Layers')->find($layerId);
+
+        $angel = rand($sector->getBeginAngle(),$sector->getEndAngle());
+        $radius = rand($layer->getBeginRadius(),$layer->getEndRadius());
+
+        $arParams["angle"]=$angel;
+        $arParams["radius"]=$radius;
+        $arParams["layer"]=$layer;
+        $arParams["sector"]=$sector;
+
+        $label = $labelController->newAction($arParams);
         return $label;
     }
 
