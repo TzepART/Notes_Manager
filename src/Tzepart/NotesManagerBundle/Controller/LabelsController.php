@@ -2,87 +2,75 @@
 
 namespace Tzepart\NotesManagerBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Tzepart\NotesManagerBundle\Entity\Labels;
 
 class LabelsController extends Controller
 {
 
     /**
-     * Creates a new Labels entity.
-     *
-     * @Route("/new", name="labels_new")
-     * @Method({"GET", "POST"})
+     * @param array $arParams
+     * @return int
      */
-    public function newAction(Request $request)
+    public function newAction($arParams)
     {
         $label = new Labels();
-        $form = $this->createForm('Tzepart\NotesManagerBundle\Form\LabelsType', $label);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($label);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $label->setAngle($arParams["Angle"]);
+        $label->setRadius($arParams["Radius"]);
+        $label->setLayers($arParams["Layer"]);
+        $label->setSectors($arParams["Sector"]);
+        $label->setDateCreate(new \DateTime('now'));
+        $label->setDateUpdate(new \DateTime('now'));
+        $em->persist($label);
+        $em->flush();
 
-            return $this->redirectToRoute('labels_show', array('id' => $label->getId()));
-        }
-
-        return $this->render('labels/new.html.twig', array(
-            'label' => $label,
-            'form' => $form->createView(),
-        ));
+        return $label->getId();
     }
 
 
     /**
-     * Displays a form to edit an existing Labels entity.
-     *
-     * @Route("/{id}/edit", name="labels_edit")
-     * @Method({"GET", "POST"})
+     * @param Labels $label
+     * @param array $arParams
+     * @return int
      */
-    public function editAction(Request $request, Labels $label)
+    public function editAction(Labels $label,$arParams)
     {
-        $deleteForm = $this->createDeleteForm($label);
-        $editForm = $this->createForm('Tzepart\NotesManagerBundle\Form\LabelsType', $label);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($label);
-            $em->flush();
-
-            return $this->redirectToRoute('labels_edit', array('id' => $label->getId()));
+        $em = $this->getDoctrine()->getManager();
+        if(!empty($arParams["Angle"])){
+            $label->setAngle($arParams["Angle"]);
         }
+        if(!empty($arParams["Radius"])){
+            $label->setRadius($arParams["Radius"]);
+        }
+        if(!empty($arParams["Layer"])){
+            $label->setLayers($arParams["Layer"]);
+        }
+        if(!empty($arParams["Sector"])){
+            $label->setSectors($arParams["Sector"]);
+        }
+        $label->setDateUpdate(new \DateTime('now'));
+        $em->persist($label);
+        $em->flush();
 
-        return $this->render('labels/edit.html.twig', array(
-            'label' => $label,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return $label->getId();
     }
+
 
     /**
      * Deletes a Labels entity.
      *
-     * @Route("/{id}", name="labels_delete")
-     * @Method("DELETE")
+     * @param Labels $label
+     * @return bool
      */
-    public function deleteAction(Request $request, Labels $label)
+    public function deleteAction(Labels $label)
     {
-        $form = $this->createDeleteForm($label);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($label);
+        $em->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($label);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('labels_index');
+        return true;
     }
     
 }
