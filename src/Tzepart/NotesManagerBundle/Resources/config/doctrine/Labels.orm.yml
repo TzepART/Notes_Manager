@@ -17,6 +17,18 @@ Tzepart\NotesManagerBundle\Entity\Labels:
             generator:
                 strategy: IDENTITY
     fields:
+        angle:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: angle
+        radius:
+            type: float
+            nullable: true
+            precision: 10
+            scale: 0
+            column: radius
         dateCreate:
             type: datetime
             nullable: true
