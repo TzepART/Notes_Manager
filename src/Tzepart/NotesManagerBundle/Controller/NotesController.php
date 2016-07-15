@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Labels;
 use Tzepart\NotesManagerBundle\Entity\Notes;
 use Tzepart\NotesManagerBundle\Form\NotesType;
@@ -17,6 +18,15 @@ use Tzepart\NotesManagerBundle\Form\NotesType;
  */
 class NotesController extends Controller
 {
+
+    function varsAndMethodsObject($object){
+        $arResult = array();
+        $arResult["CLASS_NAME"]= get_class($object);
+        $arResult["VARS"]= get_class_vars(get_class($object));
+        $arResult["METHODS"] = get_class_methods(get_class($object));
+        return $arResult;
+    }
+
     /**
      * Lists all Notes entities.
      *
@@ -24,7 +34,6 @@ class NotesController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
         $notes = $em->getRepository('NotesManagerBundle:Notes')->findAll();
 
         return $this->render('notes/index.html.twig', array(
@@ -112,20 +121,6 @@ class NotesController extends Controller
     }
 
     /**
-     * Finds and displays a Notes entity.
-     *
-     */
-    public function showAction(Notes $note)
-    {
-        $deleteForm = $this->createDeleteForm($note);
-
-        return $this->render('notes/show.html.twig', array(
-            'note' => $note,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
      * Displays a form to edit an existing Notes entity.
      *
      */
@@ -149,6 +144,22 @@ class NotesController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
+
+    /**
+     * Finds and displays a Notes entity.
+     *
+     */
+    public function showAction(Notes $note)
+    {
+        $deleteForm = $this->createDeleteForm($note);
+
+        return $this->render('notes/show.html.twig', array(
+            'note' => $note,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
 
     /**
      * Deletes a Notes entity.

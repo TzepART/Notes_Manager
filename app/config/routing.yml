@@ -1,3 +1,7 @@
+notes_manager_labels:
+    resource: "@NotesManagerBundle/Controller/LabelsController.php"
+    type:     annotation
+
 notes_manager:
     resource: "@NotesManagerBundle/Resources/config/routing.yml"
     prefix: /
