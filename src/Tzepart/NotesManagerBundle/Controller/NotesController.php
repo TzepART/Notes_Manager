@@ -159,9 +159,10 @@ class NotesController extends Controller
         $countLayers      = 5;
         $arSelectCirclesId = 0;
         
+
         $label = $note->getLabels();
-   
-        if(!$label != null){
+
+        if($label != null){
             $arSelectCirclesId = $label->getSectors()->getCircle()->getId();
         }
         

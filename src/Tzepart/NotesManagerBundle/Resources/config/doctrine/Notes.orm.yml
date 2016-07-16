@@ -45,11 +45,12 @@ Tzepart\NotesManagerBundle\Entity\Notes:
                 users_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToOne:
         labels:
             targetEntity: Labels
             cascade: {  }
             mappedBy: null
-            inversedBy: null
+            inversedBy: notes
             nullable: true
             joinColumns:
                 labels_id:

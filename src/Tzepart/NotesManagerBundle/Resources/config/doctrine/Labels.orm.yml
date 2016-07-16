@@ -56,4 +56,8 @@ Tzepart\NotesManagerBundle\Entity\Labels:
                 layers_id:
                     referencedColumnName: id
             orphanRemoval: false
+    oneToOne:
+        notes:
+          targetEntity: Notes
+          mappedBy: labels
     lifecycleCallbacks: {  }
