@@ -8,9 +8,14 @@ notes_show:
     defaults: { _controller: "NotesManagerBundle:Notes:show" }
     methods:  GET
 
+notes_new_by_circle:
+    path:     /new/{select_circle}
+    defaults: { _controller: "NotesManagerBundle:Notes:new", select_circle: null }
+    methods:  [GET, POST]
+
 notes_new:
     path:     /new
-    defaults: { _controller: "NotesManagerBundle:Notes:new" }
+    defaults: { _controller: "NotesManagerBundle:Notes:new"}
     methods:  [GET, POST]
 
 notes_edit:
