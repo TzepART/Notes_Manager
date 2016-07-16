@@ -107,7 +107,7 @@ class NotesController extends Controller
             ) {
                 $numberLayer = $request->get("layers_number");
                 $sectorId    = $request->get("select_sector");
-                $layerId     = $arLayersId[$numberLayer];
+                $layerId     = $arLayersId[$numberLayer-1];
                 $label       = $this->createLabel($sectorId, $layerId);
                 $note->setLabels($label);
             }
@@ -120,7 +120,7 @@ class NotesController extends Controller
             $em->persist($note);
             $em->flush();
 
-            return $this->redirectToRoute('notes_show', array('id' => $note->getId()));
+            return $this->redirectToRoute('circle_show', array('id' => $request->get("select_circle")));
         }
 
         return $this->render(
