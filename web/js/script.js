@@ -271,69 +271,6 @@ function createLabel(data) {
 }
 
 /*
-* Block with creating elements
-* */
-
-var numLayers = 4;
-
-var dataSector1 = {
-    id:1,
-    numLayers:numLayers,
-    color:'#8FBC8F',
-    beginAngle:10,
-    endAngle:90,
-    name:'Example1',
-    circle_id: 1,
-};
-
-var dataSector2 = {
-    id:2,
-    numLayers:numLayers,
-    color:'#FFD700',
-    beginAngle:90,
-    endAngle:200,
-    name:'Example2',
-    circle_id: 1,
-};
-var dataSector3 = {
-    id:3,
-    numLayers:numLayers,
-    color:'#BA55D3',
-    beginAngle:200,
-    endAngle:10,
-    name:'Example3',
-    circle_id: 1,
-};
-
-createSector(dataSector1);
-createSector(dataSector2);
-createSector(dataSector3);
-
-var dataLabel1 = {
-    id:1,
-    radius:0.13,
-    degr:56,
-    name:'Note1'
-};
-
-var dataLabel2 = {
-    id:2,
-    radius:0.71,
-    degr:230,
-    name:'Note2'
-};
-
-$(document).ready(function() {
-    $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
-    $('canvas').triggerLayerEvent('slice11', 'click');
-});
-
-
-createLabel(dataLabel1);
-createLabel(dataLabel2);
-
-
-/*
 * block for creating sectors
 * */
 

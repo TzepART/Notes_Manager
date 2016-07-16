@@ -28,10 +28,9 @@ class CircleController extends Controller
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
-        } else {
-            echo "You authorize!";
         }
 
+        
         $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
 
         return $this->render(
@@ -116,6 +115,9 @@ class CircleController extends Controller
     public function showAction(Circle $circle)
     {
         $deleteForm = $this->createDeleteForm($circle);
+        
+        $sectors = $circle->getSectors();
+        $layers = $circle->getLayers();
 
         return $this->render(
             'circle/show.html.twig',
