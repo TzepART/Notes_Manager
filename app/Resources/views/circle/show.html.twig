@@ -59,40 +59,21 @@
          * Block with creating elements
          * */
 
-        var numLayers = 4;
+        var numLayers = {{ countLayers }};
 
-        var dataSector1 = {
-            id:1,
-            numLayers:numLayers,
-            color:'#8FBC8F',
-            beginAngle:10,
-            endAngle:90,
-            name:'Example1',
-            circle_id: 1,
-        };
+        {% for arSector in arSectors%}
+            var dataSector{{ arSector.id }} = {
+                id:{{ arSector.id }},
+                numLayers: numLayers,
+                color:'{{ arSector.color }}',
+                beginAngle:{{ arSector.beginAngle }},
+                endAngle:{{ arSector.endAngle }},
+                name:'{{ arSector.name }}',
+                circle_id: {{  circle.id }}
+            };
+        createSector(dataSector{{ arSector.id }});
+        {% endfor %}
 
-        var dataSector2 = {
-            id:2,
-            numLayers:numLayers,
-            color:'#FFD700',
-            beginAngle:90,
-            endAngle:200,
-            name:'Example2',
-            circle_id: 1,
-        };
-        var dataSector3 = {
-            id:3,
-            numLayers:numLayers,
-            color:'#BA55D3',
-            beginAngle:200,
-            endAngle:10,
-            name:'Example3',
-            circle_id: 1,
-        };
-
-        createSector(dataSector1);
-        createSector(dataSector2);
-        createSector(dataSector3);
 
         var dataLabel1 = {
             id:1,

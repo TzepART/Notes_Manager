@@ -114,14 +114,25 @@ class CircleController extends Controller
      */
     public function showAction(Circle $circle)
     {
+        $arSectors = [];
         $deleteForm = $this->createDeleteForm($circle);
-        
-        $sectors = $circle->getSectors();
-        $layers = $circle->getLayers();
+        $arlayersObj = $circle->getLayers();
+        $countLayers = count($arlayersObj);
+
+        $arSectorsObj = $circle->getSectors();
+        foreach ($arSectorsObj as $key=>$sectorObj) {
+            $arSectors[$key]["beginAngle"] = $sectorObj->getBeginAngle();
+            $arSectors[$key]["endAngle"] = $sectorObj->getEndAngle();
+            $arSectors[$key]["name"] = $sectorObj->getName();
+            $arSectors[$key]["color"] = $sectorObj->getColor();
+            $arSectors[$key]["id"] = $sectorObj->getId();
+        }
 
         return $this->render(
             'circle/show.html.twig',
             array(
+                'arSectors'=>$arSectors,
+                'countLayers'=>$countLayers,
                 'circle' => $circle,
                 'delete_form' => $deleteForm->createView(),
             )
