@@ -68,6 +68,27 @@ class Labels
      */
     private $layers;
 
+    /**
+     * @var \Tzepart\NotesManagerBundle\Entity\Notes
+     *
+     */
+    private $notes;
+
+    /**
+     * @return Notes
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * @param Notes $notes
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+    }
 
 
     /**

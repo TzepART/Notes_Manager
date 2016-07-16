@@ -3,6 +3,8 @@
 namespace Tzepart\NotesManagerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * Notes
@@ -60,14 +62,16 @@ class Notes
     /**
      * @var \Tzepart\NotesManagerBundle\Entity\Labels
      *
-     * @ORM\ManyToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Labels")
+     * @ORM\OneToOne(targetEntity="Tzepart\NotesManagerBundle\Entity\Labels")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="labels_id", referencedColumnName="id")
      * })
      */
     private $labels;
 
-
+    public function __construct() {
+        $this->labels = new ArrayCollection();
+    }
 
     /**
      * Get id

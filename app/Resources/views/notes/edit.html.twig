@@ -1,21 +1,88 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <h1>Notes edit</h1>
+    <div class="row">
+        <h1>Notes edit</h1>
+        <div class="jumbotron col-md-6 col-md-offset-3 create_note_form">
 
-    {{ form_start(edit_form) }}
+        {{ form_start(edit_form) }}
         {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(edit_form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('notes_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+
+            <h2 style="text-align: center">Изменить Заметку</h2>
+            <div class="form-group create_note">
+                <input type="text" name="name" placeholder="Название заметки" value="{{ name }}" class="form-control"/>
+            </div>
+
+            <div class="form-group">
+                <textarea placeholder="Текст заметки" name="text" class="form-control" rows="3">{{ text }}</textarea>
+            </div>
+
+            <h2 style="text-align: center">Размещение заметки</h2>
+
+            <div class="form-group">
+                <select class="form-control" name="select_circle">
+                    {% for arCircle in arCircles%}
+                        <option value="{{ arCircle.id }}">{{ arCircle.name }}</option>
+                    {% endfor %}
+                    <option>Сохранить во ходящие</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <select class="form-control" name="select_sector">
+                    {% for arSector in arSectors%}
+                        <option value="{{ arSector.id }}">{{ arSector.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="number" name="layers_number" min="0" max="{{ countLayers }}" value="{{ numberLayer }}" placeholder="Уровень срочности" class="form-control"/>
+            </div>
+
+            <div class="form-group form_submit">
+                <input name="save" value="Сохранить заметку" class="btn btn-success btn-block" type="submit">
+                <a href="{{ path('notes_index') }}" class="btn btn-success btn-block">Back to the list</a>
+            </div>
+        {{ form_end(edit_form) }}
+
+        {{ form_start(delete_form) }}
+            <div class="form-group form_submit">
+                <input type="submit" class="btn btn-success btn-block" value="Удалить заметку">
+            </div>
+        {{ form_end(delete_form) }}
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('select[name=select_circle]').change(function () {
+                var circleId = $('select[name=select_circle]').val();
+                addSectorsAndLayers(circleId);
+            });
+        });
+
+        function addSectorsAndLayers(circleId) {
+            $.post(
+                    "{{ path('notes_edit_ajax') }}",
+                    {
+                        circleId: circleId
+                    },
+                    createSectorsAndLayers
+            );
+        }
+
+        function createSectorsAndLayers(data) {
+            $('select[name=select_sector]').find('option')
+                    .remove()
+                    .end();
+            $.each(data['sectors'], function(key, value) {
+                $('select[name=select_sector]')
+                        .append($("<option></option>")
+                                .attr("value",value.id)
+                                .text(value.name));
+            });
+            $('input[name=layers_number]').attr("max",data.countLayers);
+        }
+    </script>
 {% endblock %}
