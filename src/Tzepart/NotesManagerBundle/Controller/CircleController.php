@@ -122,6 +122,8 @@ class CircleController extends Controller
 
         $arSectorsObj = $circle->getSectors();
         $i = 0;
+        $em     = $this->getDoctrine()->getManager();
+
         foreach ($arSectorsObj as $key=>$sectorObj) {
             $arSectors[$key]["beginAngle"] = $sectorObj->getBeginAngle();
             $arSectors[$key]["endAngle"] = $sectorObj->getEndAngle();
@@ -130,11 +132,13 @@ class CircleController extends Controller
             $arSectors[$key]["id"] = $sectorObj->getId();
             $arLabelsObj = $sectorObj->getLabels();
             foreach ($arLabelsObj as $index => $labelObj) {
-                $arLabels[$i]["id"] = $labelObj->getId();
-                $arLabels[$i]["radius"] = $labelObj->getRadius();
-                $arLabels[$i]["degr"] = $labelObj->getAngle();
-                $arLabels[$i]["name"] = $labelObj->getNotes()->getName();
-                $i++;
+                if($labelObj->getNotes() != null){
+                    $arLabels[$i]["id"] = $labelObj->getId();
+                    $arLabels[$i]["radius"] = $labelObj->getRadius();
+                    $arLabels[$i]["degr"] = $labelObj->getAngle();
+                    $arLabels[$i]["name"] = $labelObj->getNotes()->getName();
+                    $i++;
+                }
             }
         }
 
