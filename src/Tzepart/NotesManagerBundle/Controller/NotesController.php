@@ -427,7 +427,7 @@ class NotesController extends Controller
         $em->persist($label);
         $em->flush();
 
-        return $label->getId();
+        return $label;
     }
 
 
