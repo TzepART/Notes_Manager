@@ -19,32 +19,6 @@ use Tzepart\NotesManagerBundle\Controller\LabelsController;
 class NotesController extends Controller
 {
 
-    function varsAndMethodsObject($object)
-    {
-        $arResult               = array();
-        $arResult["CLASS_NAME"] = get_class($object);
-        $arResult["VARS"]       = get_class_vars(get_class($object));
-        $arResult["METHODS"]    = get_class_methods(get_class($object));
-
-        return $arResult;
-    }
-
-    /**
-     * function replace two element array with keys - $key1 и $key2
-     * @param array $array original array
-     * @param string $key1
-     * @param string $key2
-     * @return bool true if replace successful or false if fail
-     */
-    public function array_swap(array &$array, $key1, $key2)
-    {
-        if (isset($array[$key1]) && isset($array[$key2])) {
-            list($array[$key1], $array[$key2]) = array($array[$key2], $array[$key1]);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Lists all Notes entities.
      *
@@ -226,6 +200,26 @@ class NotesController extends Controller
 
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            if (!empty($request->get("select_circle")) && !empty($request->get(
+                    "layers_number"
+                )) && !empty($request->get("select_sector"))
+            ) {
+                $numberLayer = $request->get("layers_number");
+                $sectorId    = $request->get("select_sector");
+                $layerId     = $arLayersId[$numberLayer];
+                if($label != null){
+                    $updateLabel = $this->updateLabel($label,$sectorId,$layerId);
+                }else{
+                    $updateLabel = $this->createLabel($sectorId,$layerId);
+                }
+                $note->setLabels($updateLabel);
+            }
+
+            $note->setDateUpdate(new \DateTime('now'));
+            $note->setName($request->get("name"));
+            $note->setText($request->get("text"));
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($note);
             $em->flush();
@@ -315,11 +309,6 @@ class NotesController extends Controller
         return new Response('This is not ajax!', 400);
     }
 
-    function f_rand($min=0,$max=1,$mul=1000000){
-        if ($min>$max) return false;
-        return mt_rand($min*$mul,$max*$mul)/$mul;
-    }
-
     /**
      * Create labels
      * @param int $sectorId
@@ -344,6 +333,35 @@ class NotesController extends Controller
         $arParams["sector"] = $sector;
         
         $label = $this->newLabel($arParams);
+
+        return $label;
+    }
+
+    /**
+     * Create labels
+     * @param Labels $label
+     * @param int $sectorId
+     * @param int $layerId
+     * @return Labels
+     */
+    protected function updateLabel(Labels $label,$sectorId, $layerId)
+    {
+        $arParams        = [];
+
+        $em     = $this->getDoctrine()->getManager();
+        $sector = $em->getRepository('NotesManagerBundle:Sectors')->find($sectorId);
+        $layer  = $em->getRepository('NotesManagerBundle:Layers')->find($layerId);
+
+
+        $angel  = rand($sector->getBeginAngle(), $sector->getEndAngle());
+        $radius = $this->f_rand($layer->getBeginRadius(), $layer->getEndRadius());
+
+        $arParams["angle"]  = $angel;
+        $arParams["radius"] = $radius;
+        $arParams["layer"]  = $layer;
+        $arParams["sector"] = $sector;
+
+        $label = $this->editLabel($label,$arParams);
 
         return $label;
     }
@@ -409,7 +427,7 @@ class NotesController extends Controller
         $em->persist($label);
         $em->flush();
 
-        return $label->getId();
+        return $label;
     }
 
 
@@ -427,4 +445,36 @@ class NotesController extends Controller
 
         return true;
     }
+
+    protected function varsAndMethodsObject($object)
+    {
+        $arResult               = array();
+        $arResult["CLASS_NAME"] = get_class($object);
+        $arResult["VARS"]       = get_class_vars(get_class($object));
+        $arResult["METHODS"]    = get_class_methods(get_class($object));
+
+        return $arResult;
+    }
+
+    /**
+     * function replace two element array with keys - $key1 и $key2
+     * @param array $array original array
+     * @param string $key1
+     * @param string $key2
+     * @return bool true if replace successful or false if fail
+     */
+    protected function array_swap(array &$array, $key1, $key2)
+    {
+        if (isset($array[$key1]) && isset($array[$key2])) {
+            list($array[$key1], $array[$key2]) = array($array[$key2], $array[$key1]);
+            return true;
+        }
+        return false;
+    }
+
+    protected function f_rand($min=0,$max=1,$mul=1000000){
+        if ($min>$max) return false;
+        return mt_rand($min*$mul,$max*$mul)/$mul;
+    }
+
 }
