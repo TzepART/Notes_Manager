@@ -19,6 +19,13 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     {% endblock %}
+
+    {% block javascripts %}
+
+        <script src="{{ asset('js/jcanvas.js') }}"></script>
+        <script src="{{ asset('js/script.js') }}"></script>
+    {% endblock %}
+
 </head>
 
 <body id="{% block body_id %}{% endblock %}">
@@ -48,11 +55,6 @@
     </footer>
 {% endblock %}
 
-{% block javascripts %}
-
-    <script src="{{ asset('js/jcanvas.js') }}"></script>
-    <script src="{{ asset('js/script.js') }}"></script>
-{% endblock %}
 
 </body>
 </html>

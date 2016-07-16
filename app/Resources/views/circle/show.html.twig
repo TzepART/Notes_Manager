@@ -2,55 +2,59 @@
 
 {% block main %}
 
-    <h1>Circle</h1>
-
-    <table>
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ circle.id }}</td>
-        </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{ circle.name }}</td>
-        </tr>
-        <tr>
-            <th>Datecreate</th>
-            <td>{% if circle.dateCreate %}{{ circle.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
-        </tr>
-        <tr>
-            <th>Dateupdate</th>
-            <td>{% if circle.dateUpdate %}{{ circle.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('circle_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('circle_edit', { 'id': circle.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
-
     <div class="row">
         <div class="col-md-7 col-md-offset-2">
             <canvas id="canvas" width="630" height="630"></canvas>
             <div>
                 <a class="btn btn-primary btn-lg btn-block" id="pop_label_link" href="" style="display: none">Посмотреть заметку</a>
-                <a href="create_note.html?id=1" id="create_label_link" class="btn btn-primary btn-lg btn-block">Добавить
+                <a href="{{ path('notes_new_by_circle', { 'select_circle': circle.id }) }}" id="create_label_link" class="btn btn-primary btn-lg btn-block">Добавить
                     заметку</a>
-                <a href="list_notes.html?id=1" class="btn btn-primary btn-lg btn-block">Список заметок</a>
+                <a href="/notes/?circle_id=1" class="btn btn-primary btn-lg btn-block">Список заметок</a>
                 <a href="{{ path('circle_edit', { 'id': circle.id }) }}" class="btn btn-default btn-lg btn-block">Редактировать
                     окружность</a>
             </div>
         </div>
 
     </div>
+
+    <script>
+        /*
+         * Block with creating elements
+         * */
+
+        var numLayers = {{ countLayers }};
+
+        {% for arSector in arSectors%}
+            var dataSector{{ arSector.id }} = {
+                id:{{ arSector.id }},
+                numLayers: numLayers,
+                color:'{{ arSector.color }}',
+                beginAngle:{{ arSector.beginAngle }},
+                endAngle:{{ arSector.endAngle }},
+                name:'{{ arSector.name }}',
+                circle_id: {{  circle.id }}
+            };
+        createSector(dataSector{{ arSector.id }});
+        {% endfor %}
+
+
+        {% for arLabel in arLabels%}
+            var dataLabel{{ arLabel.id }} = {
+                id:{{ arLabel.id }},
+                radius:{{ arLabel.radius }},
+                degr:{{ arLabel.degr }},
+                name:'{{ arLabel.name }}'
+            };
+            createLabel(dataLabel{{ arLabel.id }});
+        {% endfor %}
+
+
+        $(document).ready(function() {
+            $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
+            $('canvas').triggerLayerEvent('slice11', 'click');
+        });
+
+
+    </script>
+
 {% endblock %}

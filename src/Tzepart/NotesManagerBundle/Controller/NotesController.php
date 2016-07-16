@@ -51,7 +51,7 @@ class NotesController extends Controller
      * Creates a new Notes entity.
      *
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request,$select_circle = null)
     {
         $note             = new Notes();
         $arSectors        = [];
@@ -60,21 +60,25 @@ class NotesController extends Controller
         $arLayersObjects  = [];
         $arLayersId       = [];
         $countLayers      = 5;
-        $arSelectCirclesId = 0;
+        $selectCirclesId = 0;
         $form             = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $form->handleRequest($request);
+
 
         $user             = $this->getCurrentUserObject();
         $arCirclesObjects = $user->getCircles();
 
         if(!empty($request->get("select_circle"))){
-            $arSelectCirclesId = $request->get("select_circle");
+            $selectCirclesId = $request->get("select_circle");
+        }elseif($select_circle != null){
+            $selectCirclesId = $select_circle;
         }
 
         foreach ($arCirclesObjects as $key => $circlesObject) {
             $arCircles[$key]["id"]   = $circlesObject->getId();
             $arCircles[$key]["name"] = $circlesObject->getName();
-            if ($circlesObject->getId() == $arSelectCirclesId) {
+            if ($circlesObject->getId() == $selectCirclesId) {
+                $this->array_swap($arCircles,0,$key);
                 $arLayersObjects  = $circlesObject->getLayers();
                 $arSectorsObjects = $circlesObject->getSectors();
             }
@@ -147,7 +151,7 @@ class NotesController extends Controller
         $arCircles        = [];
         $arLayersId       = [];
         $countLayers      = 5;
-        $arSelectCirclesId = 0;
+        $selectCirclesId = 0;
         $selectLayerId = 0;
         $selectSectorId = 0;
         $numberLayer = "";
@@ -158,13 +162,13 @@ class NotesController extends Controller
         $label = $note->getLabels();
 
         if($label != null){
-            $arSelectCirclesId = $label->getSectors()->getCircle()->getId();
+            $selectCirclesId = $label->getSectors()->getCircle()->getId();
             $selectLayerId = $label->getLayers()->getId();
             $selectSectorId = $label->getSectors()->getId();
         }
         
         if(!empty($request->get("select_circle"))){
-            $arSelectCirclesId = $request->get("select_circle");
+            $selectCirclesId = $request->get("select_circle");
         }
 
         $user             = $this->getCurrentUserObject();
@@ -173,7 +177,7 @@ class NotesController extends Controller
         foreach ($arCirclesObjects as $key => $circlesObject) {
             $arCircles[$key]["id"]   = $circlesObject->getId();
             $arCircles[$key]["name"] = $circlesObject->getName();
-            if ($circlesObject->getId() == $arSelectCirclesId) {
+            if ($circlesObject->getId() == $selectCirclesId) {
                 $this->array_swap($arCircles,0,$key);
                 $arLayersObjects  = $circlesObject->getLayers();
                 $arSectorsObjects = $circlesObject->getSectors();

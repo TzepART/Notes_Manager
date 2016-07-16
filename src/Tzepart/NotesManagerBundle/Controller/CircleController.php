@@ -28,10 +28,9 @@ class CircleController extends Controller
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
-        } else {
-            echo "You authorize!";
         }
 
+        
         $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
 
         return $this->render(
@@ -115,11 +114,40 @@ class CircleController extends Controller
      */
     public function showAction(Circle $circle)
     {
+        $arSectors = [];
+        $arLabels = [];
         $deleteForm = $this->createDeleteForm($circle);
+        $arlayersObj = $circle->getLayers();
+        $countLayers = count($arlayersObj);
+
+        $arSectorsObj = $circle->getSectors();
+        $i = 0;
+        $em     = $this->getDoctrine()->getManager();
+
+        foreach ($arSectorsObj as $key=>$sectorObj) {
+            $arSectors[$key]["beginAngle"] = $sectorObj->getBeginAngle();
+            $arSectors[$key]["endAngle"] = $sectorObj->getEndAngle();
+            $arSectors[$key]["name"] = $sectorObj->getName();
+            $arSectors[$key]["color"] = $sectorObj->getColor();
+            $arSectors[$key]["id"] = $sectorObj->getId();
+            $arLabelsObj = $sectorObj->getLabels();
+            foreach ($arLabelsObj as $index => $labelObj) {
+                if($labelObj->getNotes() != null){
+                    $arLabels[$i]["id"] = $labelObj->getId();
+                    $arLabels[$i]["radius"] = $labelObj->getRadius();
+                    $arLabels[$i]["degr"] = $labelObj->getAngle();
+                    $arLabels[$i]["name"] = $labelObj->getNotes()->getName();
+                    $i++;
+                }
+            }
+        }
 
         return $this->render(
             'circle/show.html.twig',
             array(
+                'arSectors'=>$arSectors,
+                'arLabels'=>$arLabels,
+                'countLayers'=>$countLayers,
                 'circle' => $circle,
                 'delete_form' => $deleteForm->createView(),
             )
