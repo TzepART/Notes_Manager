@@ -2,43 +2,6 @@
 
 {% block main %}
 
-    <h1>Circle</h1>
-
-    <table>
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ circle.id }}</td>
-        </tr>
-        <tr>
-            <th>Name</th>
-            <td>{{ circle.name }}</td>
-        </tr>
-        <tr>
-            <th>Datecreate</th>
-            <td>{% if circle.dateCreate %}{{ circle.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
-        </tr>
-        <tr>
-            <th>Dateupdate</th>
-            <td>{% if circle.dateUpdate %}{{ circle.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('circle_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('circle_edit', { 'id': circle.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-            <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
-
     <div class="row">
         <div class="col-md-7 col-md-offset-2">
             <canvas id="canvas" width="630" height="630"></canvas>
@@ -75,27 +38,22 @@
         {% endfor %}
 
 
-        var dataLabel1 = {
-            id:1,
-            radius:0.13,
-            degr:56,
-            name:'Note1'
-        };
+        {% for arLabel in arLabels%}
+            var dataLabel{{ arLabel.id }} = {
+                id:{{ arLabel.id }},
+                radius:{{ arLabel.radius }},
+                degr:{{ arLabel.degr }},
+                name:'{{ arLabel.name }}'
+            };
+            createLabel(dataLabel{{ arLabel.id }});
+        {% endfor %}
 
-        var dataLabel2 = {
-            id:2,
-            radius:0.71,
-            degr:230,
-            name:'Note2'
-        };
 
         $(document).ready(function() {
             $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
             $('canvas').triggerLayerEvent('slice11', 'click');
         });
 
-        createLabel(dataLabel1);
-        createLabel(dataLabel2);
 
     </script>
 
