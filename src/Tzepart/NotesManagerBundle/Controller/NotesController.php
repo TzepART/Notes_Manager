@@ -70,16 +70,21 @@ class NotesController extends Controller
         $arLayersObjects  = [];
         $arLayersId       = [];
         $countLayers      = 5;
+        $arSelectCirclesId = 0;
         $form             = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $form->handleRequest($request);
 
         $user             = $this->getCurrentUserObject();
         $arCirclesObjects = $user->getCircles();
 
+        if(!empty($request->get("select_circle"))){
+            $arSelectCirclesId = $request->get("select_circle");
+        }
+
         foreach ($arCirclesObjects as $key => $circlesObject) {
             $arCircles[$key]["id"]   = $circlesObject->getId();
             $arCircles[$key]["name"] = $circlesObject->getName();
-            if ($key == !empty($request->get("select_circle"))?$request->get("select_circle"):0) {
+            if ($circlesObject->getId() == $arSelectCirclesId) {
                 $arLayersObjects  = $circlesObject->getLayers();
                 $arSectorsObjects = $circlesObject->getSectors();
             }
@@ -146,6 +151,49 @@ class NotesController extends Controller
         $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $editForm->handleRequest($request);
 
+        $arSectorsObjects = [];
+        $arLayersObjects  = [];
+        $arSectors        = [];
+        $arCircles        = [];
+        $arLayersId       = [];
+        $countLayers      = 5;
+        $arSelectCirclesId = 0;
+        
+        $label = $note->getLabels();
+   
+        if(!$label != null){
+            $arSelectCirclesId = $label->getSectors()->getCircle()->getId();
+        }
+        
+        if(!empty($request->get("select_circle"))){
+            $arSelectCirclesId = $request->get("select_circle");
+        }
+
+        $user             = $this->getCurrentUserObject();
+        $arCirclesObjects = $user->getCircles();
+
+        foreach ($arCirclesObjects as $key => $circlesObject) {
+            $arCircles[$key]["id"]   = $circlesObject->getId();
+            $arCircles[$key]["name"] = $circlesObject->getName();
+            if ($circlesObject->getId() == $arSelectCirclesId) {
+                $arLayersObjects  = $circlesObject->getLayers();
+                $arSectorsObjects = $circlesObject->getSectors();
+            }
+        }
+
+        if (!empty($arLayersObjects) && !empty($arSectorsObjects)) {
+            $countLayers = count($arLayersObjects);
+            foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
+                $arLayersId[$keyLayer] = $arLayersObject->getId();
+            }
+
+            foreach ($arSectorsObjects as $key => $arSectorObj) {
+                $arSectors[$key]["id"]   = $arSectorObj->getId();
+                $arSectors[$key]["name"] = $arSectorObj->getName();
+            }
+        }
+
+
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($note);
@@ -158,6 +206,9 @@ class NotesController extends Controller
             'notes/edit.html.twig',
             array(
                 'note' => $note,
+                'arSectors' => $arSectors,
+                'countLayers' => $countLayers,
+                'arCircles' => $arCircles,
                 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
             )
