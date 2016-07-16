@@ -30,6 +30,22 @@ class NotesController extends Controller
     }
 
     /**
+     * function replace two element array with keys - $key1 и $key2
+     * @param array $array original array
+     * @param string $key1
+     * @param string $key2
+     * @return bool true if replace successful or false if fail
+     */
+    public function array_swap(array &$array, $key1, $key2)
+    {
+        if (isset($array[$key1]) && isset($array[$key2])) {
+            list($array[$key1], $array[$key2]) = array($array[$key2], $array[$key1]);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Lists all Notes entities.
      *
      */
@@ -158,12 +174,19 @@ class NotesController extends Controller
         $arLayersId       = [];
         $countLayers      = 5;
         $arSelectCirclesId = 0;
-        
+        $selectLayerId = 0;
+        $selectSectorId = 0;
+        $numberLayer = "";
 
+
+        $name = $note->getName();
+        $text = $note->getText();
         $label = $note->getLabels();
 
         if($label != null){
             $arSelectCirclesId = $label->getSectors()->getCircle()->getId();
+            $selectLayerId = $label->getLayers()->getId();
+            $selectSectorId = $label->getSectors()->getId();
         }
         
         if(!empty($request->get("select_circle"))){
@@ -177,6 +200,7 @@ class NotesController extends Controller
             $arCircles[$key]["id"]   = $circlesObject->getId();
             $arCircles[$key]["name"] = $circlesObject->getName();
             if ($circlesObject->getId() == $arSelectCirclesId) {
+                $this->array_swap($arCircles,0,$key);
                 $arLayersObjects  = $circlesObject->getLayers();
                 $arSectorsObjects = $circlesObject->getSectors();
             }
@@ -186,11 +210,17 @@ class NotesController extends Controller
             $countLayers = count($arLayersObjects);
             foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
                 $arLayersId[$keyLayer] = $arLayersObject->getId();
+                if($arLayersObject->getId() == $selectLayerId){
+                    $numberLayer = $keyLayer;
+                }
             }
 
             foreach ($arSectorsObjects as $key => $arSectorObj) {
                 $arSectors[$key]["id"]   = $arSectorObj->getId();
                 $arSectors[$key]["name"] = $arSectorObj->getName();
+                if($arSectorObj->getId() == $selectSectorId){
+                    $this->array_swap($arSectors,0,$key);
+                }
             }
         }
 
@@ -206,6 +236,9 @@ class NotesController extends Controller
         return $this->render(
             'notes/edit.html.twig',
             array(
+                "name" => $name,
+                "text" => $text,
+                "numberLayer" => $numberLayer,
                 'note' => $note,
                 'arSectors' => $arSectors,
                 'countLayers' => $countLayers,

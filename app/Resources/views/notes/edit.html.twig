@@ -9,13 +9,13 @@
         {{ form_widget(edit_form) }}
 
 
-            <h2 style="text-align: center">Создать Заметку</h2>
+            <h2 style="text-align: center">Изменить Заметку</h2>
             <div class="form-group create_note">
-                <input type="text" name="name" placeholder="Название заметки" class="form-control"/>
+                <input type="text" name="name" placeholder="Название заметки" value="{{ name }}" class="form-control"/>
             </div>
 
             <div class="form-group">
-                <textarea placeholder="Текст заметки" name="text" class="form-control" rows="3"></textarea>
+                <textarea placeholder="Текст заметки" name="text" class="form-control" rows="3">{{ text }}</textarea>
             </div>
 
             <h2 style="text-align: center">Размещение заметки</h2>
@@ -38,7 +38,7 @@
             </div>
 
             <div class="form-group">
-                <input type="number" name="layers_number" min="0" max="{{ countLayers }}" placeholder="Уровень срочности" class="form-control"/>
+                <input type="number" name="layers_number" min="0" max="{{ countLayers }}" value="{{ numberLayer }}" placeholder="Уровень срочности" class="form-control"/>
             </div>
 
             <div class="form-group form_submit">
