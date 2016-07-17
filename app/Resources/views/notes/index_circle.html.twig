@@ -8,7 +8,7 @@
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 {% for arSector in arSectors %}
                     <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="headingOne">
+                        <div class="panel-heading" role="tab" id="heading{{ arSector.id }}">
                             <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ arSector.id }}"
                                    aria-expanded="true" aria-controls="collapse{{ arSector.id }}">
@@ -23,11 +23,11 @@
                                     {% if arSector.notes is defined %}
                                         {% for arNote in arSector.notes %}
                                             <li style="background: {{ arNote.color }}" class="list-group-item notes_link_by_list">
-                                                <a role="button" data-toggle="collapse" href="#collapseExample"
-                                                   aria-expanded="false" aria-controls="collapseExample">{{ arNote.noteName }}</a>
+                                                <a role="button" data-toggle="collapse" href="#note{{ arNote.noteId }}"
+                                                   aria-expanded="false" aria-controls="note{{ arNote.noteId }}">{{ arNote.noteName }}</a>
                                                 <a href="detail_circle.html?id=1"><i class="fa fa-adjust fa-lg"></i></a>
                                                 <a href="notes_edit.html?id=1"><i class="fa fa-pencil fa-lg"></i></a>
-                                                <div class="collapse collapse_note" id="collapseExample">
+                                                <div class="collapse collapse_note" id="note{{ arNote.noteId }}">
                                                     <div class="well">
                                                         {{ arNote.text }}
                                                     </div>
