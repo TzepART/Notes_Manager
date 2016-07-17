@@ -26,23 +26,35 @@ class NotesController extends Controller
     public function indexAction($circleId = null,$noteId = null)
     {
         $arSectors = [];
-        $notes = [];
+        $arNotes = [];
         $userObj = $this->getCurrentUserObject();
         $em    = $this->getDoctrine()->getManager();
 
 
         if($circleId != null && $circleId >0){
             $circleObj = $em->getRepository('NotesManagerBundle:Circle')->find($circleId);
+            $arLayerByLabel = [];
             $arSectorsObj = $circleObj->getSectors();
+            $arLayersObj = $circleObj->getLayers();
+            $countLayer = count($arLayersObj);
+            foreach ($arLayersObj as $index => $arLayerObj) {
+                $arLabelsObjByLayer = $arLayerObj->getLabels();
+                foreach ($arLabelsObjByLayer as $key => $labelObj) {
+                    $arLayerByLabel[$labelObj->getId()] = $index;
+                }
+            }
             foreach ($arSectorsObj as $index => $sectorObj) {
                 $arSectors[$index]["name"] = $sectorObj->getId();
                 $arSectors[$index]["id"] = $sectorObj->getName();
                 $arLabelsObj = $sectorObj->getLabels();
+                $arColorBySector = $this->returnArColorLayers($sectorObj->getColor(),$countLayer);
                 foreach ($arLabelsObj as $key => $labelObj) {
                     $notesObj = $labelObj->getNotes();
+                    $notes[] = $notesObj;
                     $arSectors[$index]["notes"][$key]["id"] = $notesObj->getId();
                     $arSectors[$index]["notes"][$key]["name"] = $notesObj->getName();
                     $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
+                    $arSectors[$index]["notes"][$key]["color"] = $arColorBySector[$arLayerByLabel[$labelObj->getId()]];
                     if($notesObj->getId() == $noteId){
                         $arSectors[$index]["notes"][$key]["active"] = "active";
                     }else{
@@ -50,22 +62,31 @@ class NotesController extends Controller
                     }
                 }
             }
+
+            return $this->render(
+                'notes/index_circle.html.twig',
+                array(
+                    'circleId' => $circleId,
+                    'arSectors' => $arSectors,
+                )
+            );
+            
         }else{
             $arNotesObj = $userObj->getNotes();
             foreach ($arNotesObj as $index => $noteObj) {
                 if($noteObj->getLabels() == null){
-                    $notes[]=$noteObj;
+                    $arNotes[]=$noteObj;
                 }
             }
-        }
 
-        return $this->render(
-            'notes/index.html.twig',
-            array(
-                'arSectors' => $arSectors,
-                'notes' => $notes,
-            )
-        );
+            return $this->render(
+                'notes/index.html.twig',
+                array(
+                    'arNotes' => $arNotes,
+                )
+            );
+        }
+        
     }
 
     /**
@@ -511,6 +532,59 @@ class NotesController extends Controller
     protected function f_rand($min=0,$max=1,$mul=1000000){
         if ($min>$max) return false;
         return mt_rand($min*$mul,$max*$mul)/$mul;
+    }
+
+    /**
+     * @param string $color
+     * @param int $numLayers
+     * @return array
+     */
+    function returnArColorLayers($color,$numLayers) {
+        $arColor = $this->hextorgb($color);
+        $tempColor = $arColor;
+        $arRBA = [];
+        $i = 0;
+        $difColorRed = (256-$arColor[0])/$numLayers;
+        $difColorGreen = ($arColor[1])/($numLayers-1);
+        $difColorBlue = ($arColor[2])/($numLayers-1);
+        $red = $arColor[0] + $difColorRed;
+        $green = $arColor[1];
+        $blue = $arColor[2];
+        for($red; $red <= 256; $red = $red + $difColorRed){
+            $tempColor[0] = floor($red);
+            $tempColor[1] = floor($green);
+            $tempColor[2] = floor($blue);
+            $arRBA[$i] = $this->hexArrayInRgbString($tempColor);
+            $green = $green - $difColorGreen;
+            $blue = $blue - $difColorBlue;
+            $i++;
+        }
+        return $arRBA;
+    }
+
+    protected function hextorgb($hex) {
+        $hex = str_replace('#', '', $hex);
+        if ( strlen($hex) == 6 ) {
+            $rgb[0] = hexdec(substr($hex, 0, 2));
+            $rgb[1] = hexdec(substr($hex, 2, 2));
+            $rgb[2] = hexdec(substr($hex, 4, 2));
+        }
+        else if ( strlen($hex) == 3 ) {
+            $rgb[0] = hexdec(str_repeat(substr($hex, 0, 1), 2));
+            $rgb[1] = hexdec(str_repeat(substr($hex, 1, 1), 2));
+            $rgb[2] = hexdec(str_repeat(substr($hex, 2, 1), 2));
+        }
+        else {
+            $rgb[0] = '0';
+            $rgb[1] = '0';
+            $rgb[2] = '0';
+        }
+        return $rgb;
+    }
+
+    function hexArrayInRgbString($tempColor) {
+        $rgb = 'rgb('.$tempColor[0].', '.$tempColor[1].', '.$tempColor[2].')';
+        return $rgb;
     }
 
 }

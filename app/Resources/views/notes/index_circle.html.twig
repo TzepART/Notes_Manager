@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <div class="row">
+        <div class="jumbotron col-md-6 col-md-offset-3">
+            <h2 style="text-align: center">Общая</h2>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                {% for arSector in arSectors %}
+                    <tr>
+                        <td><a href="{{ path('notes_show', { 'id': note.id }) }}">{{ note.id }}</a></td>
+                        <td>{{ note.name }}</td>
+                        <td>{{ note.text }}</td>
+                        <td>{% if note.dateCreate %}{{ note.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{% if note.dateUpdate %}{{ note.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('notes_show', { 'id': note.id }) }}">show</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('notes_edit', { 'id': note.id }) }}">edit</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ arSector.id }}"
+                               aria-expanded="true" aria-controls="collapse{{ arSector.id }}">
+                                {{ arSector.name }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapse{{ arSector.id }}" class="panel-collapse collapse in" role="tabpanel"
+                         aria-labelledby="heading{{ arSector.id }}">
+                        <div class="list-group">
+                            <ul class="list-group">
+                                <li style="background: rgb(256, 0, 0)" class="list-group-item notes_link_by_list">
+                                    <a role="button" data-toggle="collapse" href="#collapseExample"
+                                       aria-expanded="false" aria-controls="collapseExample">Notes1</a>
+                                    <a href="detail_circle.html?id=1"><i class="fa fa-adjust fa-lg"></i></a>
+                                    <a href="notes_edit.html?id=1"><i class="fa fa-pencil fa-lg"></i></a>
+                                    <div class="collapse collapse_note" id="collapseExample">
+                                        <div class="well">
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque delectus
+                                            doloribus eius, exercitationem impedit itaque provident sapiente sit tempora
+                                            temporibus?
+                                        </div>
+                                    </div>
+                                </li>
+                                <li style="background: rgb(227, 62, 47)" class="list-group-item notes_link_by_list">
+                                    <a href="">Notes2</a>
+                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
+                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
+                                </li>
+                                <li style="background: rgb(227, 62, 47)" class="list-group-item notes_link_by_list">
+                                    <a href="">Notes3</a>
+                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
+                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
+                                </li>
+                                <li style="background: rgb(199, 125, 95)" class="list-group-item notes_link_by_list">
+                                    <a href="">Notes4</a>
+                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
+                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
+                                </li>
+                                <li style="background: rgb(199, 125, 95)" class="list-group-item notes_link_by_list">
+                                    <a href="">Notes5</a>
+                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
+                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
+                                </li>
+                                <li style="background: rgb(171, 188, 143)" class="list-group-item notes_link_by_list">
+                                    <a href="">Notes6</a>
+                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
+                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ path('circle_show', { 'id': circleId }) }}" class="btn btn-primary btn-lg btn-block">Окружность</a>
+        </div>
+    </div>
+
+{% endblock %}
