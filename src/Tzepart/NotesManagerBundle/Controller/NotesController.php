@@ -23,14 +23,46 @@ class NotesController extends Controller
      * Lists all Notes entities.
      *
      */
-    public function indexAction()
+    public function indexAction($circleId = null,$noteId = null)
     {
+        $arSectors = [];
+        $notes = [];
+        $userObj = $this->getCurrentUserObject();
         $em    = $this->getDoctrine()->getManager();
-        $notes = $em->getRepository('NotesManagerBundle:Notes')->findAll();
+
+
+        if($circleId != null && $circleId >0){
+            $circleObj = $em->getRepository('NotesManagerBundle:Circle')->find($circleId);
+            $arSectorsObj = $circleObj->getSectors();
+            foreach ($arSectorsObj as $index => $sectorObj) {
+                $arSectors[$index]["name"] = $sectorObj->getId();
+                $arSectors[$index]["id"] = $sectorObj->getName();
+                $arLabelsObj = $sectorObj->getLabels();
+                foreach ($arLabelsObj as $key => $labelObj) {
+                    $notesObj = $labelObj->getNotes();
+                    $arSectors[$index]["notes"][$key]["id"] = $notesObj->getId();
+                    $arSectors[$index]["notes"][$key]["name"] = $notesObj->getName();
+                    $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
+                    if($notesObj->getId() == $noteId){
+                        $arSectors[$index]["notes"][$key]["active"] = "active";
+                    }else{
+                        $arSectors[$index]["notes"][$key]["active"] = "";
+                    }
+                }
+            }
+        }else{
+            $arNotesObj = $userObj->getNotes();
+            foreach ($arNotesObj as $index => $noteObj) {
+                if($noteObj->getLabels() == null){
+                    $notes[]=$noteObj;
+                }
+            }
+        }
 
         return $this->render(
             'notes/index.html.twig',
             array(
+                'arSectors' => $arSectors,
                 'notes' => $notes,
             )
         );
@@ -107,7 +139,7 @@ class NotesController extends Controller
             ) {
                 $numberLayer = $request->get("layers_number");
                 $sectorId    = $request->get("select_sector");
-                $layerId     = $arLayersId[$numberLayer];
+                $layerId     = $arLayersId[$numberLayer-1];
                 $label       = $this->createLabel($sectorId, $layerId);
                 $note->setLabels($label);
             }
@@ -120,7 +152,7 @@ class NotesController extends Controller
             $em->persist($note);
             $em->flush();
 
-            return $this->redirectToRoute('notes_show', array('id' => $note->getId()));
+            return $this->redirectToRoute('circle_show', array('id' => $request->get("select_circle")));
         }
 
         return $this->render(

@@ -1,6 +1,16 @@
 notes_index:
     path:     /
-    defaults: { _controller: "NotesManagerBundle:Notes:index" }
+    defaults: { _controller: "NotesManagerBundle:Notes:index"}
+    methods:  GET
+
+select_notes_list_by_circle:
+    path:     /{circleId}/
+    defaults: { _controller: "NotesManagerBundle:Notes:index"}
+    methods:  GET
+
+select_note_by_circle:
+    path:     /{circleId}/{noteId}/
+    defaults: { _controller: "NotesManagerBundle:Notes:index"}
     methods:  GET
 
 notes_show:
