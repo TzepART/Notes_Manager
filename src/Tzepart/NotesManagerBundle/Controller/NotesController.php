@@ -560,7 +560,7 @@ class NotesController extends Controller
             $blue = $blue - $difColorBlue;
             $i++;
         }
-        return $arRBA;
+        return array_reverse($arRBA);
     }
 
     protected function hextorgb($hex) {
