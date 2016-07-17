@@ -44,15 +44,15 @@ class NotesController extends Controller
                 }
             }
             foreach ($arSectorsObj as $index => $sectorObj) {
-                $arSectors[$index]["name"] = $sectorObj->getId();
-                $arSectors[$index]["id"] = $sectorObj->getName();
+                $arSectors[$index]["id"] = $sectorObj->getId();
+                $arSectors[$index]["name"] = $sectorObj->getName();
                 $arLabelsObj = $sectorObj->getLabels();
                 $arColorBySector = $this->returnArColorLayers($sectorObj->getColor(),$countLayer);
                 foreach ($arLabelsObj as $key => $labelObj) {
                     $notesObj = $labelObj->getNotes();
                     $notes[] = $notesObj;
-                    $arSectors[$index]["notes"][$key]["id"] = $notesObj->getId();
-                    $arSectors[$index]["notes"][$key]["name"] = $notesObj->getName();
+                    $arSectors[$index]["notes"][$key]["noteId"] = $notesObj->getId();
+                    $arSectors[$index]["notes"][$key]["noteName"] = $notesObj->getName();
                     $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
                     $arSectors[$index]["notes"][$key]["color"] = $arColorBySector[$arLayerByLabel[$labelObj->getId()]];
                     if($notesObj->getId() == $noteId){
@@ -62,6 +62,7 @@ class NotesController extends Controller
                     }
                 }
             }
+
 
             return $this->render(
                 'notes/index_circle.html.twig',
