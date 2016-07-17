@@ -26,8 +26,11 @@ class NotesController extends Controller
     public function indexAction($circleId = null,$noteId = null)
     {
         $arSectors = [];
-
+        $notes = [];
+        $userObj = $this->getCurrentUserObject();
         $em    = $this->getDoctrine()->getManager();
+
+
         if($circleId != null && $circleId >0){
             $circleObj = $em->getRepository('NotesManagerBundle:Circle')->find($circleId);
             $arSectorsObj = $circleObj->getSectors();
@@ -48,7 +51,12 @@ class NotesController extends Controller
                 }
             }
         }else{
-            $notes = $em->getRepository('NotesManagerBundle:Notes')->findAll();
+            $arNotesObj = $userObj->getNotes();
+            foreach ($arNotesObj as $index => $noteObj) {
+                if($noteObj->getLabels() == null){
+                    $notes[]=$noteObj;
+                }
+            }
         }
 
         return $this->render(
