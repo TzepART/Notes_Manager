@@ -265,7 +265,7 @@ function createLabel(data) {
             delRayNamePopUpAndCircleByLabel(layer.data.id);
         },
         dblclick: function(layer) {
-            $('#pop_label_link').css('display','block').attr('href','list_notes.html?id='+layer.data.id);
+            $('#pop_label_link').css('display','block').attr('href','/app_dev.php/notes/'+layer.data.id+'/show');
         },
     });
 }

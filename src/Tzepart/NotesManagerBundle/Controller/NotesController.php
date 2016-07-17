@@ -23,14 +23,38 @@ class NotesController extends Controller
      * Lists all Notes entities.
      *
      */
-    public function indexAction()
+    public function indexAction($circleId = null,$noteId = null)
     {
+        $arSectors = [];
+
         $em    = $this->getDoctrine()->getManager();
-        $notes = $em->getRepository('NotesManagerBundle:Notes')->findAll();
+        if($circleId != null && $circleId >0){
+            $circleObj = $em->getRepository('NotesManagerBundle:Circle')->find($circleId);
+            $arSectorsObj = $circleObj->getSectors();
+            foreach ($arSectorsObj as $index => $sectorObj) {
+                $arSectors[$index]["name"] = $sectorObj->getId();
+                $arSectors[$index]["id"] = $sectorObj->getName();
+                $arLabelsObj = $sectorObj->getLabels();
+                foreach ($arLabelsObj as $key => $labelObj) {
+                    $notesObj = $labelObj->getNotes();
+                    $arSectors[$index]["notes"][$key]["id"] = $notesObj->getId();
+                    $arSectors[$index]["notes"][$key]["name"] = $notesObj->getName();
+                    $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
+                    if($notesObj->getId() == $noteId){
+                        $arSectors[$index]["notes"][$key]["active"] = "active";
+                    }else{
+                        $arSectors[$index]["notes"][$key]["active"] = "";
+                    }
+                }
+            }
+        }else{
+            $notes = $em->getRepository('NotesManagerBundle:Notes')->findAll();
+        }
 
         return $this->render(
             'notes/index.html.twig',
             array(
+                'arSectors' => $arSectors,
                 'notes' => $notes,
             )
         );
