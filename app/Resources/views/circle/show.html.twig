@@ -9,7 +9,7 @@
                 <a class="btn btn-primary btn-lg btn-block" id="pop_label_link" href="" style="display: none">Посмотреть заметку</a>
                 <a href="{{ path('notes_new_by_circle', { 'select_circle': circle.id }) }}" id="create_label_link" class="btn btn-primary btn-lg btn-block">Добавить
                     заметку</a>
-                <a href="/notes/?circle_id=1" class="btn btn-primary btn-lg btn-block">Список заметок</a>
+                <a href="{{ path('select_notes_list_by_circle', { 'circleId': circle.id }) }}" class="btn btn-primary btn-lg btn-block">Список заметок</a>
                 <a href="{{ path('circle_edit', { 'id': circle.id }) }}" class="btn btn-default btn-lg btn-block">Редактировать
                     окружность</a>
             </div>
