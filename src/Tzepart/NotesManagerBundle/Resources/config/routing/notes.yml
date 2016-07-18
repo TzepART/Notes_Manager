@@ -8,6 +8,11 @@ select_notes_list_by_circle:
     defaults: { _controller: "NotesManagerBundle:Notes:index"}
     methods:  GET
 
+notes_new_by_circle:
+    path:     /new/{select_circle}
+    defaults: { _controller: "NotesManagerBundle:Notes:new", select_circle: null }
+    methods:  [GET, POST]
+
 select_note_by_circle:
     path:     /{circleId}/{noteId}/
     defaults: { _controller: "NotesManagerBundle:Notes:index"}
@@ -17,11 +22,6 @@ notes_show:
     path:     /{id}/show
     defaults: { _controller: "NotesManagerBundle:Notes:show" }
     methods:  GET
-
-notes_new_by_circle:
-    path:     /new/{select_circle}
-    defaults: { _controller: "NotesManagerBundle:Notes:new", select_circle: null }
-    methods:  [GET, POST]
 
 notes_new:
     path:     /new
