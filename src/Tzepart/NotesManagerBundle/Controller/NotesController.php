@@ -62,8 +62,6 @@ class NotesController extends Controller
                     }
                 }
             }
-
-
             return $this->render(
                 'notes/index_circle.html.twig',
                 array(
@@ -74,9 +72,11 @@ class NotesController extends Controller
             
         }else{
             $arNotesObj = $userObj->getNotes();
-            foreach ($arNotesObj as $index => $noteObj) {
-                if($noteObj->getLabels() == null){
-                    $arNotes[]=$noteObj;
+            foreach ($arNotesObj as $index => $notesObj) {
+                if($notesObj->getLabels() == null){
+                    $arNotes[$index]["noteId"] = $notesObj->getId();
+                    $arNotes[$index]["noteName"] = $notesObj->getName();
+                    $arNotes[$index]["text"] = $notesObj->getText();
                 }
             }
 
