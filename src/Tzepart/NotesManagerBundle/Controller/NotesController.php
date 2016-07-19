@@ -46,6 +46,7 @@ class NotesController extends Controller
             foreach ($arSectorsObj as $index => $sectorObj) {
                 $arSectors[$index]["id"] = $sectorObj->getId();
                 $arSectors[$index]["name"] = $sectorObj->getName();
+                $arSectors[$index]["inFlag"] = "";
                 $arLabelsObj = $sectorObj->getLabels();
                 $arColorBySector = $this->returnArColorLayers($sectorObj->getColor(),$countLayer);
                 foreach ($arLabelsObj as $key => $labelObj) {
@@ -56,9 +57,14 @@ class NotesController extends Controller
                     $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
                     $arSectors[$index]["notes"][$key]["color"] = $arColorBySector[$arLayerByLabel[$labelObj->getId()]];
                     if($notesObj->getId() == $noteId){
-                        $arSectors[$index]["notes"][$key]["active"] = "active";
+                        $arSectors[$index]["notes"][$key]["collapsed"] = "";
+                        $arSectors[$index]["notes"][$key]["ariaExpanded"] = "true";
+                        $arSectors[$index]["notes"][$key]["inFlag"] = "in";
+                        $arSectors[$index]["inFlag"] = "in";
                     }else{
-                        $arSectors[$index]["notes"][$key]["active"] = "";
+                        $arSectors[$index]["notes"][$key]["collapsed"] = "collapsed";
+                        $arSectors[$index]["notes"][$key]["ariaExpanded"] = "false";
+                        $arSectors[$index]["notes"][$key]["inFlag"] = "";
                     }
                 }
             }
@@ -164,6 +170,8 @@ class NotesController extends Controller
                 $layerId     = $arLayersId[$numberLayer-1];
                 $label       = $this->createLabel($sectorId, $layerId);
                 $note->setLabels($label);
+            }else{
+                $note->setLabels(null);
             }
 
             $note->setUser($user);
@@ -174,6 +182,7 @@ class NotesController extends Controller
             $em->persist($note);
             $em->flush();
 
+            //@TODO redirect in notes page
             return $this->redirectToRoute('circle_show', array('id' => $request->get("select_circle")));
         }
 
