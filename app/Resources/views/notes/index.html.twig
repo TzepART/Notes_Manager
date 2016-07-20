@@ -1,177 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-        {% for note in notes %}
-            <tr>
-                <td><a href="{{ path('notes_show', { 'id': note.id }) }}">{{ note.id }}</a></td>
-                <td>{{ note.name }}</td>
-                <td>{{ note.text }}</td>
-                <td>{% if note.dateCreate %}{{ note.dateCreate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if note.dateUpdate %}{{ note.dateUpdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('notes_show', { 'id': note.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('notes_edit', { 'id': note.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-
-    <ul>
-        <li>
-            <a href="{{ path('notes_new') }}">Create a new entry</a>
-        </li>
-    </ul>
-
     <div class="row">
         <div class="jumbotron col-md-6 col-md-offset-3">
             <h2 style="text-align: center">Входящие</h2>
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
-                               aria-expanded="true" aria-controls="collapseOne">
-                                Example1
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
-                         aria-labelledby="headingOne">
-                        <div class="list-group">
-                            <ul class="list-group">
-                                <li style="background: rgb(256, 0, 0)" class="list-group-item notes_link_by_list">
-                                    <a role="button" data-toggle="collapse" href="#collapseExample"
-                                       aria-expanded="false" aria-controls="collapseExample">Notes1</a>
-                                    <a href="detail_circle.html?id=1"><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href="notes_edit.html?id=1"><i class="fa fa-pencil fa-lg"></i></a>
-                                    <div class="collapse collapse_note" id="collapseExample">
-                                        <div class="well">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque delectus
-                                            doloribus eius, exercitationem impedit itaque provident sapiente sit tempora
-                                            temporibus?
-                                        </div>
+            <div id="collapseNotes" class="panel-collapse collapse in" role="tabpanel"
+                 aria-labelledby="headingNotes">
+                <div class="list-group">
+                    <ul class="list-group">
+                        {% for arNote in arNotes %}
+                            <li style="background-color: #245580" class="list-group-item notes_link_by_list">
+                                <a role="button" data-toggle="collapse" href="#note{{ arNote.noteId }}"
+                                   aria-expanded="false"
+                                   aria-controls="note{{ arNote.noteId }}">{{ arNote.noteName }}</a>
+                                <a href="{{ path('notes_edit', { 'id': arNote.noteId }) }}"><i
+                                            class="fa fa-pencil fa-lg"></i></a>
+                                <div class="collapse collapse_note" id="note{{ arNote.noteId }}">
+                                    <div class="well">
+                                        {{ arNote.text }}
                                     </div>
-                                </li>
-                                <li style="background: rgb(227, 62, 47)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes2</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(227, 62, 47)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes3</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(199, 125, 95)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes4</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(199, 125, 95)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes5</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(171, 188, 143)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes6</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingTwo">
-                        <h4 class="panel-title">
-                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                               href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Example2
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                        <div class="list-group">
-                            <ul class="list-group">
-                                <li style="background: rgb(256, 0, 0)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes1</a>
-                                    <a href="detail_circle.html?id=1"><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(255, 71, 0)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes2</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(255, 215, 0)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes3</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(255, 215, 0)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes4</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingThree">
-                        <h4 class="panel-title">
-                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
-                               href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Example3
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
-                         aria-labelledby="headingThree">
-                        <div class="list-group">
-                            <ul class="list-group">
-                                <li style="background: rgb(256, 0, 0)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes1</a>
-                                    <a href="detail_circle.html?id=1"><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(227, 62, 47)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes2</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(221, 56, 140)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes3</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(221, 56, 140)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes4</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(203, 85, 211)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes5</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                                <li style="background: rgb(203, 85, 211)" class="list-group-item notes_link_by_list">
-                                    <a href="">Notes6</a>
-                                    <a href=""><i class="fa fa-adjust fa-lg"></i></a>
-                                    <a href=""><i class="fa fa-pencil fa-lg"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <a href="{{ path('notes_new') }}" class="btn btn-primary btn-lg btn-block">Добавить заметку</a>
             </div>
-            <a href="detail_circle.html?id=1" class="btn btn-primary btn-lg btn-block">Окружность</a>
         </div>
     </div>
-
 {% endblock %}

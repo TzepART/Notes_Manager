@@ -43,7 +43,8 @@
                 id:{{ arLabel.id }},
                 radius:{{ arLabel.radius }},
                 degr:{{ arLabel.degr }},
-                name:'{{ arLabel.name }}'
+                name:'{{ arLabel.name }}',
+                circleId:'{{ circle.id }}'
             };
             createLabel(dataLabel{{ arLabel.id }});
         {% endfor %}
