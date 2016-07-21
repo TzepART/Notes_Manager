@@ -30,11 +30,15 @@ class NotesController extends Controller
         $userObj = $this->getCurrentUserObject();
         $em    = $this->getDoctrine()->getManager();
 
-//        $redis = $this->container->get('snc_redis.default');
-//        $val = $redis->incr('foo:bar');
-//        echo "<pre>";
-//        var_dump($val);
-//        echo "</pre>";
+
+        $redis = $this->container->get('snc_redis.default');
+
+        $redis->set('foo','hjhjj');
+        $val = $redis->get('foo');
+
+        echo "<pre>";
+        var_dump($val);
+        echo "</pre>";
 
 
         if($circleId != null && $circleId >0){
