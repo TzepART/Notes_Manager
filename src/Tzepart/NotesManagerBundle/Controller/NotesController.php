@@ -30,6 +30,12 @@ class NotesController extends Controller
         $userObj = $this->getCurrentUserObject();
         $em    = $this->getDoctrine()->getManager();
 
+//        $redis = $this->container->get('snc_redis.default');
+//        $val = $redis->incr('foo:bar');
+//        echo "<pre>";
+//        var_dump($val);
+//        echo "</pre>";
+
 
         if($circleId != null && $circleId >0){
             $circleObj = $em->getRepository('NotesManagerBundle:Circle')->find($circleId);

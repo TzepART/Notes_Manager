@@ -88,7 +88,6 @@ function changeColorLayers(color,numLayers) {
         blue = blue - difColorBlue;
         i++;
     }
-    console.log(arRBA);
     return arRBA;
 }
 
@@ -246,6 +245,9 @@ function createLabel(data) {
         dragstop: function(layer) {
             var pol = cartesian2Polar(layer.x, layer.y);
             var dec = cartesian2Dec(pol.distance,pol.degr);
+            console.log(pol.distance/bigRadius);
+            console.log(pol.degr);
+            console.log(layer.data);
             delRayNamePopUpAndCircleByLabel(layer.data.id);
         },
         drag: function(layer) {
