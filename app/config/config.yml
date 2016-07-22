@@ -8,6 +8,14 @@ imports:
 parameters:
     locale: en
 
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: redis://localhost
+
+
 framework:
     #esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
