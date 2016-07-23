@@ -115,10 +115,11 @@ class CircleController extends Controller
     public function showAction(Circle $circle)
     {
         $arSectors = [];
+        $arLayers = [];
         $arLabels = [];
         $deleteForm = $this->createDeleteForm($circle);
-        $arlayersObj = $circle->getLayers();
-        $countLayers = count($arlayersObj);
+        $arLayersObj = $circle->getLayers();
+        $countLayers = count($arLayersObj);
 
         $arSectorsObj = $circle->getSectors();
         $i = 0;
@@ -141,6 +142,17 @@ class CircleController extends Controller
                 }
             }
         }
+
+        foreach ($arLayersObj as $i => $arLayerObj) {
+            $arLayers[$i]["beginRadius"] = $arLayerObj->getBeginRadius();
+            $arLayers[$i]["endRadius"] = $arLayerObj->getEndRadius();
+            $arLayers[$i]["id"] = $arLayerObj->getId();
+        }
+
+        $redis = $this->container->get('snc_redis.default');
+        $redis->set($circle->getId().'_sectors',serialize($arSectors));
+        $redis->set($circle->getId().'_layers',serialize($arLayers));
+
 
         return $this->render(
             'circle/show.html.twig',
@@ -317,6 +329,22 @@ class CircleController extends Controller
         return $this->redirectToRoute('circle_index');
     }
 
+
+    /**
+     * @param int $circleId
+     * @param float $labelId
+     * @param float $radius
+     * @param float $angle
+     */
+    public function updateCoordinateLabelAction($circleId,$labelId,$radius,$angle)
+    {
+        $redis = $this->container->get('snc_redis.default');
+        $sectors = $redis->get($circleId.'_sectors');
+        $layers = $redis->get($circleId.'_layers');
+
+
+    }
+
     /**
      * Creates a form to delete a Circle entity.
      *
@@ -331,6 +359,7 @@ class CircleController extends Controller
             ->setMethod('DELETE')
             ->getForm();
     }
+
 
     /**
      * create N layers in circle
