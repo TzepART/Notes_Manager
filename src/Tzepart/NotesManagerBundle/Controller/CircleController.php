@@ -3,6 +3,8 @@
 namespace Tzepart\NotesManagerBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Circle;
@@ -331,17 +333,28 @@ class CircleController extends Controller
 
 
     /**
-     * @param int $circleId
-     * @param float $labelId
-     * @param float $radius
-     * @param float $angle
+     * @param Request $request
+     * @return JsonResponse|Response
      */
-    public function updateCoordinateLabelAction($circleId,$labelId,$radius,$angle)
+    public function updateCoordinateLabelAction(Request $request)
     {
-        $redis = $this->container->get('snc_redis.default');
-        $sectors = $redis->get($circleId.'_sectors');
-        $layers = $redis->get($circleId.'_layers');
+        if ($request->isXMLHttpRequest()) {
+            $arResult = [];
+            $circleId = $request->get("circleId");
+            $labelId = $request->get("labelId");
+            $radius = $request->get("radius");
+            $angle = $request->get("angle");
+            $redis = $this->container->get('snc_redis.default');
 
+            $sectors = $redis->get($circleId.'_sectors');
+            $layers = $redis->get($circleId.'_layers');
+            
+
+            return new JsonResponse($arResult);
+
+        }
+
+        return new Response('This is not ajax!', 400);
 
     }
 
