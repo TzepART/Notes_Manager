@@ -10,8 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Sectors;
 use Tzepart\NotesManagerBundle\Entity\Layers;
-use Tzepart\NotesManagerBundle\Form\CircleType;
+use Tzepart\NotesManagerBundle\Entity\Labels;
 use \Tzepart\NotesManagerBundle\Entity\User;
+
+
+use Tzepart\NotesManagerBundle\Form\CircleType;
 use Tzepart\NotesManagerBundle\Form\SectorsType;
 
 /**
@@ -340,16 +343,48 @@ class CircleController extends Controller
     {
         if ($request->isXMLHttpRequest()) {
             $arResult = [];
+            $sectorId = 0;
+            $layerId = 0;
+            $em = $this->getDoctrine()->getManager();
             $circleId = $request->get("circleId");
             $labelId = $request->get("labelId");
             $radius = $request->get("radius");
             $angle = $request->get("angle");
+            if($angle < 0 ){
+                $angle = 360 + $angle;
+            }
+
             $redis = $this->container->get('snc_redis.default');
 
-            $sectors = $redis->get($circleId.'_sectors');
-            $layers = $redis->get($circleId.'_layers');
-            
-            $arResult = [$circleId,$labelId,$radius,$angle];
+            $arSectors = unserialize($redis->get($circleId.'_sectors'));
+            $arLayers = unserialize($redis->get($circleId.'_layers'));
+
+            foreach ($arSectors as $index => $arSector) {
+                if($angle > $arSector['beginAngle'] && $angle < $arSector['endAngle']){
+                    $sectorId = $arSector['id'];
+                    break;
+                }
+            }
+
+            foreach ($arLayers as $index => $arLayer) {
+                if($radius > $arLayer['beginRadius'] && $radius < $arLayer['endRadius']){
+                    $layerId = $arLayer['id'];
+                    break;
+                }
+            }
+
+            $sector = $em->getRepository('NotesManagerBundle:Sectors')->find($sectorId);
+            $layer  = $em->getRepository('NotesManagerBundle:Layers')->find($layerId);
+            $labelObj = $em->getRepository('NotesManagerBundle:Labels')->find($labelId);
+
+            $arParams["angle"]  = $angle;
+            $arParams["radius"] = $radius;
+            $arParams["layer"]  = $layer;
+            $arParams["sector"] = $sector;
+
+            $label = $this->editLabel($labelObj,$arParams);
+
+            $arResult = array("status" => "Y");
 
             return new JsonResponse($arResult);
 
@@ -358,6 +393,7 @@ class CircleController extends Controller
         return new Response('This is not ajax!', 400);
 
     }
+
 
     /**
      * Creates a form to delete a Circle entity.
@@ -552,5 +588,33 @@ class CircleController extends Controller
         }
 
         return $arRadius;
+    }
+
+    /**
+     * @param Labels $label
+     * @param array $arParams
+     * @return int
+     */
+    public function editLabel(Labels $label,$arParams)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if(!empty($arParams["angle"])){
+            $label->setAngle($arParams["angle"]);
+        }
+        if(!empty($arParams["radius"])){
+            $label->setRadius($arParams["radius"]);
+        }
+        if(!empty($arParams["layer"])){
+            $label->setLayers($arParams["layer"]);
+        }
+        if(!empty($arParams["sector"])){
+            $label->setSectors($arParams["sector"]);
+        }
+        $label->setDateUpdate(new \DateTime('now'));
+        $em->persist($label);
+        $em->flush();
+
+        return $label;
     }
 }
