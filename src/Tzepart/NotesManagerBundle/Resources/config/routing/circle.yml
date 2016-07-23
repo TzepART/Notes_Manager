@@ -22,3 +22,8 @@ circle_delete:
     path:     /{id}/delete
     defaults: { _controller: "NotesManagerBundle:Circle:delete" }
     methods:  DELETE
+
+circle_edit_label_ajax:
+    path:     /editLabelAjax
+    defaults: { _controller: "NotesManagerBundle:Circle:updateCoordinateLabel" }
+    methods:  [GET, POST]

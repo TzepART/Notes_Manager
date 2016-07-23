@@ -3,13 +3,18 @@
 namespace Tzepart\NotesManagerBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Sectors;
 use Tzepart\NotesManagerBundle\Entity\Layers;
-use Tzepart\NotesManagerBundle\Form\CircleType;
+use Tzepart\NotesManagerBundle\Entity\Labels;
 use \Tzepart\NotesManagerBundle\Entity\User;
+
+
+use Tzepart\NotesManagerBundle\Form\CircleType;
 use Tzepart\NotesManagerBundle\Form\SectorsType;
 
 /**
@@ -115,10 +120,11 @@ class CircleController extends Controller
     public function showAction(Circle $circle)
     {
         $arSectors = [];
+        $arLayers = [];
         $arLabels = [];
         $deleteForm = $this->createDeleteForm($circle);
-        $arlayersObj = $circle->getLayers();
-        $countLayers = count($arlayersObj);
+        $arLayersObj = $circle->getLayers();
+        $countLayers = count($arLayersObj);
 
         $arSectorsObj = $circle->getSectors();
         $i = 0;
@@ -141,6 +147,17 @@ class CircleController extends Controller
                 }
             }
         }
+
+        foreach ($arLayersObj as $i => $arLayerObj) {
+            $arLayers[$i]["beginRadius"] = $arLayerObj->getBeginRadius();
+            $arLayers[$i]["endRadius"] = $arLayerObj->getEndRadius();
+            $arLayers[$i]["id"] = $arLayerObj->getId();
+        }
+
+        $redis = $this->container->get('snc_redis.default');
+        $redis->set($circle->getId().'_sectors',serialize($arSectors));
+        $redis->set($circle->getId().'_layers',serialize($arLayers));
+
 
         return $this->render(
             'circle/show.html.twig',
@@ -317,6 +334,67 @@ class CircleController extends Controller
         return $this->redirectToRoute('circle_index');
     }
 
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|Response
+     */
+    public function updateCoordinateLabelAction(Request $request)
+    {
+        if ($request->isXMLHttpRequest()) {
+            $arResult = [];
+            $sectorId = 0;
+            $layerId = 0;
+            $em = $this->getDoctrine()->getManager();
+            $circleId = $request->get("circleId");
+            $labelId = $request->get("labelId");
+            $radius = $request->get("radius");
+            $angle = $request->get("angle");
+            if($angle < 0 ){
+                $angle = 360 + $angle;
+            }
+
+            $redis = $this->container->get('snc_redis.default');
+
+            $arSectors = unserialize($redis->get($circleId.'_sectors'));
+            $arLayers = unserialize($redis->get($circleId.'_layers'));
+
+            foreach ($arSectors as $index => $arSector) {
+                if($angle > $arSector['beginAngle'] && $angle < $arSector['endAngle']){
+                    $sectorId = $arSector['id'];
+                    break;
+                }
+            }
+
+            foreach ($arLayers as $index => $arLayer) {
+                if($radius > $arLayer['beginRadius'] && $radius < $arLayer['endRadius']){
+                    $layerId = $arLayer['id'];
+                    break;
+                }
+            }
+
+            $sector = $em->getRepository('NotesManagerBundle:Sectors')->find($sectorId);
+            $layer  = $em->getRepository('NotesManagerBundle:Layers')->find($layerId);
+            $labelObj = $em->getRepository('NotesManagerBundle:Labels')->find($labelId);
+
+            $arParams["angle"]  = $angle;
+            $arParams["radius"] = $radius;
+            $arParams["layer"]  = $layer;
+            $arParams["sector"] = $sector;
+
+            $label = $this->editLabel($labelObj,$arParams);
+
+            $arResult = array("status" => "Y");
+
+            return new JsonResponse($arResult);
+
+        }
+
+        return new Response('This is not ajax!', 400);
+
+    }
+
+
     /**
      * Creates a form to delete a Circle entity.
      *
@@ -331,6 +409,7 @@ class CircleController extends Controller
             ->setMethod('DELETE')
             ->getForm();
     }
+
 
     /**
      * create N layers in circle
@@ -509,5 +588,33 @@ class CircleController extends Controller
         }
 
         return $arRadius;
+    }
+
+    /**
+     * @param Labels $label
+     * @param array $arParams
+     * @return int
+     */
+    public function editLabel(Labels $label,$arParams)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if(!empty($arParams["angle"])){
+            $label->setAngle($arParams["angle"]);
+        }
+        if(!empty($arParams["radius"])){
+            $label->setRadius($arParams["radius"]);
+        }
+        if(!empty($arParams["layer"])){
+            $label->setLayers($arParams["layer"]);
+        }
+        if(!empty($arParams["sector"])){
+            $label->setSectors($arParams["sector"]);
+        }
+        $label->setDateUpdate(new \DateTime('now'));
+        $em->persist($label);
+        $em->flush();
+
+        return $label;
     }
 }
