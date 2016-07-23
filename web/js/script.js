@@ -245,9 +245,7 @@ function createLabel(data) {
         dragstop: function(layer) {
             var pol = cartesian2Polar(layer.x, layer.y);
             var dec = cartesian2Dec(pol.distance,pol.degr);
-            console.log(pol.distance/bigRadius);
-            console.log(pol.degr);
-            console.log(layer.data);
+            updateCoordinateLabel(layer.data.circleId,layer.data.id,pol.distance/bigRadius,pol.degr);
             delRayNamePopUpAndCircleByLabel(layer.data.id);
         },
         drag: function(layer) {
@@ -270,6 +268,21 @@ function createLabel(data) {
             $('#pop_label_link').css('display','block').attr('href','/app_dev.php/notes/list/'+layer.data.circleId+'/'+layer.data.id+'/');
         },
     });
+}
+
+function updateCoordinateLabel(circleId,labelId,radius,angle) {
+    $.post(
+        "/app_dev.php/circle/editLabelAjax",
+        {
+            circleId: circleId,
+            labelId:labelId,
+            radius:radius,
+            angle:angle
+        }).done(
+        function (data) {
+            console.log(data);
+
+        })
 }
 
 /*

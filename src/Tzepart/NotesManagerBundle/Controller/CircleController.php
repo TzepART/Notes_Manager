@@ -349,6 +349,7 @@ class CircleController extends Controller
             $sectors = $redis->get($circleId.'_sectors');
             $layers = $redis->get($circleId.'_layers');
             
+            $arResult = [$circleId,$labelId,$radius,$angle];
 
             return new JsonResponse($arResult);
 
