@@ -183,16 +183,28 @@ class CircleController extends Controller
 
         $layers  = $circle->getLayers();
         $countCurrentLayers = count($layers);
+        $arLabelsByCircleObj = [];
 
         $sectors = $circle->getSectors();
 
+        /*
+         * get All sectors by circle
+         * */
         $arSectors = [];
+        $i = 0;
         foreach ($sectors as $index => $sector) {
             $arSectors[$index]["id"]        = $sector->getId();
             $arSectors[$index]["name"]      = $sector->getName();
             $arSectors[$index]["color"]     = $sector->getColor();
             $arSectorsObj[$sector->getId()] = $sector;
             $arCurrentSectorId[$index]      = $sector->getId();
+            $arLabelsObj = $sector->getLabels();
+            foreach ($arLabelsObj as $index => $labelObj) {
+                if($labelObj->getNotes() != null){
+                    $arLabelsByCircleObj[$i] = $labelObj;
+                    $i++;
+                }
+            }
         }
 
 
@@ -205,6 +217,10 @@ class CircleController extends Controller
 
             /*
             * Block logic for sectors
+            * Update sectors is in 3 steps
+             * 1 Step - if quantity sectors decreased - delete select sectors
+             * 2 Step - update exists sectors
+             * 3 Step - if quantity sectors increase - create new sectors
             * */
 
             $arSectorName  = $request->get("sector_name");
@@ -226,7 +242,7 @@ class CircleController extends Controller
 
             /*
               * Update sectors
-              * */
+            * */
 
             $sectorsNumber = count($arSectorName);
             $arAngles      = $this->anglesBySectors($sectorsNumber);
@@ -256,7 +272,8 @@ class CircleController extends Controller
 
             /*
               * End block logic for sectors
-              * */
+              *
+             * */
 
             /*
              * Block logic for layers
@@ -279,6 +296,7 @@ class CircleController extends Controller
                 for($i = $beginDelete;$i<$countCurrentLayers;$i++){
                     $this->deleteLayer($layers[$i]);
                 }
+
             }elseif($newCountLayers > $countCurrentLayers){
                 //recount
                 //update
@@ -299,6 +317,10 @@ class CircleController extends Controller
               * End block logic for layers
               * */
 
+            /*
+             * Update labels by circle
+             * */
+            $this->updateLabelsByCircle($arLabelsByCircleObj,$circle);
 
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
         }
@@ -332,6 +354,53 @@ class CircleController extends Controller
         }
 
         return $this->redirectToRoute('circle_index');
+    }
+
+    /**
+     * @param array $arLabelsObj
+     * @param Circle $circle
+     */
+    public function updateLabelsByCircle($arLabelsObj,Circle $circle)
+    {
+        $layers  = $circle->getLayers();
+        $sectors = $circle->getSectors();
+
+        $this->updateLabelsByLayer($arLabelsObj,$layers);
+        $this->updateLabelsBySector($arLabelsObj,$sectors);
+
+    }
+
+    public function updateLabelsByLayer($arLabelsObj,$arLayersObj)
+    {
+        $arLayers = [];
+        //create array, with layer's radius
+        foreach ($arLayersObj as $index => $layerObj) {
+            $arLayers[$index]["id"] = $layerObj->getId();
+            $arLayers[$index]["beginRadius"] = $layerObj->getBeginRadius();
+            $arLayers[$index]["endRadius"] = $layerObj->getEndRadius();
+            $arLayers[$index]["object"] = $layerObj;
+        }
+
+        //cycle, where labels update layers_id, if his radius in new layers
+        foreach ($arLabelsObj as $indexLabel => $labelObj) {
+            $layerId = $labelObj->getLayers()->getId();
+            $radius = $labelObj->getRadius();
+            foreach ($arLayers as $indexLayer => $arLayer) {
+                if($radius > $arLayer['beginRadius'] && $radius < $arLayer['endRadius']){
+                    if($layerId != $arLayer['id']){
+                        $arParams["layer"]  = $arLayer['object'];
+                        $this->editLabel($labelObj,$arParams);
+                    }
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public function updateLabelsBySector($arLabelsObj,$arSectorsObj)
+    {
+
     }
 
 
@@ -541,6 +610,7 @@ class CircleController extends Controller
     protected function deleteSector(Sectors $sector)
     {
         $em = $this->getDoctrine()->getManager();
+        //@TODO add method for displacement sectors's labels in input notes
         $em->remove($sector);
         $em->flush();
 
