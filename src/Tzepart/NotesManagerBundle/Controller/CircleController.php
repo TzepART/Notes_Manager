@@ -320,7 +320,7 @@ class CircleController extends Controller
             /*
              * Update labels by circle
              * */
-            $this->updateLabelsByCircle($arLabelsByCircleObj,$circle);
+            $this->updateLabelsByLayer($arLabelsByCircleObj,$circle);
 
             return $this->redirectToRoute('circle_edit', array('id' => $circle->getId()));
         }
@@ -356,23 +356,12 @@ class CircleController extends Controller
         return $this->redirectToRoute('circle_index');
     }
 
-    /**
-     * @param array $arLabelsObj
-     * @param Circle $circle
-     */
-    public function updateLabelsByCircle($arLabelsObj,Circle $circle)
-    {
-        $layers  = $circle->getLayers();
-        $sectors = $circle->getSectors();
 
-        $this->updateLabelsByLayer($arLabelsObj,$layers);
-        $this->updateLabelsBySector($arLabelsObj,$sectors);
-
-    }
-
-    public function updateLabelsByLayer($arLabelsObj,$arLayersObj)
+    public function updateLabelsByLayer($arLabelsObj,Circle $circle)
     {
         $arLayers = [];
+        $arLayersObj = $circle->getLayers();
+
         //create array, with layer's radius
         foreach ($arLayersObj as $index => $layerObj) {
             $arLayers[$index]["id"] = $layerObj->getId();
@@ -395,11 +384,6 @@ class CircleController extends Controller
                 }
             }
         }
-
-    }
-
-    public function updateLabelsBySector($arLabelsObj,$arSectorsObj)
-    {
 
     }
 
@@ -580,13 +564,19 @@ class CircleController extends Controller
      */
     protected function updateSector(Sectors $sector, $arParams)
     {
+        $arOldSectorParams = [];
+        $arNewSectorParams = [];
         if (!empty($arParams["name"])) {
             $sector->setName($arParams["name"]);
         }
         if (!empty($arParams["beginAngle"])) {
+            $arOldSectorParams["beginAngle"] = $sector->getBeginAngle();
+            $arNewSectorParams["beginAngle"] = $arParams["beginAngle"];
             $sector->setBeginAngle($arParams["beginAngle"]);
         }
         if (!empty($arParams["endAngle"])) {
+            $arOldSectorParams["endAngle"] = $sector->getEndAngle();
+            $arNewSectorParams["endAngle"] = $arParams["endAngle"];
             $sector->setEndAngle($arParams["endAngle"]);
         }
         if (!empty($arParams["parentSector"])) {
@@ -599,8 +589,43 @@ class CircleController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
         $em->flush();
+        if(!empty($arOldSectorParams["beginAngle"]) && $arOldSectorParams["endAngle"]){
+            $this->updateLabelsBySector($sector,$arOldSectorParams,$arNewSectorParams);
+        }
 
         return true;
+    }
+
+    /**
+     * @param Sectors $sectorObj
+     * @param array $arOldSectorParams
+     * @param array $arNewSectorParams
+     */
+    protected function updateLabelsBySector(Sectors $sectorObj, $arOldSectorParams,$arNewSectorParams)
+    {
+        $arLabelsObj = $sectorObj->getLabels();
+        //create array, with sectors's angles
+        $arParams = [];
+        foreach ($arLabelsObj as $index => $labelObj) {
+            $oldLabelAngle = $labelObj->getAngle();
+            $arParams["angle"] = $this->newLabelAngle($oldLabelAngle,$arOldSectorParams,$arNewSectorParams);
+            $this->editLabel($labelObj,$arParams);
+        }
+
+    }
+
+    /**
+     * @param $oldLabelAngle
+     * @param array $arOldSectorAngles
+     * @param array $arNewSectorAngles
+     * @return float|int
+     */
+    protected function newLabelAngle($oldLabelAngle,$arOldSectorAngles,$arNewSectorAngles)
+    {
+        $newAngle = 0;
+        $newAngle = ($oldLabelAngle - $arOldSectorAngles["beginAngle"])*($arNewSectorAngles["endAngle"] - $arNewSectorAngles["beginAngle"])/($arOldSectorAngles["endAngle"] - $arOldSectorAngles["beginAngle"])+$arNewSectorAngles["beginAngle"];
+        return $newAngle;
+
     }
 
     /**
