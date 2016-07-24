@@ -523,6 +523,13 @@ class CircleController extends Controller
     protected function deleteLayer(Layers $layer)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $arLabelsObj = $layer->getLabels();
+        $arParams = ["layer" => "Y"];
+        foreach ($arLabelsObj as $index => $arLabelObj) {
+            $this->unlinkLabel($arLabelObj,$arParams);
+        }
+
         $em->remove($layer);
         $em->flush();
 
@@ -635,7 +642,13 @@ class CircleController extends Controller
     protected function deleteSector(Sectors $sector)
     {
         $em = $this->getDoctrine()->getManager();
-        //@TODO add method for displacement sectors's labels in input notes
+
+        $arLabelsObj = $sector->getLabels();
+        $arParams = ["sector" => "Y"];
+        foreach ($arLabelsObj as $index => $arLabelObj) {
+            $this->unlinkLabel($arLabelObj,$arParams);
+        }
+
         $em->remove($sector);
         $em->flush();
 
@@ -711,5 +724,21 @@ class CircleController extends Controller
         $em->flush();
 
         return $label;
+    }
+
+    protected function unlinkLabel(Labels $label,$arParams)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($arParams["sector"] = "Y"){
+            $label->setSectors(null);
+        }
+        if($arParams["layer"] = "Y"){
+            $label->setLayers(null);
+        }
+        $label->setDateUpdate(new \DateTime('now'));
+        $em->persist($label);
+        $em->flush();
+
+        return true;
     }
 }
