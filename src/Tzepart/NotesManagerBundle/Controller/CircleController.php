@@ -372,7 +372,11 @@ class CircleController extends Controller
 
         //cycle, where labels update layers_id, if his radius in new layers
         foreach ($arLabelsObj as $indexLabel => $labelObj) {
-            $layerId = $labelObj->getLayers()->getId();
+            if($labelObj->getLayers() != null){
+                $layerId = $labelObj->getLayers()->getId();
+            }else{
+                $layerId = 0;
+            }
             $radius = $labelObj->getRadius();
             foreach ($arLayers as $indexLayer => $arLayer) {
                 if($radius > $arLayer['beginRadius'] && $radius < $arLayer['endRadius']){
@@ -729,15 +733,25 @@ class CircleController extends Controller
     protected function unlinkLabel(Labels $label,$arParams)
     {
         $em = $this->getDoctrine()->getManager();
-        if($arParams["sector"] = "Y"){
-            $label->setSectors(null);
+
+        if(isset($arParams["sector"]) && $arParams["sector"] == "Y"){
+            $label->setSectors();
+            $noteObj = $label->getNotes();
+            $noteObj->setLabels();
+            $noteObj->setDateUpdate(new \DateTime('now'));
+
+            $em->remove($label);
+            $em->persist($noteObj);
+
+            $em->flush();
+
         }
-        if($arParams["layer"] = "Y"){
-            $label->setLayers(null);
+        if(isset($arParams["layer"]) && $arParams["layer"] == "Y"){
+            $label->setLayers();
+            $label->setDateUpdate(new \DateTime('now'));
+            $em->persist($label);
+            $em->flush();
         }
-        $label->setDateUpdate(new \DateTime('now'));
-        $em->persist($label);
-        $em->flush();
 
         return true;
     }
