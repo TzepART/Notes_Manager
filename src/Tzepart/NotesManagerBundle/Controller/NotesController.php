@@ -19,7 +19,9 @@ class NotesController extends Controller
 
     /**
      * Lists all Notes entities.
-     *
+     * @param null $circleId
+     * @param null $noteId
+     * @return Response
      */
     public function indexAction($circleId = null,$noteId = null)
     {
@@ -95,10 +97,13 @@ class NotesController extends Controller
         }
         
     }
-    
+
+
     /**
      * Creates a new Notes entity.
-     *
+     * @param Request $request
+     * @param int $select_circle
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function newAction(Request $request,$select_circle = null)
     {
@@ -115,15 +120,20 @@ class NotesController extends Controller
         $form->handleRequest($request);
 
 
+        // Get all user's circle entities
         $user             = $this->getCurrentUserObject();
         $arCirclesObjects = $user->getCircles();
 
+        //if exists select circle in request, then selectCirclesId her id
+        //if doesn't exists select circle in request, then selectCirclesId = $select_circle from URL
+        //else selectCirclesId = 0
         if(!empty($request->get("select_circle"))){
             $selectCirclesId = $request->get("select_circle");
         }elseif($select_circle != null){
             $selectCirclesId = $select_circle;
         }
 
+        //get all sectors and layers by circle
         foreach ($arCirclesObjects as $key => $circlesObject) {
             $arCircles[$key]["id"]   = $circlesObject->getId();
             $arCircles[$key]["name"] = $circlesObject->getName();
@@ -135,6 +145,8 @@ class NotesController extends Controller
         }
 
 
+        //if exists sectors and layers by circle,
+        // then create array with information about them
         if (!empty($arLayersObjects) && !empty($arSectorsObjects)) {
             $countLayers = count($arLayersObjects);
             foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
@@ -148,6 +160,7 @@ class NotesController extends Controller
         }
 
 
+        //if form submit then create new Note and label, which links with new note
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
@@ -188,9 +201,12 @@ class NotesController extends Controller
         );
     }
 
+
     /**
      * Displays a form to edit an existing Notes entity.
-     *
+     * @param Request $request
+     * @param Notes $note
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function editAction(Request $request, Notes $note)
     {
