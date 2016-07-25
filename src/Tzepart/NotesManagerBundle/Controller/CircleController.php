@@ -48,11 +48,12 @@ class CircleController extends Controller
     {
         return $this->indexAction();
     }
-    
+
 
     /**
      * Creates a new Circle entity.
-     *
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -97,12 +98,16 @@ class CircleController extends Controller
         );
     }
 
+
     /**
      * Finds and displays a Circle entity.
-     *
+     * @param Circle $circle
+     * @param null $labelId
+     * @return Response
      */
     public function showAction(Circle $circle,$labelId = null)
     {
+
         $this->checkAuthorize();
         $selectLabel = $labelId;
         $arSectors = [];
@@ -158,9 +163,12 @@ class CircleController extends Controller
         );
     }
 
+
     /**
      * Displays a form to edit an existing Circle entity.
-     *
+     * @param Request $request
+     * @param Circle $circle
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function editAction(Request $request, Circle $circle)
     {
@@ -326,9 +334,12 @@ class CircleController extends Controller
         );
     }
 
+
     /**
      * Deletes a Circle entity.
-     *
+     * @param Request $request
+     * @param Circle $circle
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Circle $circle)
     {
@@ -409,9 +420,7 @@ class CircleController extends Controller
 
     /**
      * Creates a form to delete a Circle entity.
-     *
      * @param Circle $circle The Circle entity
-     *
      * @return \Symfony\Component\Form\Form The form
      */
     private function createDeleteForm(Circle $circle)
@@ -422,6 +431,9 @@ class CircleController extends Controller
             ->getForm();
     }
 
+    /**
+     * Check user's authorize
+     */
     protected function checkAuthorize(){
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -429,7 +441,7 @@ class CircleController extends Controller
     }
 
     /**
-     * Get user id
+     * Get user object
      * @return integer $userId
      */
     protected function getCurrentUserObject()
@@ -454,6 +466,13 @@ class CircleController extends Controller
         return true;
     }
 
+    /**
+     * Create layer
+     * @param Circle $circle
+     * @param $radiusBegin
+     * @param $radiusEnd
+     * @return bool
+     */
     protected function createLayer(Circle $circle, $radiusBegin,$radiusEnd){
         $layers = new Layers();
         $layers->setCircle($circle);
@@ -470,6 +489,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Update select layer
      * @param mixed $layer
      * @param array $arParams
      * @return integer $userId
@@ -492,6 +512,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Delete select layer
      * @param mixed $layer
      * @return bool
      */
@@ -512,6 +533,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Method return array with Begin and End radius by layers on the assumption of layer's quantity
      * @param int $layersNumber
      * @return array
      */
@@ -533,6 +555,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Create sector
      * @param mixed $circle
      * @param string $name
      * @param float $beginAngle
@@ -561,6 +584,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Update select sector
      * @param mixed $sector
      * @param array $arParams
      * @return bool
@@ -601,6 +625,7 @@ class CircleController extends Controller
 
 
     /**
+     * Delete select sector
      * @param mixed $sector
      * @return bool
      */
@@ -622,6 +647,7 @@ class CircleController extends Controller
 
 
     /**
+     * Method return array with Begin and End angles by sectors on the assumption of sector's quantity
      * @param int $sectorsNumber
      * @return array
      */
