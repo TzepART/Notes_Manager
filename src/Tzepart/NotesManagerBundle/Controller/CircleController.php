@@ -11,11 +11,7 @@ use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Sectors;
 use Tzepart\NotesManagerBundle\Entity\Layers;
 use Tzepart\NotesManagerBundle\Entity\Labels;
-use \Tzepart\NotesManagerBundle\Entity\User;
 
-
-use Tzepart\NotesManagerBundle\Form\CircleType;
-use Tzepart\NotesManagerBundle\Form\SectorsType;
 
 /**
  * Circle controller.
