@@ -32,6 +32,9 @@ class NotesController extends Controller
         $em    = $this->getDoctrine()->getManager();
 
 
+        //if exists select circle, then create array with notes link
+        // by select circle.
+        //Else - create list with haven't linked notes (inbox notes)
         if($circleId != null && $circleId >0){
             $circleObj = $em->getRepository('NotesManagerBundle:Circle')->find($circleId);
             $arLayerByLabel = [];
