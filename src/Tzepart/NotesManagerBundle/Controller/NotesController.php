@@ -7,10 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Tzepart\NotesManagerBundle\Entity\Circle;
 use Tzepart\NotesManagerBundle\Entity\Labels;
 use Tzepart\NotesManagerBundle\Entity\Notes;
-use Tzepart\NotesManagerBundle\Controller\LabelsController;
 
 /**
  * Notes controller.
@@ -306,7 +304,8 @@ class NotesController extends Controller
 
     /**
      * Finds and displays a Notes entity.
-     *
+     * @param Notes $note
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function showAction(Notes $note)
     {
@@ -325,7 +324,9 @@ class NotesController extends Controller
 
     /**
      * Deletes a Notes entity.
-     *
+     * @param Request $request
+     * @param Notes $note
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction(Request $request, Notes $note)
     {
@@ -378,10 +379,12 @@ class NotesController extends Controller
     protected function getCurrentUserObject()
     {
         $user = $this->get('security.context')->getToken()->getUser();
-
         return $user;
     }
 
+    /**
+     * Method for checking user's Authorize
+     */
     protected function checkAuthorize(){
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -418,7 +421,7 @@ class NotesController extends Controller
     }
 
     /**
-     * Create labels
+     * Update labels
      * @param Labels $label
      * @param int $sectorId
      * @param int $layerId
@@ -448,9 +451,7 @@ class NotesController extends Controller
 
     /**
      * Creates a form to delete a Notes entity.
-     *
      * @param Notes $note The Notes entity
-     *
      * @return \Symfony\Component\Form\Form The form
      */
     private function createDeleteForm(Notes $note)
@@ -462,6 +463,7 @@ class NotesController extends Controller
     }
 
     /**
+     * Create a Labels entity.
      * @param array $arParams
      * @return int
      */
@@ -484,6 +486,7 @@ class NotesController extends Controller
 
 
     /**
+     * Change a Labels entity.
      * @param Labels $label
      * @param array $arParams
      * @return int
@@ -513,7 +516,6 @@ class NotesController extends Controller
 
     /**
      * Deletes a Labels entity.
-     *
      * @param Labels $label
      * @return bool
      */
@@ -528,7 +530,7 @@ class NotesController extends Controller
 
 
     /**
-     * function replace two element array with keys - $key1 и $key2
+     * Method replace two element array with keys - $key1 и $key2
      * @param array $array original array
      * @param string $key1
      * @param string $key2
@@ -543,12 +545,20 @@ class NotesController extends Controller
         return false;
     }
 
+    /**
+     * Method for return random float number
+     * @param int $min
+     * @param int $max
+     * @param int $mul
+     * @return bool|float
+     */
     protected function f_rand($min=0,$max=1,$mul=1000000){
         if ($min>$max) return false;
         return mt_rand($min*$mul,$max*$mul)/$mul;
     }
 
     /**
+     * Method return array colors by layer, where change any color in red
      * @param string $color
      * @param int $numLayers
      * @return array
@@ -576,6 +586,12 @@ class NotesController extends Controller
         return array_reverse($arRBA);
     }
 
+
+    /**
+     * Method for converting RgbString in array by colors
+     * @param string $hex
+     * @return array
+     */
     protected function hextorgb($hex) {
         $hex = str_replace('#', '', $hex);
         if ( strlen($hex) == 6 ) {
@@ -596,6 +612,11 @@ class NotesController extends Controller
         return $rgb;
     }
 
+    /**
+     * Method for converting array by colors in RgbString
+     * @param array $tempColor
+     * @return string
+     */
     protected function hexArrayInRgbString($tempColor) {
         $rgb = 'rgb('.$tempColor[0].', '.$tempColor[1].', '.$tempColor[2].')';
         return $rgb;
