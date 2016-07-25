@@ -25,7 +25,7 @@
                                             <li style="background: {{ arNote.color }}" class="list-group-item notes_link_by_list">
                                                 <a role="button" class="{{ arNote.collapsed }}" data-toggle="collapse" href="#note{{ arNote.noteId }}"
                                                    aria-expanded="{{ arNote.ariaExpanded }}" aria-controls="note{{ arNote.noteId }}">{{ arNote.noteName }}</a>
-                                                <a href="detail_circle.html?id=1"><i class="fa fa-adjust fa-lg"></i></a>
+                                                <a href="{{ path('circle_label_show', { 'id': circleId, 'labelId': arNote.labelId  }) }}"><i class="fa fa-adjust fa-lg"></i></a>
                                                 <a href="{{ path('notes_edit', { 'id': arNote.noteId }) }}"><i class="fa fa-pencil fa-lg"></i></a>
                                                 <div class="collapse collapse_note {{ arNote.inFlag }}" aria-expanded="{{ arNote.ariaExpanded }}" id="note{{ arNote.noteId }}">
                                                     <div class="well">

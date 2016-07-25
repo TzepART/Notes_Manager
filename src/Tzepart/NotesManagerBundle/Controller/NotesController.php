@@ -53,6 +53,7 @@ class NotesController extends Controller
                     $notesObj = $labelObj->getNotes();
                     $notes[] = $notesObj;
                     $arSectors[$index]["notes"][$key]["noteId"] = $notesObj->getId();
+                    $arSectors[$index]["notes"][$key]["labelId"] = $labelObj->getId();
                     $arSectors[$index]["notes"][$key]["noteName"] = $notesObj->getName();
                     $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
                     $arSectors[$index]["notes"][$key]["color"] = $arColorBySector[$arLayerByLabel[$labelObj->getId()]];

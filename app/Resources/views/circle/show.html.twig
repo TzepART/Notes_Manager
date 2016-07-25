@@ -51,7 +51,7 @@
 
 
         $(document).ready(function() {
-            $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
+            $('canvas').triggerLayerEvent('myLabel{{ selectLabel }}', 'mouseover');
             $('canvas').triggerLayerEvent('slice11', 'click');
         });
 

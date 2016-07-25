@@ -117,8 +117,9 @@ class CircleController extends Controller
      * Finds and displays a Circle entity.
      *
      */
-    public function showAction(Circle $circle)
+    public function showAction(Circle $circle,$labelId = null)
     {
+        $selectLabel = $labelId;
         $arSectors = [];
         $arLayers = [];
         $arLabels = [];
@@ -166,6 +167,7 @@ class CircleController extends Controller
                 'arLabels'=>$arLabels,
                 'countLayers'=>$countLayers,
                 'circle' => $circle,
+                'selectLabel' => $selectLabel,
                 'delete_form' => $deleteForm->createView(),
             )
         );
