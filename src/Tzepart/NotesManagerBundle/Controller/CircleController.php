@@ -30,9 +30,10 @@ class CircleController extends Controller
     public function indexAction()
     {
         $this->checkAuthorize();
+        $user = $this->getCurrentUserObject();
 
         $em = $this->getDoctrine()->getManager();
-        $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
+        $circles = $user->getCircles();
 
         return $this->render(
             'circle/index.html.twig',
