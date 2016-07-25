@@ -25,6 +25,7 @@ class NotesController extends Controller
      */
     public function indexAction($circleId = null,$noteId = null)
     {
+        $this->checkAuthorize();
         $arSectors = [];
         $arNotes = [];
         $userObj = $this->getCurrentUserObject();
@@ -96,24 +97,14 @@ class NotesController extends Controller
         }
         
     }
-
-    /**
-     * Get user id
-     * @return integer $userId
-     */
-    protected function getCurrentUserObject()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        return $user;
-    }
-
+    
     /**
      * Creates a new Notes entity.
      *
      */
     public function newAction(Request $request,$select_circle = null)
     {
+        $this->checkAuthorize();
         $note             = new Notes();
         $arSectors        = [];
         $arCircles        = [];
@@ -205,6 +196,7 @@ class NotesController extends Controller
      */
     public function editAction(Request $request, Notes $note)
     {
+        $this->checkAuthorize();
         $deleteForm = $this->createDeleteForm($note);
         $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\NotesType', $note);
         $editForm->handleRequest($request);
@@ -318,6 +310,7 @@ class NotesController extends Controller
      */
     public function showAction(Notes $note)
     {
+        $this->checkAuthorize();
         $deleteForm = $this->createDeleteForm($note);
 
         return $this->render(
@@ -336,6 +329,7 @@ class NotesController extends Controller
      */
     public function deleteAction(Request $request, Notes $note)
     {
+        $this->checkAuthorize();
         $form = $this->createDeleteForm($note);
         $form->handleRequest($request);
 
@@ -376,6 +370,24 @@ class NotesController extends Controller
 
         return new Response('This is not ajax!', 400);
     }
+
+    /**
+     * Get user object
+     * @return integer $userId
+     */
+    protected function getCurrentUserObject()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        return $user;
+    }
+
+    protected function checkAuthorize(){
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
 
     /**
      * Create labels
@@ -453,7 +465,7 @@ class NotesController extends Controller
      * @param array $arParams
      * @return int
      */
-    public function newLabel($arParams)
+    protected function newLabel($arParams)
     {
         $label = new Labels();
         $em = $this->getDoctrine()->getManager();
@@ -476,7 +488,7 @@ class NotesController extends Controller
      * @param array $arParams
      * @return int
      */
-    public function editLabel(Labels $label,$arParams)
+    protected function editLabel(Labels $label,$arParams)
     {
         $em = $this->getDoctrine()->getManager();
         if(!empty($arParams["angle"])){
@@ -505,7 +517,7 @@ class NotesController extends Controller
      * @param Labels $label
      * @return bool
      */
-    public function deleteLabel(Labels $label)
+    protected function deleteLabel(Labels $label)
     {
         $em = $this->getDoctrine()->getManager();
         $em->remove($label);
@@ -514,15 +526,6 @@ class NotesController extends Controller
         return true;
     }
 
-    protected function varsAndMethodsObject($object)
-    {
-        $arResult               = array();
-        $arResult["CLASS_NAME"] = get_class($object);
-        $arResult["VARS"]       = get_class_vars(get_class($object));
-        $arResult["METHODS"]    = get_class_methods(get_class($object));
-
-        return $arResult;
-    }
 
     /**
      * function replace two element array with keys - $key1 и $key2
@@ -550,7 +553,7 @@ class NotesController extends Controller
      * @param int $numLayers
      * @return array
      */
-    function returnArColorLayers($color,$numLayers) {
+    protected function returnArColorLayers($color,$numLayers) {
         $arColor = $this->hextorgb($color);
         $tempColor = $arColor;
         $arRBA = [];
@@ -593,7 +596,7 @@ class NotesController extends Controller
         return $rgb;
     }
 
-    function hexArrayInRgbString($tempColor) {
+    protected function hexArrayInRgbString($tempColor) {
         $rgb = 'rgb('.$tempColor[0].', '.$tempColor[1].', '.$tempColor[2].')';
         return $rgb;
     }

@@ -29,13 +29,9 @@ class CircleController extends Controller
      */
     public function indexAction()
     {
+        $this->checkAuthorize();
+
         $em = $this->getDoctrine()->getManager();
-
-        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
-        }
-
-        
         $circles = $em->getRepository('NotesManagerBundle:Circle')->findAll();
 
         return $this->render(
@@ -55,17 +51,7 @@ class CircleController extends Controller
     {
         return $this->indexAction();
     }
-
-    /**
-     * Get user id
-     * @return integer $userId
-     */
-    protected function getCurrentUserObject()
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-
-        return $user;
-    }
+    
 
     /**
      * Creates a new Circle entity.
@@ -73,6 +59,7 @@ class CircleController extends Controller
      */
     public function newAction(Request $request)
     {
+        $this->checkAuthorize();
         $circle = new Circle();
         $form   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
@@ -119,6 +106,7 @@ class CircleController extends Controller
      */
     public function showAction(Circle $circle,$labelId = null)
     {
+        $this->checkAuthorize();
         $selectLabel = $labelId;
         $arSectors = [];
         $arLayers = [];
@@ -179,6 +167,7 @@ class CircleController extends Controller
      */
     public function editAction(Request $request, Circle $circle)
     {
+        $this->checkAuthorize();
         $deleteForm = $this->createDeleteForm($circle);
         $editForm   = $this->createForm('Tzepart\NotesManagerBundle\Form\CircleType', $circle);
         $editForm->handleRequest($request);
@@ -346,6 +335,7 @@ class CircleController extends Controller
      */
     public function deleteAction(Request $request, Circle $circle)
     {
+        $this->checkAuthorize();
         $form = $this->createDeleteForm($circle);
         $form->handleRequest($request);
 
@@ -358,40 +348,6 @@ class CircleController extends Controller
         return $this->redirectToRoute('circle_index');
     }
 
-
-    public function updateLabelsByLayer($arLabelsObj,Circle $circle)
-    {
-        $arLayers = [];
-        $arLayersObj = $circle->getLayers();
-
-        //create array, with layer's radius
-        foreach ($arLayersObj as $index => $layerObj) {
-            $arLayers[$index]["id"] = $layerObj->getId();
-            $arLayers[$index]["beginRadius"] = $layerObj->getBeginRadius();
-            $arLayers[$index]["endRadius"] = $layerObj->getEndRadius();
-            $arLayers[$index]["object"] = $layerObj;
-        }
-
-        //cycle, where labels update layers_id, if his radius in new layers
-        foreach ($arLabelsObj as $indexLabel => $labelObj) {
-            if($labelObj->getLayers() != null){
-                $layerId = $labelObj->getLayers()->getId();
-            }else{
-                $layerId = 0;
-            }
-            $radius = $labelObj->getRadius();
-            foreach ($arLayers as $indexLayer => $arLayer) {
-                if($radius > $arLayer['beginRadius'] && $radius < $arLayer['endRadius']){
-                    if($layerId != $arLayer['id']){
-                        $arParams["layer"]  = $arLayer['object'];
-                        $this->editLabel($labelObj,$arParams);
-                    }
-                    break;
-                }
-            }
-        }
-
-    }
 
 
     /**
@@ -469,6 +425,22 @@ class CircleController extends Controller
             ->getForm();
     }
 
+    protected function checkAuthorize(){
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw $this->createAccessDeniedException();
+        }
+    }
+
+    /**
+     * Get user id
+     * @return integer $userId
+     */
+    protected function getCurrentUserObject()
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        return $user;
+    }
 
     /**
      * create N layers in circle
@@ -543,6 +515,27 @@ class CircleController extends Controller
     }
 
     /**
+     * @param int $layersNumber
+     * @return array
+     */
+    protected function radiusByLayers($layersNumber = 1)
+    {
+        $arRadius = [];
+        $layerRad = 1 / $layersNumber;
+        $beginRad = 0;
+        $endRad   = $layerRad;
+
+        for ($i = 0; $i < $layersNumber; $i++) {
+            $arRadius["begin"][$i] = $beginRad;
+            $arRadius["end"][$i]   = $endRad;
+            $beginRad += $layerRad;
+            $endRad += $layerRad;
+        }
+
+        return $arRadius;
+    }
+
+    /**
      * @param mixed $circle
      * @param string $name
      * @param float $beginAngle
@@ -609,37 +602,6 @@ class CircleController extends Controller
         return true;
     }
 
-    /**
-     * @param Sectors $sectorObj
-     * @param array $arOldSectorParams
-     * @param array $arNewSectorParams
-     */
-    protected function updateLabelsBySector(Sectors $sectorObj, $arOldSectorParams,$arNewSectorParams)
-    {
-        $arLabelsObj = $sectorObj->getLabels();
-        //create array, with sectors's angles
-        $arParams = [];
-        foreach ($arLabelsObj as $index => $labelObj) {
-            $oldLabelAngle = $labelObj->getAngle();
-            $arParams["angle"] = $this->newLabelAngle($oldLabelAngle,$arOldSectorParams,$arNewSectorParams);
-            $this->editLabel($labelObj,$arParams);
-        }
-
-    }
-
-    /**
-     * @param $oldLabelAngle
-     * @param array $arOldSectorAngles
-     * @param array $arNewSectorAngles
-     * @return float|int
-     */
-    protected function newLabelAngle($oldLabelAngle,$arOldSectorAngles,$arNewSectorAngles)
-    {
-        $newAngle = 0;
-        $newAngle = ($oldLabelAngle - $arOldSectorAngles["beginAngle"])*($arNewSectorAngles["endAngle"] - $arNewSectorAngles["beginAngle"])/($arOldSectorAngles["endAngle"] - $arOldSectorAngles["beginAngle"])+$arNewSectorAngles["beginAngle"];
-        return $newAngle;
-
-    }
 
     /**
      * @param mixed $sector
@@ -683,25 +645,71 @@ class CircleController extends Controller
         return $arAngles;
     }
 
-    /**
-     * @param int $layersNumber
-     * @return array
-     */
-    protected function radiusByLayers($layersNumber = 1)
-    {
-        $arRadius = [];
-        $layerRad = 1 / $layersNumber;
-        $beginRad = 0;
-        $endRad   = $layerRad;
 
-        for ($i = 0; $i < $layersNumber; $i++) {
-            $arRadius["begin"][$i] = $beginRad;
-            $arRadius["end"][$i]   = $endRad;
-            $beginRad += $layerRad;
-            $endRad += $layerRad;
+    protected function updateLabelsByLayer($arLabelsObj,Circle $circle)
+    {
+        $arLayers = [];
+        $arLayersObj = $circle->getLayers();
+
+        //create array, with layer's radius
+        foreach ($arLayersObj as $index => $layerObj) {
+            $arLayers[$index]["id"] = $layerObj->getId();
+            $arLayers[$index]["beginRadius"] = $layerObj->getBeginRadius();
+            $arLayers[$index]["endRadius"] = $layerObj->getEndRadius();
+            $arLayers[$index]["object"] = $layerObj;
         }
 
-        return $arRadius;
+        //cycle, where labels update layers_id, if his radius in new layers
+        foreach ($arLabelsObj as $indexLabel => $labelObj) {
+            if($labelObj->getLayers() != null){
+                $layerId = $labelObj->getLayers()->getId();
+            }else{
+                $layerId = 0;
+            }
+            $radius = $labelObj->getRadius();
+            foreach ($arLayers as $indexLayer => $arLayer) {
+                if($radius > $arLayer['beginRadius'] && $radius < $arLayer['endRadius']){
+                    if($layerId != $arLayer['id']){
+                        $arParams["layer"]  = $arLayer['object'];
+                        $this->editLabel($labelObj,$arParams);
+                    }
+                    break;
+                }
+            }
+        }
+
+    }
+
+    /**
+     * @param Sectors $sectorObj
+     * @param array $arOldSectorParams
+     * @param array $arNewSectorParams
+     */
+    protected function updateLabelsBySector(Sectors $sectorObj, $arOldSectorParams,$arNewSectorParams)
+    {
+        $arLabelsObj = $sectorObj->getLabels();
+        //create array, with sectors's angles
+        $arParams = [];
+        foreach ($arLabelsObj as $index => $labelObj) {
+            $oldLabelAngle = $labelObj->getAngle();
+            $arParams["angle"] = $this->newLabelAngle($oldLabelAngle,$arOldSectorParams,$arNewSectorParams);
+            $this->editLabel($labelObj,$arParams);
+        }
+
+    }
+
+    /**
+     * @param $oldLabelAngle
+     * @param array $arOldSectorAngles
+     * @param array $arNewSectorAngles
+     * @return float|int
+     */
+    protected function newLabelAngle($oldLabelAngle,$arOldSectorAngles,$arNewSectorAngles)
+    {
+        $newAngle = 0;
+        $newAngle = ($oldLabelAngle - $arOldSectorAngles["beginAngle"])*($arNewSectorAngles["endAngle"] - $arNewSectorAngles["beginAngle"])/($arOldSectorAngles["endAngle"] - $arOldSectorAngles["beginAngle"])+$arNewSectorAngles["beginAngle"];
+        return $newAngle;
+
     }
 
     /**
@@ -709,7 +717,7 @@ class CircleController extends Controller
      * @param array $arParams
      * @return int
      */
-    public function editLabel(Labels $label,$arParams)
+    protected function editLabel(Labels $label,$arParams)
     {
         $em = $this->getDoctrine()->getManager();
 
