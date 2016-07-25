@@ -3,6 +3,11 @@ circle_index:
     defaults: { _controller: "NotesManagerBundle:Circle:index" }
     methods:  GET
 
+circle_label_show:
+    path:     /{id}/{labelId}/show
+    defaults: { _controller: "NotesManagerBundle:Circle:show" }
+    methods:  GET
+
 circle_show:
     path:     /{id}/show
     defaults: { _controller: "NotesManagerBundle:Circle:show" }

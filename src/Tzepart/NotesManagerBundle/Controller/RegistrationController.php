@@ -31,7 +31,6 @@ class RegistrationController extends Controller
             $user->setUpdated(new \DateTime('now'));
             $user->setRoles("USER");
             $user->setIsActive(true);
-//            $user->setGravatar("none");
 
             // 4) save the User!
             $em = $this->getDoctrine()->getManager();
@@ -41,7 +40,7 @@ class RegistrationController extends Controller
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
 
-            return $this->redirectToRoute('notes_manager_homepage');
+            return $this->redirectToRoute('default_security_target');
         }
 
         return $this->render(

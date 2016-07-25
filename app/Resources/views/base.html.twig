@@ -38,7 +38,11 @@
                 <li role="presentation"><a href="{{ path('notes_index') }}">Входящие</a></li>
                 <li role="presentation"><a href="{{ path('circle_new') }}">Добавить окружность</a></li>
                 <li role="presentation"><a href="{{ path('notes_new') }}">Добавить заметку</a></li>
-                <li role="presentation"><a href="{{ path('login') }}">Войти</a></li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li role="presentation"><a href="{{ path('logout') }}">Выйти</a></li>
+                {% else %}
+                    <li role="presentation"><a href="{{ path('login') }}">Войти</a></li>
+                {% endif %}
             </ul>
         </nav>
         <h3 class="text-muted">Notes Manager <span class="label label-default">Beta</span></h3>
