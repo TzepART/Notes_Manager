@@ -643,6 +643,11 @@ class CircleController extends Controller
     }
 
 
+    /**
+     * Update labels by Layer
+     * @param array $arLabelsObj
+     * @param Circle $circle
+     */
     protected function updateLabelsByLayer($arLabelsObj,Circle $circle)
     {
         $arLayers = [];
@@ -678,6 +683,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Update labels by sectors
      * @param Sectors $sectorObj
      * @param array $arOldSectorParams
      * @param array $arNewSectorParams
@@ -696,6 +702,7 @@ class CircleController extends Controller
     }
 
     /**
+     * Method return update label's angle from info about new and old angles by sector
      * @param $oldLabelAngle
      * @param array $arOldSectorAngles
      * @param array $arNewSectorAngles
@@ -710,9 +717,10 @@ class CircleController extends Controller
     }
 
     /**
+     * Update select label's params
      * @param Labels $label
      * @param array $arParams
-     * @return int
+     * @return Labels
      */
     protected function editLabel(Labels $label,$arParams)
     {
@@ -737,6 +745,12 @@ class CircleController extends Controller
         return $label;
     }
 
+    /**
+     * Method for unlink label entity from layer or sector
+     * @param Labels $label
+     * @param array $arParams
+     * @return bool
+     */
     protected function unlinkLabel(Labels $label,$arParams)
     {
         $em = $this->getDoctrine()->getManager();
