@@ -231,6 +231,7 @@ class NotesController extends Controller
         $text = $note->getText();
         $label = $note->getLabels();
 
+        // if note have label, get layer and sector entities where is label
         if($label != null){
             $selectCirclesId = $label->getSectors()->getCircle()->getId();
             $selectLayerId = $label->getLayers()->getId();
@@ -241,9 +242,12 @@ class NotesController extends Controller
             $selectCirclesId = $request->get("select_circle");
         }
 
+        //get current user object
         $user             = $this->getCurrentUserObject();
         $arCirclesObjects = $user->getCircles();
 
+        //get list with user's circles
+        //if exists select circle then move it into first place in list
         foreach ($arCirclesObjects as $key => $circlesObject) {
             $arCircles[$key]["id"]   = $circlesObject->getId();
             $arCircles[$key]["name"] = $circlesObject->getName();
@@ -254,6 +258,9 @@ class NotesController extends Controller
             }
         }
 
+
+        //if exists sectors and layers by select circle,
+        // then create array with information about them
         if (!empty($arLayersObjects) && !empty($arSectorsObjects)) {
             $countLayers = count($arLayersObjects);
             foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
@@ -273,6 +280,7 @@ class NotesController extends Controller
         }
 
 
+        //if form submit then update Note and label, which links with new note
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
             if (!empty($request->get("select_circle")) && !empty($request->get(
