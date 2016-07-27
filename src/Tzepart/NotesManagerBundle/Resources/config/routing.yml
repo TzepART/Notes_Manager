@@ -5,8 +5,3 @@ notes_manager_circle:
 notes_manager_notes:
     resource: "@NotesManagerBundle/Resources/config/routing/notes.yml"
     prefix:   /notes
-
-notes_manager_sectors:
-    resource: "@NotesManagerBundle/Resources/config/routing/sectors.yml"
-    prefix:   /sectors
-
