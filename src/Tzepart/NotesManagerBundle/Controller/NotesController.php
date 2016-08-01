@@ -213,6 +213,7 @@ class NotesController extends Controller
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
+    //@TODO change number layer (now first layer - 0)
     public function editAction(Request $request, Notes $note)
     {
         $this->checkAuthorize();
@@ -288,6 +289,7 @@ class NotesController extends Controller
         //if form submit then update Note and label, which links with new note
         if ($editForm->isSubmitted() && $editForm->isValid()) {
 
+            $labelDelete = false;
             if (!empty($request->get("select_circle")) && !empty($request->get(
                     "layers_number"
                 )) && !empty($request->get("select_sector"))
@@ -301,6 +303,9 @@ class NotesController extends Controller
                     $updateLabel = $this->createLabel($sectorId,$layerId);
                 }
                 $note->setLabels($updateLabel);
+            }elseif(empty($request->get("layers_number")) && empty($request->get("select_sector")) && ($label != null)){
+                $note->setLabels();
+                $labelDelete = true;
             }
 
             $note->setDateUpdate(new \DateTime('now'));
@@ -310,6 +315,10 @@ class NotesController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($note);
             $em->flush();
+
+            if($labelDelete){
+                $this->deleteLabel($label);
+            }
 
             return $this->redirectToRoute('notes_edit', array('id' => $note->getId()));
         }
