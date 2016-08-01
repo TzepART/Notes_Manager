@@ -149,6 +149,13 @@ class NotesController extends Controller
             }
         }
 
+        $arDefaultCircle = ["id" => "", "name" => "Во входящие"];
+        if($selectCirclesId  == 0){
+            array_unshift($arCircles,$arDefaultCircle);
+        }else{
+            array_push($arCircles,$arDefaultCircle);
+        }
+
 
         //if exists sectors and layers by circle,
         // then create array with information about them
