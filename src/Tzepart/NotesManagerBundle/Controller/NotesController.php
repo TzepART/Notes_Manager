@@ -20,10 +20,10 @@ class NotesController extends Controller
     /**
      * Lists all Notes entities.
      * @param null $circleId
-     * @param null $noteId
+     * @param null $labelId
      * @return Response
      */
-    public function indexAction($circleId = null,$noteId = null)
+    public function indexAction($circleId = null,$labelId = null)
     {
         $this->checkAuthorize();
         $arSectors = [];
@@ -41,10 +41,10 @@ class NotesController extends Controller
             $arSectorsObj = $circleObj->getSectors();
             $arLayersObj = $circleObj->getLayers();
             $countLayer = count($arLayersObj);
-            foreach ($arLayersObj as $index => $arLayerObj) {
+            foreach ($arLayersObj as $indexLayer => $arLayerObj) {
                 $arLabelsObjByLayer = $arLayerObj->getLabels();
                 foreach ($arLabelsObjByLayer as $key => $labelObj) {
-                    $arLayerByLabel[$labelObj->getId()] = $index;
+                    $arLayerByLabel[$labelObj->getId()] = $indexLayer;
                 }
             }
             foreach ($arSectorsObj as $index => $sectorObj) {
@@ -53,6 +53,7 @@ class NotesController extends Controller
                 $arSectors[$index]["inFlag"] = "";
                 $arLabelsObj = $sectorObj->getLabels();
                 $arColorBySector = $this->returnArColorLayers($sectorObj->getColor(),$countLayer);
+
                 foreach ($arLabelsObj as $key => $labelObj) {
                     $notesObj = $labelObj->getNotes();
                     $notes[] = $notesObj;
@@ -61,7 +62,7 @@ class NotesController extends Controller
                     $arSectors[$index]["notes"][$key]["noteName"] = $notesObj->getName();
                     $arSectors[$index]["notes"][$key]["text"] = $notesObj->getText();
                     $arSectors[$index]["notes"][$key]["color"] = $arColorBySector[$arLayerByLabel[$labelObj->getId()]];
-                    if($notesObj->getId() == $noteId){
+                    if($labelObj->getId() == $labelId){
                         $arSectors[$index]["notes"][$key]["collapsed"] = "";
                         $arSectors[$index]["notes"][$key]["ariaExpanded"] = "true";
                         $arSectors[$index]["notes"][$key]["inFlag"] = "in";
@@ -73,6 +74,7 @@ class NotesController extends Controller
                     }
                 }
             }
+
             return $this->render(
                 'notes/index_circle.html.twig',
                 array(
@@ -492,7 +494,7 @@ class NotesController extends Controller
     /**
      * Create a Labels entity.
      * @param array $arParams
-     * @return int
+     * @return Labels
      */
     protected function newLabel($arParams)
     {
@@ -516,7 +518,7 @@ class NotesController extends Controller
      * Change a Labels entity.
      * @param Labels $label
      * @param array $arParams
-     * @return int
+     * @return Labels
      */
     protected function editLabel(Labels $label,$arParams)
     {
@@ -601,7 +603,7 @@ class NotesController extends Controller
         $red = $arColor[0] + $difColorRed;
         $green = $arColor[1];
         $blue = $arColor[2];
-        for($red; $red <= 256; $red = $red + $difColorRed){
+        for($red; $red <= 256.01; $red = $red + $difColorRed){
             $tempColor[0] = floor($red);
             $tempColor[1] = floor($green);
             $tempColor[2] = floor($blue);

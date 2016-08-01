@@ -79,7 +79,7 @@ function changeColorLayers(color,numLayers) {
     var red = arColor[0] + difColorRed;
     var green = arColor[1];
     var blue = arColor[2];
-    for(red; red <= 256; red = red + difColorRed){
+    for(red; red <= 256.01; red = red + difColorRed){
         tempColor[0] = Math.floor(red);
         tempColor[1] = Math.floor(green);
         tempColor[2] = Math.floor(blue);
@@ -88,6 +88,7 @@ function changeColorLayers(color,numLayers) {
         blue = blue - difColorBlue;
         i++;
     }
+    console.log(arRBA);
     return arRBA;
 }
 
