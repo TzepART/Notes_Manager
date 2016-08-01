@@ -14,7 +14,7 @@ notes_new_by_circle:
     methods:  [GET, POST]
 
 select_note_by_circle:
-    path:     /list/{circleId}/{noteId}/
+    path:     /list/{circleId}/{labelId}/
     defaults: { _controller: "NotesManagerBundle:Notes:index"}
     methods:  GET
 
