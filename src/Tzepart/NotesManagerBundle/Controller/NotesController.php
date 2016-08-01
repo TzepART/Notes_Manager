@@ -384,9 +384,13 @@ class NotesController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $label = $note ->getLabels();
             $em = $this->getDoctrine()->getManager();
             $em->remove($note);
             $em->flush();
+            if($label != null){
+                $this->deleteLabel($label);
+            }
         }
 
         return $this->redirectToRoute('notes_index');
