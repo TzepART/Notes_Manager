@@ -198,7 +198,11 @@ class NotesController extends Controller
             $em->flush();
 
             //@TODO redirect in notes page
-            return $this->redirectToRoute('circle_show', array('id' => $request->get("select_circle")));
+            if($selectCirclesId  != 0){
+                return $this->redirectToRoute('circle_show', array('id' => $selectCirclesId));
+            }else{
+                return $this->redirectToRoute('notes_index');
+            }
         }
 
         return $this->render(
