@@ -5,5 +5,5 @@ parameters:
 
 services:
     time_authenticator:
-        class:     Tzepart\NotesManagerBundle\Security\TimeAuthenticator
+        class:     AppBundle\Security\TimeAuthenticator
         arguments: ["@security.password_encoder"]

@@ -1,12 +1,12 @@
 security:
     encoders:
-        Tzepart\NotesManagerBundle\Entity\User:
+        AppBundle\Entity\User:
           algorithm: bcrypt
 
     providers:
         our_db_provider:
             entity:
-                class: NotesManagerBundle:User
+                class: AppBundle:User
                 property: username
 
     firewalls:
