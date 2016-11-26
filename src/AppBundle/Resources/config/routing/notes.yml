@@ -1,0 +1,44 @@
+notes_index:
+    path:     /
+    defaults: { _controller: "AppBundle:Notes:index"}
+    methods:  GET
+
+select_notes_list_by_circle:
+    path:     /list/{circleId}/
+    defaults: { _controller: "AppBundle:Notes:index"}
+    methods:  GET
+
+notes_new_by_circle:
+    path:     /new/{select_circle}
+    defaults: { _controller: "AppBundle:Notes:new", select_circle: null }
+    methods:  [GET, POST]
+
+select_note_by_circle:
+    path:     /list/{circleId}/{labelId}/
+    defaults: { _controller: "AppBundle:Notes:index"}
+    methods:  GET
+
+notes_show:
+    path:     /{id}/show
+    defaults: { _controller: "AppBundle:Notes:show" }
+    methods:  GET
+
+notes_new:
+    path:     /new
+    defaults: { _controller: "AppBundle:Notes:new"}
+    methods:  [GET, POST]
+
+notes_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "AppBundle:Notes:edit" }
+    methods:  [GET, POST]
+
+notes_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "AppBundle:Notes:delete" }
+    methods:  DELETE
+
+notes_edit_ajax:
+    path:     /editAjax
+    defaults: { _controller: "AppBundle:Notes:editAjax" }
+    methods:  [GET, POST]

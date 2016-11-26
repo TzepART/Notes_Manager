@@ -1,0 +1,53 @@
+AppBundle\Entity\User:
+    type: entity
+    table: user
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            id: true
+            generator:
+                strategy: IDENTITY
+    fields:
+        email:
+            type: string
+            nullable: false
+            length: 60
+            fixed: false
+        username:
+            type: string
+            nullable: false
+            length: 25
+            fixed: false
+        password:
+            type: string
+            nullable: false
+            length: 64
+            fixed: false
+        created:
+            type: datetime
+            nullable: false
+        updated:
+            type: datetime
+            nullable: false
+        logged:
+            type: datetime
+            nullable: true
+        roles:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+        isActive:
+            type: boolean
+            nullable: false
+            column: is_active
+    oneToMany:
+            notes:
+                targetEntity: Notes
+                mappedBy: user
+            circles:
+                targetEntity: Circle
+                mappedBy: user
+    lifecycleCallbacks: {  }
