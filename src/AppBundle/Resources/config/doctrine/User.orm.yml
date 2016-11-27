@@ -10,21 +10,6 @@ AppBundle\Entity\User:
             generator:
                 strategy: IDENTITY
     fields:
-        email:
-            type: string
-            nullable: false
-            length: 60
-            fixed: false
-        username:
-            type: string
-            nullable: false
-            length: 25
-            fixed: false
-        password:
-            type: string
-            nullable: false
-            length: 64
-            fixed: false
         created:
             type: datetime
             nullable: false
@@ -34,11 +19,6 @@ AppBundle\Entity\User:
         logged:
             type: datetime
             nullable: true
-        roles:
-            type: string
-            nullable: true
-            length: 45
-            fixed: false
         isActive:
             type: boolean
             nullable: false
