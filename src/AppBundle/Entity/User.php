@@ -90,9 +90,18 @@ class User implements UserInterface, \Serializable
         $this->notes = new ArrayCollection();
         $this->circles = new ArrayCollection();
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid(null, true));
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
     }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->updated = new \DateTime();
+    }
+
 
     /**
      * @return mixed
