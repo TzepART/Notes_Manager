@@ -2,17 +2,16 @@ notes_manager:
     resource: "@AppBundle/Resources/config/routing.yml"
     prefix: /
 
-user_registration:
-    path:     /register
-    defaults: { _controller: AppBundle:Registration:register }
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
 default_security_target:
     path:     /circle
     defaults: { _controller: AppBundle:Circle:index }
-
-login:
-    path:     /login
-    defaults: { _controller: AppBundle:Security:login }
 
 logout:
     path: /logout
@@ -21,7 +20,3 @@ logout:
 notes_manager_homepage:
     path:     /
     defaults: { _controller: AppBundle:Circle:homepage }
-
-NelmioApiDocBundle:
-    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
-    prefix:   /api/doc
