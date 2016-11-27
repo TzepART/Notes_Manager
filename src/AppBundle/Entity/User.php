@@ -2,91 +2,64 @@
 
 namespace AppBundle\Entity;
 
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
  * @ORM\Table(name="user")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User extends BaseUser
 {
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=25, unique=true)
-     */
-    private $username;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $password;
-
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
-    private $plainPassword;
-
-
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
-     */
-    private $roles;
 
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive;
+    protected $isActive;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="logged", type="datetime", nullable=false)
      */
-    private $logged;
+    protected $logged;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    protected $created;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
-    private $updated;
+    protected $updated;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notes", mappedBy="user")
      */
-    private $notes;   
+    protected $notes;
     
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Circle", mappedBy="user")
      */
-    private $circles;
+    protected $circles;
 
     public function __construct()
     {
+        parent::__construct();
         $this->notes = new ArrayCollection();
         $this->circles = new ArrayCollection();
         $this->isActive = true;
@@ -119,55 +92,6 @@ class User implements UserInterface, \Serializable
         return $this->circles;
     }
 
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    public function getSalt()
-    {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
-    }
-
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
-
-    public function eraseCredentials()
-    {
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt
-            ) = unserialize($serialized);
-    }
 
     /**
      * Get id
@@ -180,21 +104,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    /**
      * Get isActive
      *
      * @return boolean
@@ -204,49 +113,6 @@ class User implements UserInterface, \Serializable
         return $this->isActive;
     }
 
-    public function setPlainPassword($password)
-    {
-        $this->plainPassword = $password;
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $username
-     * @return User
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return string
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
 
     /**
      * Set isActive
@@ -259,11 +125,6 @@ class User implements UserInterface, \Serializable
         $this->isActive = $isActive;
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return strval($this->getId());
     }
 
 
@@ -336,16 +197,4 @@ class User implements UserInterface, \Serializable
         return $this->logged;
     }
 
-    /**
-     * Set roles
-     *
-     * @param string $roles
-     * @return User
-     */
-    public function setRoles($roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
 }

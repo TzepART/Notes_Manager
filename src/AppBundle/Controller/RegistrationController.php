@@ -27,9 +27,6 @@ class RegistrationController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
-            $user->setCreated(new \DateTime('now'));
-            $user->setUpdated(new \DateTime('now'));
-            $user->setRoles("USER");
             $user->setIsActive(true);
 
             // 4) save the User!

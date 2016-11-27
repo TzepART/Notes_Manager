@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Snc\RedisBundle\SncRedisBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
