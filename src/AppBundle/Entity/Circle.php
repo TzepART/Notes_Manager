@@ -65,7 +65,18 @@ class Circle
     public function __construct() {
         $this->layers = new ArrayCollection();
         $this->sectors = new ArrayCollection();
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
     }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->updated = new \DateTime();
+    }
+
 
     public function getSectors()
     {

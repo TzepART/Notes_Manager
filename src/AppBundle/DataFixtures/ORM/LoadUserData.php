@@ -27,13 +27,11 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
         $manager->persist($user);
         $manager->flush();
 
-        $this->addReference('admin-user', $user);
+        $this->addReference('example_user', $user);
     }
 
     public function getOrder()
     {
-        // the order in which fixtures will be loaded
-        // the lower the number, the sooner that this fixture is loaded
         return 1;
     }
 }
