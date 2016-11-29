@@ -1,6 +1,11 @@
 AppBundle\Entity\User:
     type: entity
     table: user
+    attributeOverride:
+        salt:
+          column: salt
+          type: string
+          nullable: true
     id:
         id:
             type: integer
