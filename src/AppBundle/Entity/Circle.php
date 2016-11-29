@@ -123,18 +123,6 @@ class Circle
         return $this->name;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Circle
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
 
     /**
      * Get dateCreate
@@ -146,18 +134,6 @@ class Circle
         return $this->dateCreate;
     }
 
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Circle
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
-    }
 
     /**
      * Get dateUpdate

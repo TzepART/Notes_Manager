@@ -139,18 +139,6 @@ class Notes
         return $this->text;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Notes
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
 
     /**
      * Get dateCreate
@@ -160,19 +148,6 @@ class Notes
     public function getDateCreate()
     {
         return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Notes
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
