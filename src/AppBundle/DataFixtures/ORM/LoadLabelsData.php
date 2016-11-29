@@ -18,16 +18,17 @@ class LoadLabelsData extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-            $sector = new Labels();
-            $sector->setLayers($this->getReference('layer_2'));
-            $sector->setSectors($this->getReference('sector_1'));
-            $sector->setRadius(0.7);
-            $sector->setAngle(100);
+            $label = new Labels();
+            $label->setLayers($this->getReference('layer_2'));
+            $label->setSectors($this->getReference('sector_1'));
+            $label->setRadius(0.7);
+            $label->setAngle(100);
 
-            $manager->persist($sector);
+            $this->addReference('label_0', $label);
+
+            $manager->persist($label);
             $manager->flush();
 
-            $this->addReference('label_0', $sector);
     }
 
     public function getOrder()

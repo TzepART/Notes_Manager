@@ -205,32 +205,5 @@ class Notes
     {
         return $this->labels;
     }
-    /**
-     * @var \AppBundle\Entity\User
-     */
-    private $users;
 
-
-    /**
-     * Set users
-     *
-     * @param \AppBundle\Entity\User $users
-     * @return Notes
-     */
-    public function setUsers(\AppBundle\Entity\User $users = null)
-    {
-        $this->users = $users;
-
-        return $this;
-    }
-
-    /**
-     * Get users
-     *
-     * @return \AppBundle\Entity\User 
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
 }
