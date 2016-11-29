@@ -69,8 +69,8 @@ class Sectors
 
     public function __construct() {
         $this->labels = new ArrayCollection();
-        $this->created = new \DateTime();
-        $this->updated = new \DateTime();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
     /**
@@ -78,7 +78,7 @@ class Sectors
      */
     public function preUpdate()
     {
-        $this->updated = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
 

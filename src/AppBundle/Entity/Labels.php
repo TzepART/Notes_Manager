@@ -76,8 +76,8 @@ class Labels
 
 
     public function __construct() {
-        $this->created = new \DateTime();
-        $this->updated = new \DateTime();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
     /**
@@ -85,7 +85,7 @@ class Labels
      */
     public function preUpdate()
     {
-        $this->updated = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
     /**

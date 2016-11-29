@@ -65,8 +65,8 @@ class Circle
     public function __construct() {
         $this->layers = new ArrayCollection();
         $this->sectors = new ArrayCollection();
-        $this->created = new \DateTime();
-        $this->updated = new \DateTime();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
     /**
@@ -74,7 +74,7 @@ class Circle
      */
     public function preUpdate()
     {
-        $this->updated = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
 
