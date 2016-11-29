@@ -71,6 +71,16 @@ class Notes
 
     public function __construct() {
         $this->labels = new ArrayCollection();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->dateUpdate = new \DateTime();
     }
 
     /**
@@ -129,18 +139,6 @@ class Notes
         return $this->text;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Notes
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
 
     /**
      * Get dateCreate
@@ -150,19 +148,6 @@ class Notes
     public function getDateCreate()
     {
         return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Notes
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
@@ -220,32 +205,5 @@ class Notes
     {
         return $this->labels;
     }
-    /**
-     * @var \AppBundle\Entity\User
-     */
-    private $users;
 
-
-    /**
-     * Set users
-     *
-     * @param \AppBundle\Entity\User $users
-     * @return Notes
-     */
-    public function setUsers(\AppBundle\Entity\User $users = null)
-    {
-        $this->users = $users;
-
-        return $this;
-    }
-
-    /**
-     * Get users
-     *
-     * @return \AppBundle\Entity\User 
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
 }

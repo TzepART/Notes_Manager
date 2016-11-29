@@ -59,7 +59,18 @@ class Layers
 
     public function __construct() {
         $this->labels = new ArrayCollection();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->dateUpdate = new \DateTime();
+    }
+
 
     public function getLabels()
     {
@@ -124,19 +135,6 @@ class Layers
     }
 
     /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Layers
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
-
-    /**
      * Get dateCreate
      *
      * @return \DateTime 
@@ -144,19 +142,6 @@ class Layers
     public function getDateCreate()
     {
         return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Layers
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**

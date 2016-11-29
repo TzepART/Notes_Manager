@@ -65,7 +65,18 @@ class Circle
     public function __construct() {
         $this->layers = new ArrayCollection();
         $this->sectors = new ArrayCollection();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->dateUpdate = new \DateTime();
+    }
+
 
     public function getSectors()
     {
@@ -112,18 +123,6 @@ class Circle
         return $this->name;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Circle
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
 
     /**
      * Get dateCreate
@@ -135,18 +134,6 @@ class Circle
         return $this->dateCreate;
     }
 
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Circle
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
-    }
 
     /**
      * Get dateUpdate
