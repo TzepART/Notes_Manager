@@ -1,5 +1,6 @@
 <?php
-
+//phpinfo();
+//die();
 use Symfony\Component\HttpFoundation\Request;
 
 /**

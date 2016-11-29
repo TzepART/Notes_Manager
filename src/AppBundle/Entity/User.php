@@ -60,6 +60,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->salt = null;
         $this->notes = new ArrayCollection();
         $this->circles = new ArrayCollection();
         $this->isActive = true;
