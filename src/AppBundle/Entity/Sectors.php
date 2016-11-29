@@ -69,7 +69,18 @@ class Sectors
 
     public function __construct() {
         $this->labels = new ArrayCollection();
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->dateUpdate = new \DateTime();
+    }
+
 
     public function getLabels()
     {
@@ -178,18 +189,6 @@ class Sectors
         return $this->parentSectorId;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Sectors
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
 
     /**
      * Get dateCreate
@@ -199,19 +198,6 @@ class Sectors
     public function getDateCreate()
     {
         return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Sectors
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**

@@ -20,20 +20,18 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
     {
         $user = new User();
         $user->setUsername('user2');
-        $user->setPassword('123123');
+        $user->setPlainPassword('qweqwe');
         $user->setEmail('user@mail.com');
-        $user->setRoles('USER');
+        $user->setEnabled(true);
 
         $manager->persist($user);
         $manager->flush();
 
-        $this->addReference('admin-user', $user);
+        $this->addReference('example_user', $user);
     }
 
     public function getOrder()
     {
-        // the order in which fixtures will be loaded
-        // the lower the number, the sooner that this fixture is loaded
         return 1;
     }
 }

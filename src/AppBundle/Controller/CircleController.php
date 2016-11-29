@@ -65,8 +65,6 @@ class CircleController extends Controller
         if ($form->isSubmitted() && $form->isValid() && !empty($request->get("layers_number"))) {
             $user = $this->getCurrentUserObject();
             $circle->setUser($user);
-            $circle->setDateCreate(new \DateTime('now'));
-            $circle->setDateUpdate(new \DateTime('now'));
             $circle->setName($request->get("name"));
             $em = $this->getDoctrine()->getManager();
             $em->persist($circle);
@@ -206,7 +204,6 @@ class CircleController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $circle->setDateUpdate(new \DateTime('now'));
             $circle->setName($request->get("name"));
             $em->persist($circle);
             $em->flush();
@@ -479,8 +476,6 @@ class CircleController extends Controller
         $layers->setBeginRadius($radiusBegin);
         $layers->setEndRadius($radiusEnd);
         $layers->setColor("#FFF");
-        $layers->setDateCreate(new \DateTime('now'));
-        $layers->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($layers);
         $em->flush();
@@ -503,7 +498,6 @@ class CircleController extends Controller
             $layer->setEndRadius($arParams["endRadius"]);
         }
 
-        $layer->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($layer);
         $em->flush();
@@ -574,8 +568,6 @@ class CircleController extends Controller
         $sector->setEndAngle($endAngle);
         $sector->setParentSectorId($parentSector);
         $sector->setColor($color);
-        $sector->setDateCreate(new \DateTime('now'));
-        $sector->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
         $em->flush();
@@ -612,7 +604,6 @@ class CircleController extends Controller
         if (!empty($arParams["color"])) {
             $sector->setColor($arParams["color"]);
         }
-        $sector->setDateUpdate(new \DateTime('now'));
         $em = $this->getDoctrine()->getManager();
         $em->persist($sector);
         $em->flush();
@@ -764,7 +755,6 @@ class CircleController extends Controller
         if(!empty($arParams["sector"])){
             $label->setSectors($arParams["sector"]);
         }
-        $label->setDateUpdate(new \DateTime('now'));
         $em->persist($label);
         $em->flush();
 
@@ -785,7 +775,6 @@ class CircleController extends Controller
             $label->setSectors();
             $noteObj = $label->getNotes();
             $noteObj->setLabels();
-            $noteObj->setDateUpdate(new \DateTime('now'));
 
             $em->remove($label);
             $em->persist($noteObj);
@@ -795,7 +784,6 @@ class CircleController extends Controller
         }
         if(isset($arParams["layer"]) && $arParams["layer"] == "Y"){
             $label->setLayers();
-            $label->setDateUpdate(new \DateTime('now'));
             $em->persist($label);
             $em->flush();
         }

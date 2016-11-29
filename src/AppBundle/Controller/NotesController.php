@@ -190,8 +190,6 @@ class NotesController extends Controller
             }
 
             $note->setUser($user);
-            $note->setDateCreate(new \DateTime('now'));
-            $note->setDateUpdate(new \DateTime('now'));
             $note->setName($request->get("name"));
             $note->setText($request->get("text"));
             $em->persist($note);
@@ -319,7 +317,6 @@ class NotesController extends Controller
                 $labelDelete = true;
             }
 
-            $note->setDateUpdate(new \DateTime('now'));
             $note->setName($request->get("name"));
             $note->setText($request->get("text"));
 
@@ -529,8 +526,6 @@ class NotesController extends Controller
         $label->setRadius($arParams["radius"]);
         $label->setLayers($arParams["layer"]);
         $label->setSectors($arParams["sector"]);
-        $label->setDateCreate(new \DateTime('now'));
-        $label->setDateUpdate(new \DateTime('now'));
         $em->persist($label);
         $em->flush();
 
@@ -559,7 +554,6 @@ class NotesController extends Controller
         if(!empty($arParams["sector"])){
             $label->setSectors($arParams["sector"]);
         }
-        $label->setDateUpdate(new \DateTime('now'));
         $em->persist($label);
         $em->flush();
 

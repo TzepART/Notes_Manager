@@ -74,6 +74,20 @@ class Labels
      */
     private $notes;
 
+
+    public function __construct() {
+        $this->dateCreate = new \DateTime();
+        $this->dateUpdate = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->dateUpdate = new \DateTime();
+    }
+
     /**
      * @return Notes
      */
@@ -134,19 +148,6 @@ class Labels
     }
 
     /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     * @return Labels
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-
-        return $this;
-    }
-
-    /**
      * Get dateCreate
      *
      * @return \DateTime 
@@ -154,19 +155,6 @@ class Labels
     public function getDateCreate()
     {
         return $this->dateCreate;
-    }
-
-    /**
-     * Set dateUpdate
-     *
-     * @param \DateTime $dateUpdate
-     * @return Labels
-     */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
