@@ -22,7 +22,7 @@ class LoadLabelsData extends AbstractFixture implements OrderedFixtureInterface
             $label->setLayers($this->getReference('layer_2'));
             $label->setSectors($this->getReference('sector_1'));
             $label->setRadius(0.7);
-            $label->setAngle(100);
+            $label->setAngle(200);
 
             $this->addReference('label_0', $label);
 

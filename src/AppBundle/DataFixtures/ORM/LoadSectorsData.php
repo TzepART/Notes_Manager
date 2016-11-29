@@ -18,15 +18,15 @@ class LoadSectorsData extends AbstractFixture implements OrderedFixtureInterface
     protected $data = [
         ['name' => 'Sector_1',
           'begin_angle' => 0,
-          'end_angle' => 60,
+          'end_angle' => 120,
           'color' => '#7fff00'],
         ['name' => 'Sector_2',
-          'begin_angle' => 60,
-          'end_angle' => 120,
+          'begin_angle' => 120,
+          'end_angle' => 240,
           'color' => '#6495ed'],
         ['name' => 'Sector_3',
-            'begin_angle' => 0,
-            'end_angle' => 180,
+            'begin_angle' => 240,
+            'end_angle' => 360,
             'color' => '#ff8c00'],
     ];
 
