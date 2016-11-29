@@ -74,6 +74,20 @@ class Labels
      */
     private $notes;
 
+
+    public function __construct() {
+        $this->created = new \DateTime();
+        $this->updated = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->updated = new \DateTime();
+    }
+
     /**
      * @return Notes
      */
