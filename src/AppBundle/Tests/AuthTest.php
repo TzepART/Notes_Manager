@@ -21,10 +21,6 @@ class AuthTest extends WebTestCase
             'customer[email]' => self::TEST_LOGIN,
             'customer[password][first]' => self::TEST_PASSWORD,
             'customer[password][second]' => self::TEST_PASSWORD,
-            'customer[firstName]' => 'Тест',
-            'customer[lastName]' => 'Тест',
-            'customer[external][vkontakte]' => '',
-            'customer[external][facebook]' => '',
             'agree' => 'on',
             'customer[inviterId]' => '',
             'g-recaptcha-response' => ''
