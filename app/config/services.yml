@@ -7,3 +7,8 @@ services:
     time_authenticator:
         class:     AppBundle\Security\TimeAuthenticator
         arguments: ["@security.password_encoder"]
+
+    app.circle_listener:
+        class: AppBundle\EventListener\CreateCircleListener
+        tags:
+            - { name: kernel.event_listener, event: circle.create, method: onCreateCircle }
