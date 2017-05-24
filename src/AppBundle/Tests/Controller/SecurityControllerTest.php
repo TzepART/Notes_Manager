@@ -7,7 +7,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class SecurityControllerTest extends WebTestCase
 {
-    const EXAMPLE_EMAIL = 'user@mail.com';
+    const EXAMPLE_EMAIL = 'user2@mail.com';
     const EXAMPLE_LOGIN = 'user2';
     const EXAMPLE_PASSWORD = 'qweqwe';
     const REGISTER_URL = '/register/';
