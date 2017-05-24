@@ -9,7 +9,6 @@
 namespace AppBundle\Tests;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Tests\TestClient;
 
 class CommonApp extends WebTestCase
 {

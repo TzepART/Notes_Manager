@@ -2,15 +2,18 @@
 
 namespace AppBundle\Tests\Controller;
 
+use AppBundle\Entity\Circle;
+use AppBundle\Entity\Notes;
 use AppBundle\Tests\CommonApp;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 class PageControllerTest extends WebTestCase
 {
     /**
      * @dataProvider getUrlsProvider
      */
-    public function testCheckRedirectStatus($url)
+    public function testCheckRedirectStatusMainPages($url)
     {
         $client = static::createClient();
 
@@ -23,7 +26,7 @@ class PageControllerTest extends WebTestCase
     /**
      * @dataProvider getUrlsProvider
      */
-    public function testCheckSuccessStatus($url)
+    public function testCheckSuccessStatusMainPages($url)
     {
         $client = $this->loadDefaultData();
 
@@ -33,6 +36,50 @@ class PageControllerTest extends WebTestCase
         );
     }
 
+    public function testCheckCirclePage()
+    {
+        $client = $this->loadDefaultData();
+
+        $circle = $this->returnEntityByUser($client,Circle::class);
+
+        $client->request('GET',  '/circle/'.$circle->getId().'/show');
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+    }
+
+    public function testCheckNewNotePageByCircle()
+    {
+        $client = $this->loadDefaultData();
+        $circle = $this->returnEntityByUser($client,Circle::class);
+
+        $client->request('GET',  '/notes/new/'.$circle->getId());
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+    }
+
+    public function testCheckNotesPageByCircle()
+    {
+        $client = $this->loadDefaultData();
+        $circle = $this->returnEntityByUser($client,Circle::class);
+
+        $client->request('GET',  '/notes/list/'.$circle->getId().'/');
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+    }
+
+    public function testCheckEditNotePage()
+    {
+        $client = $this->loadDefaultData();
+        $note = $this->returnEntityByUser($client,Notes::class);
+
+        $client->request('GET',  '/notes/'.$note->getId().'/edit');
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+    }
 
     public function getUrlsProvider()
     {
@@ -41,6 +88,7 @@ class PageControllerTest extends WebTestCase
             ['/circle/'],
             ['/circle/new'],
             ['/notes/'],
+            ['/notes/new'],
         ];
     }
 
@@ -60,6 +108,40 @@ class PageControllerTest extends WebTestCase
 
         $client = CommonApp::loginUser();
         return $client;
+    }
+
+    /**
+     * @param Client $client
+     * @param string $class
+     * @return mixed
+     */
+    private function returnEntityByUser($client,$class){
+
+        $container = static::$kernel->getContainer();
+        $user = $container->get('security.token_storage')->getToken()->getUser();
+
+        /**
+         * @var mixed $entity
+         */
+        $entity = $client->getContainer()->get('doctrine')->getRepository($class)->findOneBy(['user' => $user]);
+
+        return $entity;
+    }
+
+    /**
+     * @param Client $client
+     * @param string $class
+     * @param Circle $circle
+     * @return mixed
+     */
+    private function returnEntityByCircle($client,Circle $circle,$class){
+
+        /**
+         * @var mixed $entity
+         */
+        $entity = $client->getContainer()->get('doctrine')->getRepository($class)->findOneBy(['circle' => $circle]);
+
+        return $entity;
     }
 
 }
