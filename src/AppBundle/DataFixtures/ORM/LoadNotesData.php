@@ -20,21 +20,26 @@ class LoadNotesData extends AbstractFixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $faker = FakerFactory::create('ru_RU');
-        $note1 = new Notes();
-        $note1->setLabels($this->getReference('label_0'));
 
-        $note1->setUser($this->getReference('example_user'));
-        $note1->setName($faker->name);
-        $note1->setText($faker->realText(500));
-        $manager->persist($note1);
+        for ($i = 0; $i < 10; $i++){
+            $note = new Notes();
+            $note->setLabels($this->getReference('label_'.$i));
+            $note->setUser($this->getReference('example_user_'.rand(0,1)));
+            $note->setName($faker->name);
+            $note->setText($faker->realText(500));
+            $manager->persist($note);
+        }
 
-        $note2 = new Notes();
-        $note2->setLabels(null);
-        $note2->setUser($this->getReference('example_user'));
-        $note2->setName($faker->name);
-        $note2->setText($faker->realText(500));
 
-        $manager->persist($note2);
+        for ($i = 0; $i < 5; $i++){
+            $note = new Notes();
+            $note->setLabels(null);
+            $note->setUser($this->getReference('example_user_'.rand(0,1)));
+            $note->setName($faker->name);
+            $note->setText($faker->realText(500));
+            $manager->persist($note);
+        }
+
         $manager->flush();
 
     }
