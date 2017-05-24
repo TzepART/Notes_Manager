@@ -37,7 +37,7 @@ class LoadLayersData extends AbstractFixture implements OrderedFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             foreach ($this->data as $index => $item) {
                 $layer = new Layers();
                 $layer->setCircle($this->getReference('example_circle_' . $i));

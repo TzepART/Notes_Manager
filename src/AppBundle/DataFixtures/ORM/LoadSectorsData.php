@@ -37,7 +37,7 @@ class LoadSectorsData extends AbstractFixture implements OrderedFixtureInterface
     {
         $faker = FakerFactory::create('ru_RU');
 
-        for($i = 0; $i < 2; $i++){
+        for($i = 0; $i < 4; $i++){
             foreach ($this->data as $index => $item) {
                 $sector = new Sectors();
                 $sector->setCircle($this->getReference('example_circle_'.$i));

@@ -33,26 +33,26 @@ class LoadLabelsData extends AbstractFixture implements OrderedFixtureInterface
     protected $layerData = [
         [
             'begin_radius' => 0,
-            'end_radius' => 0.25,
+            'end_radius' => 25,
         ],
         [
-            'begin_radius' => 0.25,
-            'end_radius' => 0.5,
+            'begin_radius' => 25,
+            'end_radius' => 50,
         ],
         [
-            'begin_radius' => 0.5,
-            'end_radius' => 0.75,
+            'begin_radius' => 50,
+            'end_radius' => 75,
         ],
         [
-            'begin_radius' => 0.75,
-            'end_radius' => 1,
+            'begin_radius' => 75,
+            'end_radius' => 100,
         ],
     ];
 
     public function load(ObjectManager $manager)
     {
-            for ($i = 0; $i < 10; $i++){
-                $circleKey = $i%2;
+            for ($i = 0; $i < 20; $i++){
+                $circleKey = $i%4;
                 $sectorKey = array_rand($this->sectorData);
                 $sector = $this->sectorData[$sectorKey];
                 $layerKey = array_rand($this->layerData);
@@ -61,7 +61,7 @@ class LoadLabelsData extends AbstractFixture implements OrderedFixtureInterface
                 $label = new Labels();
                 $label->setLayers($this->getReference('circle_' . $circleKey . '_layer_' . $layerKey));
                 $label->setSectors($this->getReference('circle_' . $circleKey . '_sector_' . $sectorKey));
-                $label->setRadius(rand($layer['begin_radius'],$layer['end_radius']));
+                $label->setRadius(rand($layer['begin_radius'],$layer['end_radius'])/100);
                 $label->setAngle(rand($sector['begin_angle'],$sector['end_angle']));
                 $this->addReference('label_'.$i, $label);
                 $manager->persist($label);

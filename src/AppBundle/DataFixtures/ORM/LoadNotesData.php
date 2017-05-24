@@ -21,10 +21,11 @@ class LoadNotesData extends AbstractFixture implements OrderedFixtureInterface
     {
         $faker = FakerFactory::create('ru_RU');
 
-        for ($i = 0; $i < 10; $i++){
+        for ($i = 0; $i < 20; $i++){
+            $userKey = $i%2;
             $note = new Notes();
             $note->setLabels($this->getReference('label_'.$i));
-            $note->setUser($this->getReference('example_user_'.rand(0,1)));
+            $note->setUser($this->getReference('example_user_'.$userKey));
             $note->setName($faker->name);
             $note->setText($faker->realText(500));
             $manager->persist($note);

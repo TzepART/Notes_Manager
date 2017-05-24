@@ -23,7 +23,7 @@ class LoadCircleData extends AbstractFixture implements OrderedFixtureInterface
             $key = $i%2;
             $circle = new Circle();
             $circle->setUser($this->getReference('example_user_'.$key));
-            $circle->setName($faker->title);
+            $circle->setName($faker->word);
 
             $manager->persist($circle);
             $this->addReference('example_circle_'.$i, $circle);
