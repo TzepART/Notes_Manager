@@ -8,26 +8,41 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
-
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
 
+
 class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
 {
+    protected $users = [
+      [
+          'login' => 'user1',
+          'password' => 'qweqwe',
+          'email' => 'user1@mail.com',
+      ],
+      [
+          'login' => 'user2',
+          'password' => 'qweqwe',
+          'email' => 'user2@mail.com',
+      ],
+    ];
     public function load(ObjectManager $manager)
     {
-        $user = new User();
-        $user->setUsername('user2');
-        $user->setPlainPassword('qweqwe');
-        $user->setEmail('user@mail.com');
-        $user->setEnabled(true);
 
-        $manager->persist($user);
+        foreach ($this->users as $index => $arUser) {
+            $user = new User();
+            $user->setUsername($arUser['login']);
+            $user->setPlainPassword($arUser['password']);
+            $user->setEmail($arUser['email']);
+            $user->setEnabled(true);
+            $manager->persist($user);
+            $this->addReference('example_user_'.$index, $user);
+        }
+
         $manager->flush();
 
-        $this->addReference('example_user', $user);
     }
 
     public function getOrder()

@@ -16,39 +16,46 @@ use AppBundle\Entity\Layers;
 class LoadLayersData extends AbstractFixture implements OrderedFixtureInterface
 {
     protected $data = [
-        ['begin_radius' => 0,
-          'end_radius' => 0.25,
-          'color' => '#FFF'],
-        ['begin_radius' => 0.25,
-          'end_radius' => 0.5,
-          'color' => '#FFF'],
-        ['begin_radius' => 0.5,
+        [
+            'begin_radius' => 0,
+            'end_radius' => 0.25,
+            'color' => '#FFF'],
+        [
+            'begin_radius' => 0.25,
+            'end_radius' => 0.5,
+            'color' => '#FFF'],
+        [
+            'begin_radius' => 0.5,
             'end_radius' => 0.75,
             'color' => '#FFF'],
-        ['begin_radius' => 0.75,
+        [
+            'begin_radius' => 0.75,
             'end_radius' => 1,
-            'color' => '#FFF'],
+            'color' => '#FFF'
+        ],
     ];
 
     public function load(ObjectManager $manager)
     {
+        for ($i = 0; $i < 4; $i++) {
+            foreach ($this->data as $index => $item) {
+                $layer = new Layers();
+                $layer->setCircle($this->getReference('example_circle_' . $i));
+                $layer->setBeginRadius($item['begin_radius']);
+                $layer->setEndRadius($item['end_radius']);
+                $layer->setColor($item['color']);
 
-        foreach ($this->data as $index => $item) {
-            $sector = new Layers();
-            $sector->setCircle($this->getReference('example_circle'));
-            $sector->setBeginRadius($item['begin_radius']);
-            $sector->setEndRadius($item['end_radius']);
-            $sector->setColor($item['color']);
+                $manager->persist($layer);
 
-            $manager->persist($sector);
-            $manager->flush();
-
-            $this->addReference('layer_'.$index, $sector);
+                $this->addReference('circle_' . $i . '_layer_' . $index, $layer);
+            }
         }
+
+        $manager->flush();
     }
 
     public function getOrder()
     {
-        return 4;
+        return 3;
     }
 }

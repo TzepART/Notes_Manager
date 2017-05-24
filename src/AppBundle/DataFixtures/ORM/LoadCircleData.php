@@ -12,19 +12,25 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\Circle;
+use Faker\Factory as FakerFactory;
 
 class LoadCircleData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $circle = new Circle();
-        $circle->setUser($this->getReference('example_user'));
-        $circle->setName('Common circle');
+        $faker = FakerFactory::create('ru_RU');
+        for($i=0; $i < 4; $i++){
+            $key = $i%2;
+            $circle = new Circle();
+            $circle->setUser($this->getReference('example_user_'.$key));
+            $circle->setName($faker->word);
 
-        $manager->persist($circle);
+            $manager->persist($circle);
+            $this->addReference('example_circle_'.$i, $circle);
+        }
+
         $manager->flush();
 
-        $this->addReference('example_circle', $circle);
     }
 
     public function getOrder()
