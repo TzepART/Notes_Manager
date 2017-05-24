@@ -2,11 +2,52 @@
 
 namespace AppBundle\Tests\Controller;
 
+use AppBundle\Tests\CommonApp;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class PageControllerTest extends WebTestCase
 {
-    public function testCompleteScenario()
+    /**
+     * @dataProvider getUrlsProvider
+     */
+    public function testCheckRedirectStatus($url)
+    {
+        $client = static::createClient();
+
+        $client->request('GET',  $url);
+        $this->assertTrue(
+            $client->getResponse()->isRedirect()
+        );
+    }
+
+    /**
+     * @dataProvider getUrlsProvider
+     */
+    public function testCheckSuccessStatus($url)
+    {
+        $client = $this->loadDefaultData();
+
+        $client->request('GET',  $url);
+        $this->assertTrue(
+            $client->getResponse()->isSuccessful()
+        );
+    }
+
+
+    public function getUrlsProvider()
+    {
+        return [
+            ['/'],
+            ['/circle/'],
+            ['/circle/new'],
+            ['/notes/'],
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    private function loadDefaultData()
     {
         $this->loadFixtures(array(
             'AppBundle\DataFixtures\ORM\LoadCircleData',
@@ -17,27 +58,8 @@ class PageControllerTest extends WebTestCase
             'AppBundle\DataFixtures\ORM\LoadUserData',
         ));
 
-        $client = static::createClient();
+        $client = CommonApp::loginUser();
+        return $client;
     }
 
-    /**
-     * @dataProvider getUrlsProvider
-     */
-    public function testPagesResponseStatus($url)
-    {
-
-        $client = static::createClient();
-
-        $client->request('GET',  $url);
-        $this->assertTrue(
-            $client->getResponse()->isRedirect()
-        );
-    }
-
-    public function getUrlsProvider()
-    {
-        return [
-            ['/'],
-        ];
-    }
 }
