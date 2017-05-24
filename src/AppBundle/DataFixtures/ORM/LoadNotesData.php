@@ -24,15 +24,15 @@ class LoadNotesData extends AbstractFixture implements OrderedFixtureInterface
         $note1->setLabels($this->getReference('label_0'));
 
         $note1->setUser($this->getReference('example_user'));
-        $note1->setName($faker->word);
-        $note1->setText($faker->text(50));
+        $note1->setName($faker->name);
+        $note1->setText($faker->realText(500));
         $manager->persist($note1);
 
         $note2 = new Notes();
         $note2->setLabels(null);
         $note2->setUser($this->getReference('example_user'));
-        $note1->setName($faker->word);
-        $note1->setText($faker->text(50));
+        $note2->setName($faker->name);
+        $note2->setText($faker->realText(500));
 
         $manager->persist($note2);
         $manager->flush();
