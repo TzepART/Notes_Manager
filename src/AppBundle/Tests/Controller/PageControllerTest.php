@@ -128,20 +128,4 @@ class PageControllerTest extends WebTestCase
         return $entity;
     }
 
-    /**
-     * @param Client $client
-     * @param string $class
-     * @param Circle $circle
-     * @return mixed
-     */
-    private function returnEntityByCircle($client,Circle $circle,$class){
-
-        /**
-         * @var mixed $entity
-         */
-        $entity = $client->getContainer()->get('doctrine')->getRepository($class)->findOneBy(['circle' => $circle]);
-
-        return $entity;
-    }
-
 }
