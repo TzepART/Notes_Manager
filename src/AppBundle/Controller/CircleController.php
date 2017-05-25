@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use AppBundle\Event\CreateCircleEvent;
 use AppBundle\Entity\Circle;
 use AppBundle\Entity\Sectors;
 use AppBundle\Entity\Layers;
@@ -60,6 +61,7 @@ class CircleController extends Controller
     {
         $this->checkAuthorize();
         $circle = new Circle();
+
         $form   = $this->createForm('AppBundle\Form\CircleType', $circle);
         $form->handleRequest($request);
 
@@ -68,6 +70,12 @@ class CircleController extends Controller
             $circle->setUser($user);
             $circle->setName($request->get("name"));
             $em = $this->getDoctrine()->getManager();
+
+            // create the CreateCircleEvent and dispatch it
+            $event = new CreateCircleEvent($circle);
+            $dispatcher = $this->get('event_dispatcher');
+            $dispatcher->dispatch(CreateCircleEvent::NAME, $event);
+
             $em->persist($circle);
             $em->flush();
 
