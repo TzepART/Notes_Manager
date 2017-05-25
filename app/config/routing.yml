@@ -1,6 +1,7 @@
 notes_manager:
-    resource: "@AppBundle/Resources/config/routing.yml"
-    prefix: /
+    type:     annotation
+    resource: "@AppBundle/Controller"
+    prefix:   /
 
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"

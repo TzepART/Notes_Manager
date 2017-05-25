@@ -1,9 +1,0 @@
-notes_manager_circle:
-    type:     annotation
-    resource: "@AppBundle/Controller/CircleController.php"
-    prefix:   /circle
-
-notes_manager_notes:
-    type:     annotation
-    resource: "@AppBundle/Controller/NotesController.php"
-    prefix:   /notes
