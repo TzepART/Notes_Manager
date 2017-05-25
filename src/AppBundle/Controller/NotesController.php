@@ -131,6 +131,7 @@ class NotesController extends Controller
         $arLayersObjects  = [];
         $arLayersId       = [];
         $countLayers      = 5;
+        $selectLayerId = 0;
         $selectCirclesId = 0;
         $form             = $this->createForm('AppBundle\Form\NotesType', $note);
         $form->handleRequest($request);
@@ -166,6 +167,7 @@ class NotesController extends Controller
             }
         }
 
+
         $arDefaultCircle = ["id" => "", "name" => "Во входящие"];
         if($selectCirclesId  == 0){
             array_unshift($arCircles,$arDefaultCircle);
@@ -178,10 +180,12 @@ class NotesController extends Controller
         // then create array with information about them
         if (!empty($arLayersObjects) && !empty($arSectorsObjects)) {
             $countLayers = count($arLayersObjects);
+//            $arLayersObjects = array_reverse($arLayersObjects->toArray());
             foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
                 $arLayersId[$keyLayer] = $arLayersObject->getId();
                 if (!empty($selectLayer) && $arLayersObject->getId() == $selectLayer->getId()) {
                     $this->array_swap($arLayersId, 0, $keyLayer);
+                    $selectLayerId = $keyLayer+1;
                 }
             }
 
@@ -193,7 +197,6 @@ class NotesController extends Controller
                 }
             }
         }
-
 
         //if form submit then create new Note and label, which links with new note
         if ($form->isSubmitted() && $form->isValid()) {
@@ -232,6 +235,7 @@ class NotesController extends Controller
                 'note' => $note,
                 'arSectors' => $arSectors,
                 'countLayers' => $countLayers,
+                'selectLayerId' =>  $selectLayerId,
                 'arCircles' => $arCircles,
                 'form' => $form->createView(),
             )
