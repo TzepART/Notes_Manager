@@ -3,15 +3,20 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
 
 /**
  * Labels
  *
- * @ORM\Table(name="labels", indexes={@ORM\Index(name="fk_labels_sectors1_idx", columns={"sectors_id"}), @ORM\Index(name="fk_labels_layers1_idx", columns={"layers_id"})})
+ * @ORM\Table(name="labels", indexes={@ORM\Index(name="fk_labels_sectors1_idx", columns={"sectors_id"})
+ * @ORM\Index(name="fk_labels_layers1_idx", columns={"layers_id"})})
  * @ORM\Entity
  */
 class Labels
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -21,7 +26,6 @@ class Labels
 
     /**
      * @var float
-     *
      * @ORM\Column(name="radius", type="float")
      */
     private $radius;
@@ -29,24 +33,10 @@ class Labels
 
     /**
      * @var float
-     *
      * @ORM\Column(name="angle", type="float")
      */
     private $angle;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=true)
-     */
-    private $dateCreate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_update", type="datetime", nullable=true)
-     */
-    private $dateUpdate;
 
     /**
      * @var \AppBundle\Entity\Sectors
@@ -74,19 +64,6 @@ class Labels
      */
     private $notes;
 
-
-    public function __construct() {
-        $this->dateCreate = new \DateTime();
-        $this->dateUpdate = new \DateTime();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate()
-    {
-        $this->dateUpdate = new \DateTime();
-    }
 
     /**
      * @return Notes
@@ -147,25 +124,6 @@ class Labels
         $this->angle = $angle;
     }
 
-    /**
-     * Get dateCreate
-     *
-     * @return \DateTime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
 
     /**
      * Set sectors
@@ -173,7 +131,7 @@ class Labels
      * @param \AppBundle\Entity\Sectors $sectors
      * @return Labels
      */
-    public function setSectors(\AppBundle\Entity\Sectors $sectors = null)
+    public function setSectors(Sectors $sectors = null)
     {
         $this->sectors = $sectors;
 
@@ -196,7 +154,7 @@ class Labels
      * @param \AppBundle\Entity\Layers $layers
      * @return Labels
      */
-    public function setLayers(\AppBundle\Entity\Layers $layers = null)
+    public function setLayers(Layers $layers = null)
     {
         $this->layers = $layers;
 

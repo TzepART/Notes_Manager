@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
 
 
 /**
@@ -11,6 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Layers
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -27,16 +32,6 @@ class Layers
      * @var float
      */
     private $endRadius;
-
-    /**
-     * @var \DateTime
-     */
-    private $dateCreate;
-
-    /**
-     * @var \DateTime
-     */
-    private $dateUpdate;
 
     /**
      * @var string
@@ -59,16 +54,6 @@ class Layers
 
     public function __construct() {
         $this->labels = new ArrayCollection();
-        $this->dateCreate = new \DateTime();
-        $this->dateUpdate = new \DateTime();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate()
-    {
-        $this->dateUpdate = new \DateTime();
     }
 
 
@@ -134,25 +119,6 @@ class Layers
         return $this->endRadius;
     }
 
-    /**
-     * Get dateCreate
-     *
-     * @return \DateTime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
 
     /**
      * Set color
@@ -183,7 +149,7 @@ class Layers
      * @param \AppBundle\Entity\Circle $circle
      * @return Layers
      */
-    public function setCircle(\AppBundle\Entity\Circle $circle = null)
+    public function setCircle(Circle $circle = null)
     {
         $this->circle = $circle;
 

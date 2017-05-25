@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
 
 
 /**
@@ -14,6 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Notes
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -34,20 +38,6 @@ class Notes
      * @ORM\Column(name="text", type="text", nullable=true)
      */
     private $text;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=true)
-     */
-    private $dateCreate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_update", type="datetime", nullable=true)
-     */
-    private $dateUpdate;
 
     /**
      * @var \AppBundle\Entity\User
@@ -71,16 +61,6 @@ class Notes
 
     public function __construct() {
         $this->labels = new ArrayCollection();
-        $this->dateCreate = new \DateTime();
-        $this->dateUpdate = new \DateTime();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate()
-    {
-        $this->dateUpdate = new \DateTime();
     }
 
     /**
@@ -141,32 +121,12 @@ class Notes
 
 
     /**
-     * Get dateCreate
-     *
-     * @return \DateTime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-
-    /**
      * Set user
      *
      * @param \AppBundle\Entity\User $user
      * @return Notes
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -189,7 +149,7 @@ class Notes
      * @param \AppBundle\Entity\Labels $labels
      * @return Notes
      */
-    public function setLabels(\AppBundle\Entity\Labels $labels = null)
+    public function setLabels(Labels $labels = null)
     {
         $this->labels = $labels;
 
