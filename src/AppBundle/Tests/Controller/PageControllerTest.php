@@ -2,11 +2,12 @@
 
 namespace AppBundle\Tests\Controller;
 
-use AppBundle\Tests\CommonApp;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 class PageControllerTest extends WebTestCase
 {
+    use ControllerTestTrait;
+
     /**
      * @dataProvider getUrlsProvider
      */
@@ -44,25 +45,4 @@ class PageControllerTest extends WebTestCase
             ['/notes/new'],
         ];
     }
-
-    /**
-     * @return mixed
-     */
-    private function loadDefaultData()
-    {
-        $this->loadFixtures(array(
-            'AppBundle\DataFixtures\ORM\LoadCircleData',
-            'AppBundle\DataFixtures\ORM\LoadLabelsData',
-            'AppBundle\DataFixtures\ORM\LoadLayersData',
-            'AppBundle\DataFixtures\ORM\LoadNotesData',
-            'AppBundle\DataFixtures\ORM\LoadSectorsData',
-            'AppBundle\DataFixtures\ORM\LoadUserData',
-        ));
-
-        $client = CommonApp::loginUser();
-        return $client;
-    }
-
-
-
 }
