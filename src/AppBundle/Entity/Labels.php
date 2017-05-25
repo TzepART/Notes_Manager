@@ -59,6 +59,7 @@ class Labels
 
     /**
      * @var \AppBundle\Entity\Notes
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Notes", mappedBy="labels")
      */
     private $notes;
 
