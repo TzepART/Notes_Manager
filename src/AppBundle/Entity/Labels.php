@@ -9,8 +9,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Labels
  *
- * @ORM\Table(name="labels", indexes={@ORM\Index(name="fk_labels_sectors1_idx", columns={"sectors_id"})
- * @ORM\Index(name="fk_labels_layers1_idx", columns={"layers_id"})})
+ * @ORM\Table(name="labels", indexes={@ORM\Index(name="fk_labels_sectors1_idx", columns={"sectors_id"}), @ORM\Index(name="fk_labels_layers1_idx", columns={"layers_id"})})
  * @ORM\Entity
  */
 class Labels
@@ -60,7 +59,6 @@ class Labels
 
     /**
      * @var \AppBundle\Entity\Notes
-     *
      */
     private $notes;
 

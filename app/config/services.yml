@@ -4,10 +4,6 @@ parameters:
 #    parameter_name: value
 
 services:
-    time_authenticator:
-        class:     AppBundle\Security\TimeAuthenticator
-        arguments: ["@security.password_encoder"]
-
     app.circle_listener:
         class: AppBundle\EventListener\CreateCircleListener
         tags:

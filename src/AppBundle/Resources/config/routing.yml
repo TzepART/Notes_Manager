@@ -1,7 +1,9 @@
 notes_manager_circle:
-    resource: "@AppBundle/Resources/config/routing/circle.yml"
+    type:     annotation
+    resource: "@AppBundle/Controller/CircleController.php"
     prefix:   /circle
 
 notes_manager_notes:
-    resource: "@AppBundle/Resources/config/routing/notes.yml"
+    type:     annotation
+    resource: "@AppBundle/Controller/NotesController.php"
     prefix:   /notes

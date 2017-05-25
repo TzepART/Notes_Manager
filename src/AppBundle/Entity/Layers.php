@@ -10,6 +10,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Layers
+ * @ORM\Table(name="layers")
+ * @ORM\Entity
  */
 class Layers
 {

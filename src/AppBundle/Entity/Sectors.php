@@ -10,6 +10,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Sectors
+ * @ORM\Table(name="sectors")
+ * @ORM\Entity
  */
 class Sectors
 {
