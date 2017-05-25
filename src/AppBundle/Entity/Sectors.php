@@ -26,26 +26,31 @@ class Sectors
 
     /**
      * @var float
+     * @ORM\Column(type="float")
      */
     private $beginAngle;
 
     /**
      * @var float
+     * @ORM\Column(type="float")
      */
     private $endAngle;
 
     /**
      * @var string
+     * @ORM\Column(type="string")
      */
     private $name;
 
     /**
      * @var integer
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $parentSectorId;
 
     /**
      * @var string
+     * @ORM\Column(type="string")
      */
     private $color;
 

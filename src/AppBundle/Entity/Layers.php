@@ -27,16 +27,19 @@ class Layers
 
     /**
      * @var float
+     * @ORM\Column(type="float")
      */
     private $beginRadius;
 
     /**
      * @var float
+     * @ORM\Column(type="float")
      */
     private $endRadius;
 
     /**
      * @var string
+     * @ORM\Column(type="string")
      */
     private $color;
 
