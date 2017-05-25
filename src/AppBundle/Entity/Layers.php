@@ -11,7 +11,8 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Layers
  * @ORM\Table(name="layers")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\LayerRepository")
+ *
  */
 class Layers
 {

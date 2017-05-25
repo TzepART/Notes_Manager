@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 /**
  * Sectors
  * @ORM\Table(name="sectors")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\SectorRepository")
  */
 class Sectors
 {

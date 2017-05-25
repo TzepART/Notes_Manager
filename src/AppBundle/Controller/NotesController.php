@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Layers;
+use AppBundle\Entity\Sectors;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -155,6 +157,12 @@ class NotesController extends Controller
                 $this->array_swap($arCircles,0,$key);
                 $arLayersObjects  = $circlesObject->getLayers();
                 $arSectorsObjects = $circlesObject->getSectors();
+
+                if(!empty($request->get('radius')) && !empty($request->get('degr'))){
+                    $selectSector = $this->getDoctrine()->getRepository(Sectors::class)->getSectorsByCircleAndRadius($circlesObject,$request->get('degr'));
+                    $selectLayer = $this->getDoctrine()->getRepository(Layers::class)->getLayersByCircleAndRadius($circlesObject,$request->get('radius'));
+                }
+
             }
         }
 
@@ -172,11 +180,17 @@ class NotesController extends Controller
             $countLayers = count($arLayersObjects);
             foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
                 $arLayersId[$keyLayer] = $arLayersObject->getId();
+                if (!empty($selectLayer) && $arLayersObject->getId() == $selectLayer->getId()) {
+                    $this->array_swap($arLayersId, 0, $keyLayer);
+                }
             }
 
             foreach ($arSectorsObjects as $key => $arSectorObj) {
                 $arSectors[$key]["id"]   = $arSectorObj->getId();
                 $arSectors[$key]["name"] = $arSectorObj->getName();
+                if (!empty($selectSector) && $arSectorObj->getId() == $selectSector->getId()) {
+                    $this->array_swap($arSectors, 0, $key);
+                }
             }
         }
 
@@ -445,7 +459,7 @@ class NotesController extends Controller
      */
     protected function getCurrentUserObject()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         return $user;
     }
 

@@ -125,7 +125,7 @@ function createSector(data) {
             strokeWidth: 3,
             dblclick: function(layer) {
                 var polar = cartesian2Polar(layer.eventX, layer.eventY);
-                var link = $('#create_label_link').attr('href','create_note.html?circle_id='+data.circle_id+'&radius='+polar.distance/bigRadius+'&degr='+polar.degr);
+                var link = $('#create_label_link').attr('href','/app_dev.php/notes/new/'+data.circle_id+'?radius='+polar.distance/bigRadius+'&degr='+polar.degr);
                 link.removeClass( "btn-primary" ).addClass( "btn-danger" );
                 link.text('Добавить заметку в выбрнный сектор');
             },
