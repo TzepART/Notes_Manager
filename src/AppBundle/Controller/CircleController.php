@@ -34,7 +34,7 @@ class CircleController extends Controller
         $circles = $user->getCircles();
 
         return $this->render(
-            'circle/index.html.twig',
+            'SectorManagercircle/index.html.twig',
             array(
                 'circles' => $circles,
                 'user' => "",
