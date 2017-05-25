@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +24,10 @@ class NotesController extends Controller
      * @param null $circleId
      * @param null $labelId
      * @return Response
+     * @Route('/',name="notes_index")
+     * @Route('/list/{circleId}/',name="select_notes_list_by_circle")
+     * @Route('/list/{circleId}/{labelId}/',name="select_note_by_circle")
+     * @Method('GET')
      */
     public function indexAction($circleId = null,$labelId = null)
     {
@@ -109,6 +115,9 @@ class NotesController extends Controller
      * @param Request $request
      * @param int $select_circle
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route('/new/{select_circle}',name="notes_new_by_circle")
+     * @Route('/new',name="notes_new")
+     * @Method({'GET', 'POST'})
      */
     public function newAction(Request $request,$select_circle = null)
     {
@@ -221,6 +230,8 @@ class NotesController extends Controller
      * @param Request $request
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route('/{id}/edit',name="notes_edit")
+     * @Method({'GET', 'POST'})
      */
     //@TODO change number layer (now first layer - 0)
     public function editAction(Request $request, Notes $note)
@@ -352,6 +363,8 @@ class NotesController extends Controller
      * Finds and displays a Notes entity.
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route('/{id}/show',name="notes_show")
+     * @Method('GET')
      */
     public function showAction(Notes $note)
     {
@@ -373,6 +386,8 @@ class NotesController extends Controller
      * @param Request $request
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route('/{id}/delete',name="notes_delete")
+     * @Method('DELETE')
      */
     public function deleteAction(Request $request, Notes $note)
     {
@@ -397,6 +412,8 @@ class NotesController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse|Response
+     * @Route('/editAjax',name="notes_edit_ajax")
+     * @Method({'GET', 'POST'})
      */
     public function editAjaxAction(Request $request)
     {
