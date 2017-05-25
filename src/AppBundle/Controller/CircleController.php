@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -439,11 +440,11 @@ class CircleController extends Controller
 
     /**
      * Get user object
-     * @return integer $userId
+     * @return User $userId
      */
     protected function getCurrentUserObject()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         return $user;
     }
