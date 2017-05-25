@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 
 trait ControllerTestTrait
 {
-    /**
+     /**
      * @param Client $client
      * @param string $class
      * @return mixed
