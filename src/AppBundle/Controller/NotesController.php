@@ -2,6 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Layers;
+use AppBundle\Entity\Sectors;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +16,7 @@ use AppBundle\Entity\Notes;
 
 /**
  * Notes controller.
- *
+ * @Route("notes")
  */
 class NotesController extends Controller
 {
@@ -22,6 +26,10 @@ class NotesController extends Controller
      * @param null $circleId
      * @param null $labelId
      * @return Response
+     * @Route("/",name="notes_index")
+     * @Route("/list/{circleId}/",name="select_notes_list_by_circle")
+     * @Route("/list/{circleId}/{labelId}/",name="select_note_by_circle")
+     * @Method("GET")
      */
     public function indexAction($circleId = null,$labelId = null)
     {
@@ -109,6 +117,9 @@ class NotesController extends Controller
      * @param Request $request
      * @param int $select_circle
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/new/{select_circle}",name="notes_new_by_circle")
+     * @Route("/new",name="notes_new")
+     * @Method({"GET", "POST"})
      */
     public function newAction(Request $request,$select_circle = null)
     {
@@ -120,6 +131,7 @@ class NotesController extends Controller
         $arLayersObjects  = [];
         $arLayersId       = [];
         $countLayers      = 5;
+        $selectLayerId = 0;
         $selectCirclesId = 0;
         $form             = $this->createForm('AppBundle\Form\NotesType', $note);
         $form->handleRequest($request);
@@ -146,8 +158,15 @@ class NotesController extends Controller
                 $this->array_swap($arCircles,0,$key);
                 $arLayersObjects  = $circlesObject->getLayers();
                 $arSectorsObjects = $circlesObject->getSectors();
+
+                if(!empty($request->get('radius')) && !empty($request->get('degr'))){
+                    $selectSector = $this->getDoctrine()->getRepository(Sectors::class)->getSectorsByCircleAndRadius($circlesObject,$request->get('degr'));
+                    $selectLayer = $this->getDoctrine()->getRepository(Layers::class)->getLayersByCircleAndRadius($circlesObject,$request->get('radius'));
+                }
+
             }
         }
+
 
         $arDefaultCircle = ["id" => "", "name" => "Во входящие"];
         if($selectCirclesId  == 0){
@@ -161,16 +180,23 @@ class NotesController extends Controller
         // then create array with information about them
         if (!empty($arLayersObjects) && !empty($arSectorsObjects)) {
             $countLayers = count($arLayersObjects);
+//            $arLayersObjects = array_reverse($arLayersObjects->toArray());
             foreach ($arLayersObjects as $keyLayer => $arLayersObject) {
                 $arLayersId[$keyLayer] = $arLayersObject->getId();
+                if (!empty($selectLayer) && $arLayersObject->getId() == $selectLayer->getId()) {
+                    $this->array_swap($arLayersId, 0, $keyLayer);
+                    $selectLayerId = $keyLayer+1;
+                }
             }
 
             foreach ($arSectorsObjects as $key => $arSectorObj) {
                 $arSectors[$key]["id"]   = $arSectorObj->getId();
                 $arSectors[$key]["name"] = $arSectorObj->getName();
+                if (!empty($selectSector) && $arSectorObj->getId() == $selectSector->getId()) {
+                    $this->array_swap($arSectors, 0, $key);
+                }
             }
         }
-
 
         //if form submit then create new Note and label, which links with new note
         if ($form->isSubmitted() && $form->isValid()) {
@@ -209,6 +235,7 @@ class NotesController extends Controller
                 'note' => $note,
                 'arSectors' => $arSectors,
                 'countLayers' => $countLayers,
+                'selectLayerId' =>  $selectLayerId,
                 'arCircles' => $arCircles,
                 'form' => $form->createView(),
             )
@@ -221,6 +248,8 @@ class NotesController extends Controller
      * @param Request $request
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/{id}/edit",name="notes_edit")
+     * @Method({"GET", "POST"})
      */
     //@TODO change number layer (now first layer - 0)
     public function editAction(Request $request, Notes $note)
@@ -352,6 +381,8 @@ class NotesController extends Controller
      * Finds and displays a Notes entity.
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("/{id}/show",name="notes_show")
+     * @Method("GET")
      */
     public function showAction(Notes $note)
     {
@@ -373,6 +404,8 @@ class NotesController extends Controller
      * @param Request $request
      * @param Notes $note
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("/{id}/delete",name="notes_delete")
+     * @Method("DELETE")
      */
     public function deleteAction(Request $request, Notes $note)
     {
@@ -397,6 +430,8 @@ class NotesController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse|Response
+     * @Route("/editAjax",name="notes_edit_ajax")
+     * @Method({"GET", "POST"})
      */
     public function editAjaxAction(Request $request)
     {
@@ -428,7 +463,7 @@ class NotesController extends Controller
      */
     protected function getCurrentUserObject()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         return $user;
     }
 

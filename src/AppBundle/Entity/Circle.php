@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
 
 /**
  * Circle
@@ -13,6 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Circle
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -27,19 +31,6 @@ class Circle
      */
     private $name;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=true)
-     */
-    private $dateCreate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_update", type="datetime", nullable=true)
-     */
-    private $dateUpdate;
 
     /**
      * @var \AppBundle\Entity\User
@@ -65,17 +56,8 @@ class Circle
     public function __construct() {
         $this->layers = new ArrayCollection();
         $this->sectors = new ArrayCollection();
-        $this->dateCreate = new \DateTime();
-        $this->dateUpdate = new \DateTime();
     }
 
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate()
-    {
-        $this->dateUpdate = new \DateTime();
-    }
 
 
     public function getSectors()
@@ -125,34 +107,12 @@ class Circle
 
 
     /**
-     * Get dateCreate
-     *
-     * @return \DateTime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-    
-
-    /**
      * Set user
      *
      * @param \AppBundle\Entity\User $user
      * @return Circle
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 

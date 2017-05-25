@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,13 +19,14 @@ use AppBundle\Entity\Labels;
 
 /**
  * Circle controller.
- *
+ * @Route("circle")
  */
 class CircleController extends Controller
 {
     /**
      * Lists all Circle entities.
-     *
+     * @Route("/", name="circle_index")
+     * @Method("GET")
      */
     public function indexAction()
     {
@@ -34,7 +37,7 @@ class CircleController extends Controller
         $circles = $user->getCircles();
 
         return $this->render(
-            'circle/index.html.twig',
+            ':circle:index.html.twig',
             array(
                 'circles' => $circles,
                 'user' => "",
@@ -56,6 +59,8 @@ class CircleController extends Controller
      * Creates a new Circle entity.
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/new",name="circle_new")
+     * @Method({"GET","POST"})
      */
     public function newAction(Request $request)
     {
@@ -111,6 +116,9 @@ class CircleController extends Controller
      * @param Circle $circle
      * @param null $labelId
      * @return Response
+     * @Route("/{id}/{labelId}/show",name="circle_label_show")
+     * @Route("/{id}/show", name="circle_show")
+     * @Method("GET")
      */
     public function showAction(Circle $circle,$labelId = null)
     {
@@ -176,6 +184,8 @@ class CircleController extends Controller
      * @param Request $request
      * @param Circle $circle
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @Route("/{id}/edit", name="circle_edit")
+     * @Method({"POST","GET"})
      */
     public function editAction(Request $request, Circle $circle)
     {
@@ -346,6 +356,8 @@ class CircleController extends Controller
      * @param Request $request
      * @param Circle $circle
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @Route("{id}/delete",name="circle_delete")
+     * @Method("DELETE")
      */
     public function deleteAction(Request $request, Circle $circle)
     {
@@ -367,6 +379,8 @@ class CircleController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse|Response
+     * @Route("/editLabelAjax", name="circle_edit_label_ajax")
+     * @Method({"POST","GET"})
      */
     public function updateCoordinateLabelAction(Request $request)
     {

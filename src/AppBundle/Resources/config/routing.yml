@@ -1,7 +1,0 @@
-notes_manager_circle:
-    resource: "@AppBundle/Resources/config/routing/circle.yml"
-    prefix:   /circle
-
-notes_manager_notes:
-    resource: "@AppBundle/Resources/config/routing/notes.yml"
-    prefix:   /notes

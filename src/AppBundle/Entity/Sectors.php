@@ -4,13 +4,19 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
 
 
 /**
  * Sectors
+ * @ORM\Table(name="sectors")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\SectorRepository")
  */
 class Sectors
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -20,36 +26,31 @@ class Sectors
 
     /**
      * @var float
+     * @ORM\Column(type="float")
      */
     private $beginAngle;
 
     /**
      * @var float
+     * @ORM\Column(type="float")
      */
     private $endAngle;
 
     /**
      * @var string
+     * @ORM\Column(type="string")
      */
     private $name;
 
     /**
      * @var integer
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $parentSectorId;
 
     /**
-     * @var \DateTime
-     */
-    private $dateCreate;
-
-    /**
-     * @var \DateTime
-     */
-    private $dateUpdate;
-
-    /**
      * @var string
+     * @ORM\Column(type="string")
      */
     private $color;
 
@@ -69,16 +70,6 @@ class Sectors
 
     public function __construct() {
         $this->labels = new ArrayCollection();
-        $this->dateCreate = new \DateTime();
-        $this->dateUpdate = new \DateTime();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate()
-    {
-        $this->dateUpdate = new \DateTime();
     }
 
 
@@ -189,27 +180,6 @@ class Sectors
         return $this->parentSectorId;
     }
 
-
-    /**
-     * Get dateCreate
-     *
-     * @return \DateTime 
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-    /**
-     * Get dateUpdate
-     *
-     * @return \DateTime 
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-
     /**
      * Set color
      *
@@ -239,7 +209,7 @@ class Sectors
      * @param \AppBundle\Entity\Circle $circle
      * @return Sectors
      */
-    public function setCircle(\AppBundle\Entity\Circle $circle = null)
+    public function setCircle(Circle $circle = null)
     {
         $this->circle = $circle;
 

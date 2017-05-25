@@ -5,6 +5,8 @@ namespace AppBundle\Entity;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
 
 
 /**
@@ -13,6 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class User extends BaseUser
 {
+    use ORMBehaviors\Timestampable\Timestampable;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -33,19 +37,6 @@ class User extends BaseUser
      */
     protected $logged;
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    protected $created;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    protected $updated;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notes", mappedBy="user")
@@ -64,16 +55,6 @@ class User extends BaseUser
         $this->notes = new ArrayCollection();
         $this->circles = new ArrayCollection();
         $this->isActive = true;
-        $this->created = new \DateTime();
-        $this->updated = new \DateTime();
-    }
-
-    /**
-     * @ORM\PreUpdate()
-     */
-    public function preUpdate()
-    {
-        $this->updated = new \DateTime();
     }
 
 
@@ -128,52 +109,6 @@ class User extends BaseUser
         return $this;
     }
 
-
-    /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return User
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime 
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Set updated
-     *
-     * @param \DateTime $updated
-     * @return User
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated
-     *
-     * @return \DateTime 
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
 
     /**
      * Set logged
