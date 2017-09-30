@@ -167,7 +167,7 @@ function createSector(data) {
 
 function rayAndCircleByLabel(layer, id) {
   var pol = cartesian2Polar(layer.x, layer.y);
-  var dec = cartesian2Dec(bigRadius + 30, pol.degr);
+  var dec = cartesian2Dec(bigRadius * 2, pol.degr);
   $('canvas').drawArc({
     layer: true,
     strokeStyle: colorRayAndCircleByLabel,
@@ -240,12 +240,13 @@ function createLabel(data) {
     fillStyle: colorLabel,
     x: LabelCoord.X, y: LabelCoord.Y,
     radius: radiusLabel,
-    data: {'id': data.id, 'name': data.name},
+    data: {'id': data.id, 'name': data.name, 'circleId': data.circleId},
     shadowColor: shadowColor,
     shadowBlur: shadowLabelSize,
     dragstop: function (layer) {
       var pol = cartesian2Polar(layer.x, layer.y);
       var dec = cartesian2Dec(pol.distance, pol.degr);
+      updateCoordinateLabel(layer.data.circleId, layer.data.id, pol.distance / bigRadius, pol.degr);
       delRayNamePopUpAndCircleByLabel(layer.data.id);
     },
     drag: function (layer) {
@@ -265,14 +266,26 @@ function createLabel(data) {
       delRayNamePopUpAndCircleByLabel(layer.data.id);
     },
     dblclick: function (layer) {
-      $('#pop_label_link').css('display', 'block').attr('href', 'list_notes.html?id=' + layer.data.id);
+      $('#pop_label_link').css('display', 'block').attr('href', '/app_dev.php/notes/list/' + layer.data.circleId + '/' + layer.data.id + '/');
     },
   });
 }
 
-/*
-* Block with creating elements
-* */
+function updateCoordinateLabel(circleId, labelId, radius, angle) {
+  $.post(
+      "/app_dev.php/circle/editLabelAjax",
+      {
+        circleId: circleId,
+        labelId: labelId,
+        radius: radius,
+        angle: angle
+      }).done(
+      function (data) {
+        console.log(data);
+
+      })
+}
+
 
 var numLayers = 4;
 
