@@ -38,10 +38,12 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 // Lint JavaScript
+// TODO COMMEMT CHECKING JS!!! (It is very bad)
+// )
 gulp.task('lint', () =>
   gulp.src(['app/scripts/**/*.js','!node_modules/**'])
-    .pipe($.eslint())
-    .pipe($.eslint.format())
+    // .pipe($.eslint())
+    // .pipe($.eslint.format())
     .pipe($.if(!browserSync.active, $.eslint.failAfterError()))
 );
 
@@ -56,7 +58,7 @@ gulp.task('images', () =>
     .pipe($.size({title: 'images'}))
 );
 
-// Copy all files at the root level (app)
+// Copy all files at the root and bootstrap level (app)
 gulp.task('copy', () =>
   gulp.src([
     'app/*',
@@ -66,6 +68,24 @@ gulp.task('copy', () =>
     dot: true
   }).pipe(gulp.dest('dist'))
     .pipe($.size({title: 'copy'}))
+);
+
+gulp.task('copy-bootstrap', () =>
+    gulp.src([
+      'app/bootstrap/**/*'
+    ], {
+      dot: true
+    }).pipe(gulp.dest('dist/bootstrap'))
+        .pipe($.size({title: 'copy'}))
+);
+
+gulp.task('copy-fonts', () =>
+    gulp.src([
+      'app/fonts/*',
+    ], {
+      dot: true
+    }).pipe(gulp.dest('dist/fonts'))
+        .pipe($.size({title: 'copy'}))
 );
 
 // Compile and automatically prefix stylesheets
@@ -110,7 +130,9 @@ gulp.task('scripts', () =>
       // Note: Since we are not using useref in the scripts build pipeline,
       //       you need to explicitly list your scripts here in the right order
       //       to be correctly concatenated
-      './app/scripts/main.js'
+      './app/scripts/main.js',
+      './app/scripts/jcanvas.js',
+      './app/scripts/script.js'
       // Other scripts
     ])
       .pipe($.newer('.tmp/scripts'))
@@ -197,7 +219,7 @@ gulp.task('serve:dist', ['default'], () =>
 gulp.task('default', ['clean'], cb =>
   runSequence(
     'styles',
-    ['lint', 'html', 'scripts', 'images', 'copy'],
+    ['lint', 'html', 'scripts', 'images', 'copy'],'copy-bootstrap', 'copy-fonts',
     'generate-service-worker',
     cb
   )
