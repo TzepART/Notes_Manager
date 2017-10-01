@@ -33,9 +33,11 @@ import swPrecache from 'sw-precache';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import {output as pagespeed} from 'psi';
 import pkg from './package.json';
+import pug from 'gulp-pug';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
+
 
 // Lint JavaScript
 // TODO COMMEMT CHECKING JS!!! (It is very bad)
@@ -63,6 +65,7 @@ gulp.task('copy', () =>
   gulp.src([
     'app/*',
     '!app/*.html',
+    '!app/*.pug',
     'node_modules/apache-server-configs/dist/.htaccess'
   ], {
     dot: true
@@ -200,7 +203,7 @@ gulp.task('serve', ['scripts', 'styles'], () => {
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['default'], () =>
+gulp.task('serve:dist', ['default','pug-dist'], () =>
   browserSync({
     notify: false,
     logPrefix: 'WSK',
@@ -276,3 +279,9 @@ gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
 // Load custom tasks from the `tasks` directory
 // Run: `npm install --save-dev require-dir` from the command-line
 // try { require('require-dir')('tasks'); } catch (err) { console.error(err); }
+
+gulp.task('pug-dist', function buildHTML() {
+  return gulp.src('app/*.pug')
+      .pipe(pug({ yourTemplate: 'Locals' }))
+      .pipe(gulp.dest('dist/'));
+});
