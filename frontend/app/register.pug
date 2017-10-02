@@ -1,0 +1,17 @@
+extends layout/base.pug
+
+block content
+    .row
+        form.col-md-4.col-md-offset-4.create_register_for(method="post" name="form1" action="#" enctype="multipart/form-data")
+            h2.register_title Регистрация
+            .form-group
+                input.form-control(name="_username" placeholder="Login")
+            .form-group
+                input.form-control(type="email" name="_email" placeholder="E-mail")
+            .form-group
+                input.form-control(type="password" name="_password" placeholder="Пароль")
+            .form-group
+                input.form-control(type="password" name="_password_repeat" placeholder="Повторите пароль")
+            .form-group.form_submit
+                input.btn.btn-success.register_button(type="submit" name="save" value="Регистрация")
+            a.btn.btn-primary.btn-block(type="button" href="login.html") Авторизоваться
