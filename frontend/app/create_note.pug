@@ -1,0 +1,22 @@
+extends layout/base.pug
+
+block content
+    .row
+        form.jumbotron.col-md-6.col-md-offset-3.create_note_form(method="post" name="form1" action="#" enctype="multipart/form-data")
+            h2(style="text-align: center") Создать Заметку
+            .form-group.create_note
+                input.form-control(name="name" placeholder="Название заметки")
+            .form-group
+                textarea.form-control(name="notes_body" placeholder="Текст заметки" rows="3")
+            h2(style="text-align: center") Размещение заметки
+            mixin sectors(...names)
+                select.form-control(name=select_sector)
+                    option Выберите сектор
+                    each name in names
+                        option= name
+            +sectors('Путешествие','Общая','Работа')
+            +sectors('Виза','Язык','Деньги на сувениры')
+            .form-group
+                input.form-control(name="name" type="number" placeholder="Уровень срочности")
+            .form-group.form_submit
+                input.btn.btn-success.btn-block(name="save" type="submit" value="Сохранить заметку" placeholder="Уровень срочности")
