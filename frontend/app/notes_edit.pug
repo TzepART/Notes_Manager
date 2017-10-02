@@ -1,0 +1,25 @@
+extends layout/base.pug
+
+block content
+    .row
+        form.jumbotron.col-md-6.col-md-offset-3.create_note_form(method="post" name="form1" action="#" enctype="multipart/form-data")
+            h2(style="text-align: center") Notes1
+            .form-group.create_note
+                input.form-control(name="name" placeholder="Название заметки" value="Notes1")
+            .form-group
+                textarea.form-control(name="notes_body" placeholder="Текст заметки" rows="6")
+                    | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque
+                    | delectus doloribus eius, exercitationem impedit itaque provident
+                    | sapiente sit tempora temporibus?
+            mixin sectors(...names)
+                select.form-control(name=select_sector)
+                    each name in names
+                        option= name
+            +sectors('Путешествие','Выберите сектор','Общая','Работа')
+            +sectors('Виза','Выберите сектор','Язык','Деньги на сувениры')
+            .form-group
+                input.form-control(name="layers_number" type="number" placeholder="Уровень срочности" value="1")
+            .form-group.form_submit
+                input.btn.btn-success.btn-block(name="save" type="submit" value="Сохранить заметку" placeholder="Сохранить заметку")
+            a.btn.btn-primary.btn-block(type="button" href="list_notes.html?id=1") Назад к списку
+
