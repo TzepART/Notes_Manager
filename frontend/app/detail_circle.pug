@@ -1,0 +1,11 @@
+extends layout/base.pug
+
+block content
+    .row
+        .col-md-7.col-md-offset-2
+            canvas#canvas(width="630" height="630")
+            div
+                a#pop_label_link.btn.btn-primary.btn-lg.btn-block(href="" style="display: none") Посмотреть заметку
+                a#create_label_link.btn.btn-primary.btn-lg.btn-block(href="create_note.html?id=1") Добавить заметку
+                a.btn.btn-primary.btn-lg.btn-block(href="list_notes.html?id=1") Список заметок
+                a.btn.btn-primary.btn-lg.btn-block(href="circles_edit.html?id=1") Редактировать окружность
