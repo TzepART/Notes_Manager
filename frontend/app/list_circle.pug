@@ -1,0 +1,15 @@
+extends layout/base.pug
+
+block content
+    .row
+        .jumbotron.col-md-4.col-md-offset-4
+            h2.circle_list_title Список Ваших окружностей
+            mixin list(...items)
+                ul.list-group
+                    each item in items
+                        li.list-group-item
+                            a(href="detail_circle.html")= item
+            +list('Общая','Семья','Работа','Путешествия','...')
+            p
+                a.btn.btn-primary.btn-lg.circle_list_button(href="create_circle.html") Создать окружность
+

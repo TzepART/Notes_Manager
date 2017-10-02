@@ -1,0 +1,26 @@
+extends layout/base.pug
+
+block content
+    .row
+        form.jumbotron.col-md-6.col-md-offset-3.create_circle_form(method="post" name="form1" action="#" enctype="multipart/form-data")
+            h2(style="text-align: center") Общая
+            .form-group.create_circle
+                input.form-control(name="name" value="Общая" placeholder="Название окружности")
+            .form-group
+                input.form-control(type="number" name="layers_number" value="5" placeholder="Колличество уровней")
+            h2(style="text-align: center") Секторы
+            #formCircleCreate
+                mixin sector(number,color)
+                    .form-group.create_sector
+                        input.form-control(placeholder="Название сектора" name="sector_name["+number+"]" value="Example"+number)
+                        input.form-control(type="color" placeholder="Цвет сектора"  name="sector_color["+number+"]" value=color)
+                        input.form-control(type="button" onclick="return deleteField(this)" value="x")
+                +sector(1,'#8FBC8F')
+                +sector(2,'#FFD700')
+                +sector(3,'#BA55D3')
+            .form-group.form_submit
+                a.btn.btn-primary.btn-block(onclick="return addField()" href="#") Добавить сектор
+                input.btn.btn-success.btn-block(name="save" value="Сохранить" type="submit")
+                a.btn.btn-primary.btn-block(type="button" href="detail_circle.html?id=1") Назад
+
+

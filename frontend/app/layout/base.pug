@@ -1,0 +1,36 @@
+html
+    head
+        title Notes Manager - #{title}
+        block styles
+            link(href="bootstrap/css/bootstrap.min.css" rel="stylesheet")
+            link(href="styles/style.css" rel="stylesheet")
+            link(href="styles/additional_style.css" rel="stylesheet")
+            link(href="styles/font-awesome.min.css" rel="stylesheet")
+        block head-scripts
+            script(src="//code.jquery.com/jquery-1.10.2.js")
+            script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    body
+        block main
+            .container
+                block head
+                    .header.clearfix
+                        nav
+                            ul.nav.nav-pills.pull-right
+                                li(role="presentation")
+                                    a(href="list_circle.html") Home
+                                li(role="presentation")
+                                    a(href="create_circle.html") Добавить окружность
+                                li(role="presentation")
+                                    a(href="create_note.html") Добавить заметку
+                                li.active(role="presentation")
+                                    a(href="index.html") About
+                        h3.text-muted Notes Manager
+                            span.label.label-default  Beta
+                block content
+                block foot
+                    footer.footer
+                        p &copy; 2016 TzepArt Company, Inc.
+                    block scripts
+                        script(src="https://www.gstatic.com/charts/loader.js")
+                        script(src="scripts/main.min.js")
+                        script(src="bootstrap/js/bootstrap.min.js")

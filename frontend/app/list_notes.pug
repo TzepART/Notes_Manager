@@ -1,0 +1,51 @@
+extends layout/base.pug
+
+block content
+    .row
+        .jumbotron.col-md-6.col-md-offset-3
+            h2(style="text-align: center") Общая
+            .panel.panel-default
+                .panel-heading#headingOne(role="tab")
+                    h4.panel-title
+                        a(data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-controls="collapseOne") Example1
+                #collapseOne.panel-collapse.collapse.in(role="tabpanel" aria-labelledby="headingOne")
+                    .list-group
+                        ul.list-group
+                            li.list-group-item.notes_link_by_list(style="background: rgb(256, 0, 0)")
+                                a(href="#collapseExample" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample") Notes1
+                                a(href="detail_circle.html?id=1")
+                                    i.fa.fa-adjust.fa-lg
+                                a(href="notes_edit.html?id=1")
+                                    i.fa.fa-pencil.fa-lg
+                                .collapse.collapse_note#collapseExample
+                                    .well
+                                        | Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque delectus
+                                        | doloribus eius, exercitationem impedit itaque provident sapiente sit tempora
+                                        | temporibus?
+                            mixin li-note(color, name)
+                                li.list-group-item.notes_link_by_list(style="background: "+color)
+                                    a(href="")= name
+                                    a(href="")
+                                        i.fa.fa-adjust.fa-lg
+                                    a(href="")
+                                        i.fa.fa-pencil.fa-lg
+                            +li-note('rgb(227, 62, 47)','Notes2')
+                            +li-note('rgb(227, 62, 47)','Notes3')
+                            +li-note('rgb(199, 125, 95)','Notes4')
+                            +li-note('rgb(199, 125, 95)','Notes5')
+                            +li-note('rgb(171, 188, 143)','Notes6')
+                .panel-heading#headingTwo(role="tab")
+                    h4.panel-title
+                        a(data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-controls="collapseTwo" aria-expanded="false") Example2
+                #collapseTwo.panel-collapse.collapse(role="tabpanel" aria-labelledby="headingTwo")
+                    .list-group
+                        ul.list-group
+                            +li-note('rgb(256, 0, 0)','Notes1')
+                            +li-note('rgb(227, 62, 47)','Notes2')
+                            +li-note('rgb(227, 62, 47)','Notes3')
+                            +li-note('rgb(199, 125, 95)','Notes4')
+                            +li-note('rgb(199, 125, 95)','Notes5')
+                            +li-note('rgb(171, 188, 143)','Notes6')
+
+
+
