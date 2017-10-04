@@ -34,6 +34,8 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import {output as pagespeed} from 'psi';
 import pkg from './package.json';
 import pug from 'gulp-pug';
+import watch from 'gulp-watch';
+import gulp_watch_pug from 'gulp-watch-pug';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -203,7 +205,7 @@ gulp.task('serve', ['scripts', 'styles'], () => {
 });
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['default','pug-dist'], () =>
+gulp.task('serve:dist', ['default'], () =>
   browserSync({
     notify: false,
     logPrefix: 'WSK',
@@ -218,14 +220,17 @@ gulp.task('serve:dist', ['default','pug-dist'], () =>
   })
 );
 
+
+gulp.task('serve:watch', ['serve:dist','pug-watcher']);
+
 // Build production files, the default task
 gulp.task('default', ['clean'], cb =>
-  runSequence(
-    'styles',
-    ['lint', 'html', 'scripts', 'images', 'copy'],'copy-bootstrap', 'copy-fonts',
-    'generate-service-worker',
-    cb
-  )
+    runSequence(
+        'styles',
+        ['lint', 'html', 'scripts', 'images', 'copy'],'copy-bootstrap', 'copy-fonts', 'pug-dist',
+        'generate-service-worker',
+        cb
+    )
 );
 
 // Run PageSpeed Insights
@@ -283,5 +288,18 @@ gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
 gulp.task('pug-dist', function buildHTML() {
   return gulp.src('app/*.pug')
       .pipe(pug({ yourTemplate: 'Locals' }))
+      .pipe(gulp.dest('dist/'));
+});
+
+
+gulp.task('watch', function() {
+  gulp.watch(['dist/**/*.html'], reload);
+});
+
+gulp.task('pug-watcher', function buildHTML() {
+  return gulp.src('app/**/*.pug')
+      .pipe(watch('app/**/*.pug'))
+      .pipe(gulp_watch_pug('app/**/*.pug', { delay: 100 }))
+      .pipe(pug())
       .pipe(gulp.dest('dist/'));
 });

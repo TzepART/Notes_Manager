@@ -13,19 +13,20 @@ html
         block main
             .container
                 block head
-                    .header.clearfix
-                        nav
-                            ul.nav.nav-pills.pull-right
+                    .masthead
+                        h3.text-muted Notes Manager
+                            span.label.label-default Beta
+                        ul.nav.nav-justified
                                 li(role="presentation")
-                                    a(href="list_circle.html") Home
+                                    a(href="list_circle.html") Список окружностей
+                                li(role="presentation")
+                                    a(href="№") Входящие
                                 li(role="presentation")
                                     a(href="create_circle.html") Добавить окружность
                                 li(role="presentation")
                                     a(href="create_note.html") Добавить заметку
                                 li.active(role="presentation")
-                                    a(href="index.html") About
-                        h3.text-muted Notes Manager
-                            span.label.label-default  Beta
+                                    a(href="register.html") Регистрация
                 block content
                 block foot
                     footer.footer
