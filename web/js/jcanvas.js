@@ -1294,7 +1294,6 @@
           var r = layer.circleRadius;
           var x1 = layer.x - centerX;
           var y1 = layer.y - centerY;
-          console.log(x1,y1);
           var k = y1/x1;
 
           if(x1<0){

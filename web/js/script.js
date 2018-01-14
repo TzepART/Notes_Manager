@@ -287,8 +287,14 @@ function borderForSector(angle, sectorLeftId, sectorRightId) {
       // delRayNamePopUpAndCircleByLabel(layer.data.id);
     },
     drag: function(layer) {
-      // delRayNamePopUpAndCircleByLabel(layer.data.id);
-      // rayAndCircleByLabel(layer,layer.data.id);
+      var pol = cartesian2Polar(layer.x, layer.y);
+
+      $('canvas').drawVector({
+        strokeStyle: 'white',
+        strokeWidth: 4,
+        x: CenterX, y: CenterY,
+        a1: pol.degr, l1: pol.distance
+      });
     },
     mouseover: function(layer) {
       // var Label = $('canvas').getLayer(layer.name);
