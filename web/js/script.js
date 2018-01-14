@@ -1,12 +1,12 @@
 var CenterX = 315;
 var CenterY = 315;
-var bigRadius = 250;
+const bigRadius = 250;
 var colorRayAndCircleByLabel = '#48D1CC';
 var colorLabel = '#36c';
 var radiusLabel = 10;
 var colorSelectLabel = "Red";
 var shadowLabelSize = 10;
-var shadowColor = "black";
+var shadowColor = "white";
 
 /*
  * General functions
@@ -40,15 +40,41 @@ function cartesian2Dec(radius, degr) {
     radians = (degr-90)*(Math.PI/180);
     if(degr >= 0 && degr <= 180){
         tan  = Math.tan(radians);
-        x = Math.sqrt((radius*radius)/(tan*tan+1));
+        x = Math.sqrt((Math.pow(radius,2))/(Math.pow(tan,2)+1));
         y = x*tan;
     }else{
         tan  = Math.tan(-radians);
-        x = -Math.sqrt((radius*radius)/(tan*tan+1));
+        x = -Math.sqrt((Math.pow(radius,2))/(Math.pow(tan,2)+1));
         y = -x*tan;
     }
     decCoor = {X: x+CenterX, Y: y+CenterY};
     return decCoor;
+}
+
+/**
+ * From polar in dec
+ *
+ * @param {float} radius
+ * @param {float} degr
+ * @returns {object}
+ */
+function cartesian2DecForBorder(radius, degr) {
+  var newDegr = (degr-90);
+  radians = newDegr*(Math.PI/180);
+
+  if(newDegr >= 0 && newDegr <= 180){
+    tan  = Math.tan(radians);
+    x = Math.sqrt((radius*radius)/(tan*tan+1));
+    y = x*tan;
+  }else{
+    tan  = Math.tan(-radians);
+    x = Math.sqrt((radius*radius)/(tan*tan+1));
+    y = x*tan;
+  }
+
+  decCoor = {X: x, Y: y};
+
+  return decCoor;
 }
 
 /**
@@ -145,6 +171,7 @@ function createSector(data) {
         });
         radius = radius - difRadius;
     }
+
     $('canvas')
         .drawText({
             layer: true,
@@ -159,6 +186,126 @@ function createSector(data) {
                 $('#pop_sector').css('display','block').attr('id',555);
             },
         });
+}
+
+function createSectorNew(data) {
+    var arColors = changeColorLayers(data.color,data.numLayers);
+    var i;
+    var difRadius = bigRadius/data.numLayers;
+    var radius = bigRadius;
+    var canvas = $('canvas');
+    var nameArc = 'mainArc_'+data.id;
+
+    for(i=1;i<=data.numLayers;i++){
+        canvas.drawSlice({
+            layer: true,
+            mask: true,
+            fillStyle: arColors[i-1],
+            x: CenterX, y: CenterY,
+            start: data.beginAngle,
+            end: data.endAngle,
+            radius: radius,
+            strokeStyle: '#f60',
+            strokeWidth: 3,
+        }).restoreCanvas({
+          layer: true
+        });
+
+        radius = radius - difRadius;
+    }
+
+    canvas.drawSlice({
+      layer: true,
+      mask: true,
+      x: CenterX, y: CenterY,
+      start: data.beginAngle,
+      end: data.endAngle,
+      name: 'sector'+data.id,
+      radius: bigRadius,
+      dblclick: function(layer) {
+        var polar = cartesian2Polar(layer.eventX, layer.eventY);
+        var link = $('#create_label_link').attr('href','/app_dev.php/notes/new/'+data.circle_id+'?radius='+polar.distance/bigRadius+'&degr='+polar.degr);
+        link.removeClass( "btn-primary" ).addClass( "btn-danger" );
+        link.text('Добавить заметку в выбрнный сектор');
+      },
+      click: function(layer) {
+        $('canvas').drawArc({
+          shadowBlur: 40,
+          shadowColor: 'white',
+          strokeStyle: 'white',
+          strokeWidth: 3,
+          x: CenterX, y: CenterY,
+          radius: bigRadius,
+          start: data.beginAngle,
+          end: data.endAngle,
+        }).restoreCanvas({
+          layer: true
+        });
+      },
+      mouseout: function(layer) {
+        $('canvas').setLayer(nameArc, {
+          shadowBlur: 0
+        }).drawLayer();
+      }
+    });
+
+    canvas.restoreCanvas({
+      layer: true
+    });
+}
+
+function createBorderSector(data) {
+  var endCoord = cartesian2DecForBorder(bigRadius, data.beginAngle);
+  $('canvas').drawVector({
+    strokeStyle: 'white',
+    strokeWidth: 4,
+    x: CenterX, y: CenterY,
+    a1: endCoord.X, l1: endCoord.Y
+  });
+}
+
+function borderForSector(angle, sectorLeftId, sectorRightId) {
+  var LabelCoord = cartesian2Dec(bigRadius, angle);
+  $('canvas').drawArc({
+    layer: true,
+    draggable: true,
+    name: 'border_'+sectorLeftId+'_'+sectorRightId,
+    fillStyle: 'yellow',
+    x: LabelCoord.X, y: LabelCoord.Y,
+    radius: radiusLabel,
+    circlePath: true,
+    circleRadius: bigRadius,
+    circleCenterX: CenterX,
+    circleCenterY: CenterY,
+    data: {'sectorLeft': sectorLeftId , 'sectorRight': sectorRightId},
+    shadowColor: shadowColor,
+    shadowBlur: shadowLabelSize,
+    dragstop: function(layer) {
+      // var pol = cartesian2Polar(layer.x, layer.y);
+      // var dec = cartesian2Dec(pol.distance,pol.degr);
+      // updateCoordinateLabel(layer.data.circleId,layer.data.id,pol.distance/bigRadius,pol.degr);
+      // delRayNamePopUpAndCircleByLabel(layer.data.id);
+    },
+    drag: function(layer) {
+      // delRayNamePopUpAndCircleByLabel(layer.data.id);
+      // rayAndCircleByLabel(layer,layer.data.id);
+    },
+    mouseover: function(layer) {
+      // var Label = $('canvas').getLayer(layer.name);
+      // Label.fillStyle = colorSelectLabel;
+      // delRayNamePopUpAndCircleAllLabels();
+      // rayAndCircleByLabel(layer,layer.data.id);
+      // createNamePopUpLabel(layer.data.id,layer.x,layer.y,layer.data.name);
+    },
+    mouseout: function(layer) {
+      // var Label = $('canvas').getLayer(layer.name);
+      // Label.fillStyle = colorLabel;
+      // delRayNamePopUpAndCircleByLabel(layer.data.id);
+    },
+    dblclick: function(layer) {
+      // $('#pop_label_link').css('display','block').attr('href','/app_dev.php/notes/list/'+layer.data.circleId+'/'+layer.data.id+'/');
+    },
+  });
 }
 
 /*
@@ -189,8 +336,9 @@ function rayAndCircleByLabel(layer,id) {
 }
 
 function createNamePopUpLabel(id,x,y,text) {
-    var heightPopUp = 30;
+    var heightPopUp = 100;
     var widthPopUp = 200;
+
     $('canvas').drawRect({
         layer: true,
         fillStyle: 'white',
@@ -199,8 +347,8 @@ function createNamePopUpLabel(id,x,y,text) {
         name: 'nameLabelPopup'+id,
         groups: ['nameLabelPopup'],
         x: x + widthPopUp/2, y: y - heightPopUp/2 - 10,
-        width: 200,
-        height: 30,
+        width: widthPopUp,
+        height: heightPopUp,
         cornerRadius: 10
     });
     $('canvas').drawText({
@@ -212,6 +360,7 @@ function createNamePopUpLabel(id,x,y,text) {
         x: x + widthPopUp/2, y: y - heightPopUp/2 - 10,
         fontSize: '15pt',
         fontFamily: 'Verdana, sans-serif',
+        maxWidth: widthPopUp,
         text: text
     })
 }
