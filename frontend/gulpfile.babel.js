@@ -22,9 +22,8 @@ const $ = gulpLoadPlugins();
 // paths to assets
 var paths = {
   styles: [
-    'app/assets/styles/vendor/**/*.css',
-    'app/assets/styles/**/*.css',
-    'app/assets/styles/**/*.sass'
+    'app/styles/**/*.scss',
+    'app/styles/**/*.css'
   ],
   scripts: {
     js: [
@@ -42,14 +41,6 @@ var paths = {
 };
 
 gulp.task('serve:watch', ['serve:dist','pug-watcher']);
-
-gulp.task('pug-watcher', function buildHTML() {
-  return gulp.src('app/**/*.pug')
-      .pipe(watch('app/**/*.pug'))
-      .pipe(gulp_watch_pug('app/**/*.pug', { delay: 100 }))
-      .pipe(pug())
-      .pipe(gulp.dest('dist/'));
-});
 
 // Build and serve the output from the dist build
 gulp.task('serve:dist', ['default'], () =>
@@ -77,6 +68,8 @@ gulp.task('default', ['clean'], cb =>
         'pug-dist',
         // 'generate-service-worker',
         'js-watcher',
+        'css-watcher',
+        'html-watcher',
         cb
     )
 );
@@ -99,10 +92,7 @@ gulp.task('styles', () => {
   ];
 
   // For best performance, don't add Sass partials to `gulp.src`
-  return gulp.src([
-    'app/styles/**/*.scss',
-    'app/styles/**/*.css'
-  ])
+  return gulp.src(paths.styles)
       .pipe($.newer('.tmp/styles'))
       .pipe($.sourcemaps.init())
       .pipe($.sass({
@@ -226,6 +216,21 @@ gulp.task('pug-dist', function buildHTML() {
 });
 
 
+//pug-watcher
+gulp.task('pug-watcher', function buildHTML() {
+  return gulp.src('app/**/*.pug')
+      .pipe(watch('app/**/*.pug'))
+      .pipe(gulp_watch_pug('app/**/*.pug', { delay: 100 }))
+      .pipe(pug())
+      .pipe(gulp.dest('dist/'));
+});
+
+//pug-watcher
+gulp.task('html-watcher', function () {
+  gulp.watch("dist/**/*.html").on('change', browserSync.reload);
+});
+
+
 //js-watcher
 gulp.task('js-watcher', function () {
   gulp.watch(paths.scripts.js, ['scripts', 'clean_js', 'copy_js']);
@@ -238,6 +243,26 @@ gulp.task('clean_js', () => del(['.tmp', 'dist/scripts/*', '!dist/.git'], {dot: 
 gulp.task('copy_js', () =>
     gulp.src([
       'app/scripts/*',
+    ], {
+      dot: true
+    }).pipe(gulp.dest('dist'))
+        .pipe($.size({title: 'copy'}))
+);
+
+
+
+//css-watcher
+gulp.task('css-watcher', function () {
+  gulp.watch(paths.styles, ['styles', 'clean_css', 'copy_css']);
+  gulp.watch("dist/styles/*").on('change', browserSync.reload);
+});
+
+gulp.task('clean_css', () => del(['.tmp', 'dist/styles/*', '!dist/.git'], {dot: true}));
+// Copy all files at the root and bootstrap level (app)
+
+gulp.task('copy_css', () =>
+    gulp.src([
+      'app/styles/*',
     ], {
       dot: true
     }).pipe(gulp.dest('dist'))
