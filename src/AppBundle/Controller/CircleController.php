@@ -23,6 +23,8 @@ use AppBundle\Entity\Labels;
  */
 class CircleController extends Controller
 {
+    const USE_REDIS = false;
+
     /**
      * Lists all Circle entities.
      * @Route("/", name="circle_index")
@@ -142,6 +144,7 @@ class CircleController extends Controller
             $arSectors[$key]["name"] = $sectorObj->getName();
             $arSectors[$key]["color"] = $sectorObj->getColor();
             $arSectors[$key]["id"] = $sectorObj->getId();
+
             $arLabelsObj = $sectorObj->getLabels();
             foreach ($arLabelsObj as $index => $labelObj) {
                 if($labelObj->getNotes() != null){
@@ -154,15 +157,32 @@ class CircleController extends Controller
             }
         }
 
+        $countSectors = count($arSectors)-1;
+        foreach ($arSectors as $index => $arSector) {
+            if($index == 0){
+                $arSectors[$countSectors]["rightSectorId"] = $arSector['id'];
+            }else{
+                $arSectors[$index-1]["rightSectorId"] = $arSector['id'];
+            }
+        }
+
+
         foreach ($arLayersObj as $i => $arLayerObj) {
             $arLayers[$i]["beginRadius"] = $arLayerObj->getBeginRadius();
             $arLayers[$i]["endRadius"] = $arLayerObj->getEndRadius();
             $arLayers[$i]["id"] = $arLayerObj->getId();
         }
 
-        $redis = $this->container->get('snc_redis.default');
-        $redis->set($circle->getId().'_sectors',serialize($arSectors));
-        $redis->set($circle->getId().'_layers',serialize($arLayers));
+        if(self::USE_REDIS){
+            $redis = $this->container->get('snc_redis.default');
+            $redis->set($circle->getId().'_sectors',serialize($arSectors));
+            $redis->set($circle->getId().'_layers',serialize($arLayers));
+        }else{
+            $session = $this->container->get('session');
+            $session->set($circle->getId().'_sectors',serialize($arSectors));
+            $session->set($circle->getId().'_layers',serialize($arLayers));
+
+        }
 
 
         return $this->render(
@@ -397,10 +417,16 @@ class CircleController extends Controller
                 $angle = 360 + $angle;
             }
 
-            $redis = $this->container->get('snc_redis.default');
 
-            $arSectors = unserialize($redis->get($circleId.'_sectors'));
-            $arLayers = unserialize($redis->get($circleId.'_layers'));
+            if(self::USE_REDIS){
+                $redis = $this->container->get('snc_redis.default');
+                $arSectors = unserialize($redis->get($circleId.'_sectors'));
+                $arLayers = unserialize($redis->get($circleId.'_layers'));
+            }else{
+                $session = $this->container->get('session');
+                $arSectors = unserialize($session->get($circleId.'_sectors'));
+                $arLayers = unserialize($session->get($circleId.'_layers'));
+            }
 
             foreach ($arSectors as $index => $arSector) {
                 if($angle > $arSector['beginAngle'] && $angle < $arSector['endAngle']){

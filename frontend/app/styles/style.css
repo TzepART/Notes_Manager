@@ -1,1 +1,52 @@
-body{background:#fafad2}.circle_list_title,.login_title,.register_title{margin-top:0;text-align:center}.circle_list_button,.login_button,.register_button{width:100%}.create_circle_form .form_submit input:nth-child(1){padding-right:10px}.create_circle_form .create_circle input{width:100%}.create_circle_form .create_sector input:nth-child(1){width:65%;display:inline-block}.create_circle_form .create_sector input:nth-child(2){width:23%;display:inline-block}.create_circle_form .create_sector input:nth-child(3){width:10%;display:inline-block}.notes_link_by_list a{color:#fff}.notes_link_by_list a:nth-child(2){float:right}.notes_link_by_list a:nth-child(3){float:right;padding-right:10px}.collapse_note{padding-top:10px}
+body {
+    background: black;
+}
+
+.circle_list_title, .login_title, .register_title {
+    margin-top: 0;
+    text-align: center
+}
+
+.circle_list_button, .login_button, .register_button {
+    width: 100%
+}
+
+.create_circle_form .form_submit input:nth-child(1) {
+    padding-right: 10px
+}
+
+.create_circle_form .create_circle input {
+    width: 100%
+}
+
+.create_circle_form .create_sector input:nth-child(1) {
+    width: 65%;
+    display: inline-block
+}
+
+.create_circle_form .create_sector input:nth-child(2) {
+    width: 23%;
+    display: inline-block
+}
+
+.create_circle_form .create_sector input:nth-child(3) {
+    width: 10%;
+    display: inline-block
+}
+
+.notes_link_by_list a {
+    color: #fff
+}
+
+.notes_link_by_list a:nth-child(2) {
+    float: right
+}
+
+.notes_link_by_list a:nth-child(3) {
+    float: right;
+    padding-right: 10px
+}
+
+.collapse_note {
+    padding-top: 10px
+}
