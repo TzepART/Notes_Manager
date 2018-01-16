@@ -188,70 +188,87 @@ function createSector(data) {
         });
 }
 
-function createSectorNew(data) {
-    var arColors = changeColorLayers(data.color,data.numLayers);
-    var i;
-    var difRadius = bigRadius/data.numLayers;
-    var radius = bigRadius;
-    var canvas = $('canvas');
-    var nameArc = 'mainArc_'+data.id;
+function createSectorNew(sector_id, beginAngle, endAngle, circle_id, numLayers, color) {
+  var i;
 
-    for(i=1;i<=data.numLayers;i++){
-        canvas.drawSlice({
-            layer: true,
-            mask: true,
-            fillStyle: arColors[i-1],
-            x: CenterX, y: CenterY,
-            start: data.beginAngle,
-            end: data.endAngle,
-            radius: radius,
-            strokeStyle: '#f60',
-            strokeWidth: 3,
-        }).restoreCanvas({
-          layer: true
-        });
+  var sector_id = sector_id;
+  var beginAngle = beginAngle;
+  var endAngle = endAngle;
+  var circle_id = circle_id;
+  var numLayers = numLayers;
+  var color = color;
 
-        radius = radius - difRadius;
-    }
+  var arColors = changeColorLayers(color,numLayers);
+  var difRadius = bigRadius/numLayers;
+  var radius = bigRadius;
 
-    canvas.drawSlice({
-      layer: true,
-      mask: true,
-      x: CenterX, y: CenterY,
-      start: data.beginAngle,
-      end: data.endAngle,
-      name: 'sector'+data.id,
-      radius: bigRadius,
-      dblclick: function(layer) {
-        var polar = cartesian2Polar(layer.eventX, layer.eventY);
-        var link = $('#create_label_link').attr('href','/app_dev.php/notes/new/'+data.circle_id+'?radius='+polar.distance/bigRadius+'&degr='+polar.degr);
-        link.removeClass( "btn-primary" ).addClass( "btn-danger" );
-        link.text('Добавить заметку в выбрнный сектор');
-      },
-      click: function(layer) {
-        $('canvas').drawArc({
-          shadowBlur: 40,
-          shadowColor: 'white',
-          strokeStyle: 'white',
-          strokeWidth: 3,
+  var nameArc = 'mainArc_'+sector_id;
+  var canvas = $('canvas');
+
+  for(i=1;i<=numLayers;i++){
+      canvas.drawSlice({
+          layer: true,
+          mask: true,
+          groups: ['sector_'+sector_id],
+          fillStyle: arColors[i-1],
           x: CenterX, y: CenterY,
-          radius: bigRadius,
-          start: data.beginAngle,
-          end: data.endAngle,
-        }).restoreCanvas({
-          layer: true
-        });
-      },
-      mouseout: function(layer) {
-        $('canvas').setLayer(nameArc, {
-          shadowBlur: 0
-        }).drawLayer();
-      }
-    });
+          start: beginAngle,
+          end: endAngle,
+          radius: radius,
+          strokeStyle: '#f60',
+          strokeWidth: 3,
+      }).restoreCanvas({
+        layer: true
+      });
 
-    canvas.restoreCanvas({
-      layer: true
-    });
+      radius = radius - difRadius;
+  }
+
+  canvas.drawSlice({
+    layer: true,
+    mask: true,
+    x: CenterX, y: CenterY,
+    start: beginAngle,
+    end: endAngle,
+    name: 'main_sector_'+sector_id,
+    groups: ['sector_'+sector_id],
+    circle_id: circle_id,
+    sector_id: sector_id,
+    radius: bigRadius,
+    numLayers : numLayers,
+    color : color,
+    dblclick: function(layer) {
+      var polar = cartesian2Polar(layer.eventX, layer.eventY);
+      var link = $('#create_label_link').attr('href','/app_dev.php/notes/new/'+layer.circle_id+'?radius='+polar.distance/bigRadius+'&degr='+polar.degr);
+      link.removeClass( "btn-primary" ).addClass( "btn-danger" );
+      link.text('Добавить заметку в выбрнный сектор');
+    },
+    click: function(layer) {
+      $('canvas').drawArc({
+        shadowBlur: 40,
+        shadowColor: 'white',
+        strokeStyle: 'white',
+        name: nameArc,
+        groups: ['sector_'+sector_id],
+        strokeWidth: 3,
+        x: CenterX, y: CenterY,
+        radius: bigRadius,
+        start: beginAngle,
+        end: endAngle,
+      }).restoreCanvas({
+        layer: true
+      });
+    },
+    mouseout: function(layer) {
+      $('canvas').setLayer(nameArc, {
+        shadowBlur: 0
+      }).drawLayer();
+    }
+  });
+
+  canvas.restoreCanvas({
+    layer: true
+  });
 }
 
 function createBorderSector(data) {
@@ -281,8 +298,33 @@ function borderForSector(angle, sectorLeftId, sectorRightId) {
     shadowColor: shadowColor,
     shadowBlur: shadowLabelSize,
     dragstop: function(layer) {
-      // var pol = cartesian2Polar(layer.x, layer.y);
-      // var dec = cartesian2Dec(pol.distance,pol.degr);
+      var pol = cartesian2Polar(layer.x, layer.y);
+      var sectorLeft = $('canvas').getLayer( 'main_sector_'+sectorLeftId);
+      var sectorRight = $('canvas').getLayer('main_sector_'+sectorRightId);
+
+      var circleId = sectorLeft.circle_id;
+      var numLayers = sectorLeft.numLayers;
+
+      var beginAngleL = sectorLeft.start;
+      var colorL = sectorLeft.color;
+
+      var endAngleR = sectorRight.end;
+      var colorR = sectorRight.color;
+
+      // sectorLeft.end = pol.degr;
+      // sectorRight.start = pol.degr;
+
+      $('canvas').removeLayerGroup('sector_'+sectorLeftId);
+      createSectorNew(sectorLeftId,beginAngleL,pol.degr, circleId, numLayers, colorL);
+
+      $('canvas').removeLayerGroup('sector_'+sectorRightId);
+      createSectorNew(sectorRightId,pol.degr,endAngleR, circleId, numLayers, colorR);
+
+      $('canvas').moveLayer('border_'+sectorLeftId+'_'+sectorRightId, 100);
+      // $('canvas').removeLayer('border_'+sectorLeftId+'_'+sectorRightId);
+      // borderForSector(pol.degr,sectorLeftId,sectorRightId);
+
+
       // updateCoordinateLabel(layer.data.circleId,layer.data.id,pol.distance/bigRadius,pol.degr);
       // delRayNamePopUpAndCircleByLabel(layer.data.id);
     },
@@ -297,11 +339,12 @@ function borderForSector(angle, sectorLeftId, sectorRightId) {
       });
     },
     mouseover: function(layer) {
-      // var Label = $('canvas').getLayer(layer.name);
-      // Label.fillStyle = colorSelectLabel;
-      // delRayNamePopUpAndCircleAllLabels();
-      // rayAndCircleByLabel(layer,layer.data.id);
-      // createNamePopUpLabel(layer.data.id,layer.x,layer.y,layer.data.name);
+      $('canvas').drawVector({
+        strokeStyle: 'white',
+        strokeWidth: 4,
+        x: CenterX, y: CenterY,
+        a1: angle, l1: bigRadius
+      });
     },
     mouseout: function(layer) {
       // var Label = $('canvas').getLayer(layer.name);

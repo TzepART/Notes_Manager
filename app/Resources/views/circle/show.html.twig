@@ -34,11 +34,11 @@
                 circle_id: {{  circle.id }}
             };
             {#createSector(dataSector{{ arSector.id }});#}
-            createSectorNew(dataSector{{ arSector.id }});
+            createSectorNew(dataSector{{ arSector.id }}.id,dataSector{{ arSector.id }}.beginAngle,dataSector{{ arSector.id }}.endAngle,dataSector{{ arSector.id }}.circle_id,dataSector{{ arSector.id }}.numLayers,dataSector{{ arSector.id }}.color);
         {% endfor %}
 
         {% for arSector in arSectors%}
-            borderForSector({{ arSector.endAngle }},{{ arSector.id }},{{ arSector.id+1 }});
+            borderForSector({{ arSector.endAngle }},{{ arSector.id }},{{ arSector.rightSectorId }});
         {% endfor %}
 
 

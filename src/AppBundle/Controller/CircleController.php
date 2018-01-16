@@ -144,6 +144,7 @@ class CircleController extends Controller
             $arSectors[$key]["name"] = $sectorObj->getName();
             $arSectors[$key]["color"] = $sectorObj->getColor();
             $arSectors[$key]["id"] = $sectorObj->getId();
+
             $arLabelsObj = $sectorObj->getLabels();
             foreach ($arLabelsObj as $index => $labelObj) {
                 if($labelObj->getNotes() != null){
@@ -155,6 +156,16 @@ class CircleController extends Controller
                 }
             }
         }
+
+        $countSectors = count($arSectors)-1;
+        foreach ($arSectors as $index => $arSector) {
+            if($index == 0){
+                $arSectors[$countSectors]["rightSectorId"] = $arSector['id'];
+            }else{
+                $arSectors[$index-1]["rightSectorId"] = $arSector['id'];
+            }
+        }
+
 
         foreach ($arLayersObj as $i => $arLayerObj) {
             $arLayers[$i]["beginRadius"] = $arLayerObj->getBeginRadius();
