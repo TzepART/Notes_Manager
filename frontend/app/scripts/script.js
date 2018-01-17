@@ -324,7 +324,8 @@ function borderForSector(angle, sectorLeftId, sectorRightId, angleMin, angelMax)
       $('canvas').removeLayerGroup('sector_'+sectorRightId);
       createSectorNew(sectorRightId,pol.degr,endAngleR, circleId, numLayers, colorR);
 
-      $('canvas').moveLayer('border_'+sectorLeftId+'_'+sectorRightId, 100);
+      setHightMoveLayerToLayer();
+
       // $('canvas').removeLayer('border_'+sectorLeftId+'_'+sectorRightId);
       // borderForSector(pol.degr,sectorLeftId,sectorRightId);
 
@@ -387,6 +388,7 @@ function rayAndCircleByLabel(layer,id) {
     x2: dec.X, y2: dec.Y,
   });
 }
+
 
 function createNamePopUpLabel(id,x,y,text) {
   var heightPopUp = 100;
@@ -471,6 +473,18 @@ function createLabel(data) {
       $('#pop_label_link').css('display','block').attr('href','/app_dev.php/notes/list/'+layer.data.circleId+'/'+layer.data.id+'/');
     },
   });
+}
+
+function setHightMoveLayerToLayer(){
+  // Returns an array containing all draggable layers
+  var dragLayers = $('canvas').getLayers(function(layer) {
+    return (layer.draggable === true);
+  });
+
+  function setMoveLayerToLayer(layer, index, array) {
+    $('canvas').moveLayer(layer.name, 100);
+  }
+  dragLayers.forEach(setMoveLayerToLayer);
 }
 
 function updateCoordinateLabel(circleId,labelId,radius,angle) {
