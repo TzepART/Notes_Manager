@@ -3,7 +3,7 @@ var CenterY = 315;
 const bigRadius = 250;
 var colorRayAndCircleByLabel = '#48D1CC';
 var colorLabel = '#36c';
-var radiusLabel = 15;
+var radiusLabel = 17;
 var colorSelectLabel = "Red";
 var shadowLabelSize = 10;
 var shadowColor = "white";
@@ -283,8 +283,8 @@ function createBorderSector(data) {
 
 function borderForSector(angle, sectorLeftId, sectorRightId, angleMin, angelMax) {
   var LabelCoord = cartesian2Dec(bigRadius, angle);
-  var leftCoord = cartesian2Dec(bigRadius, angleMin);
-  var rightCoord = cartesian2Dec(bigRadius, angelMax);
+  var leftCoord = cartesian2Dec(bigRadius, angleMin+5);
+  var rightCoord = cartesian2Dec(bigRadius, angelMax-5);
   $('canvas').drawArc({
     layer: true,
     draggable: true,
