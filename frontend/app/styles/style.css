@@ -1,5 +1,13 @@
 body {
-    background: black;
+    background: gainsboro;
+}
+
+.nav-justified{
+    margin-bottom: 20px;
+}
+
+.detail_circle_group_buttons{
+    width: 650px;
 }
 
 .circle_list_title, .login_title, .register_title {

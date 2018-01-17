@@ -547,7 +547,7 @@ var dataLabel2 = {
 };
 
 $(document).ready(function () {
-  $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
+  // $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
   $('canvas').triggerLayerEvent('slice11', 'click');
 });
 
