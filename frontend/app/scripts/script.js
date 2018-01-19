@@ -1,5 +1,5 @@
-var CenterX = 315;
-var CenterY = 315;
+var CenterX = 300;
+var CenterY = 300;
 const bigRadius = 250;
 var colorRayAndCircleByLabel = '#48D1CC';
 var colorLabel = '#36c';
