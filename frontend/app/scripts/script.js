@@ -1,5 +1,5 @@
-var CenterX = 315;
-var CenterY = 315;
+var CenterX = 300;
+var CenterY = 300;
 const bigRadius = 250;
 var colorRayAndCircleByLabel = '#48D1CC';
 var colorLabel = '#36c';
@@ -281,8 +281,10 @@ function createBorderSector(data) {
   });
 }
 
-function borderForSector(angle, sectorLeftId, sectorRightId) {
+function borderForSector(angle, sectorLeftId, sectorRightId, angleMin, angelMax) {
   var LabelCoord = cartesian2Dec(bigRadius, angle);
+  var leftCoord = cartesian2Dec(bigRadius, angleMin+5);
+  var rightCoord = cartesian2Dec(bigRadius, angelMax-5);
   $('canvas').drawArc({
     layer: true,
     draggable: true,
@@ -294,6 +296,8 @@ function borderForSector(angle, sectorLeftId, sectorRightId) {
     circleRadius: bigRadius,
     circleCenterX: CenterX,
     circleCenterY: CenterY,
+    xMin: leftCoord.X, yMin: leftCoord.Y,
+    xMax: rightCoord.X, yMax: rightCoord.Y,
     data: {'sectorLeft': sectorLeftId , 'sectorRight': sectorRightId},
     shadowColor: shadowColor,
     shadowBlur: shadowLabelSize,
@@ -320,7 +324,8 @@ function borderForSector(angle, sectorLeftId, sectorRightId) {
       $('canvas').removeLayerGroup('sector_'+sectorRightId);
       createSectorNew(sectorRightId,pol.degr,endAngleR, circleId, numLayers, colorR);
 
-      $('canvas').moveLayer('border_'+sectorLeftId+'_'+sectorRightId, 100);
+      setHightMoveLayerToLayer();
+
       // $('canvas').removeLayer('border_'+sectorLeftId+'_'+sectorRightId);
       // borderForSector(pol.degr,sectorLeftId,sectorRightId);
 
@@ -421,6 +426,11 @@ function delRayNamePopUpAndCircleByLabel(id) {
   $('canvas').removeLayer('nameLabelPopupText'+id);
 }
 
+function delNamePopUpByLabel(id) {
+  $('canvas').removeLayer('nameLabelPopup'+id);
+  $('canvas').removeLayer('nameLabelPopupText'+id);
+}
+
 function delRayNamePopUpAndCircleAllLabels() {
   $('canvas').removeLayerGroup('circleByLabel');
   $('canvas').removeLayerGroup('lineByLabel');
@@ -430,20 +440,30 @@ function delRayNamePopUpAndCircleAllLabels() {
 
 
 function createLabel(data) {
-  var LabelCoord = cartesian2Dec(data.radius*bigRadius, data.degr)
+  var LabelCoord = cartesian2Dec(data.radius*bigRadius, data.degr);
+  console.log(data.radius);
   $('canvas').drawArc({
     layer: true,
     draggable: true,
+    groups: ['note_labels'],
     name: 'myLabel'+data.id,
     fillStyle: colorLabel,
     x: LabelCoord.X, y: LabelCoord.Y,
     radius: radiusLabel,
     data: {'id' : data.id, 'name': data.name , 'circleId': data.circleId},
+    label_radius: data.radius,
+    label_angle: data.degr,
+    label_id: data.id,
     shadowColor: shadowColor,
     shadowBlur: shadowLabelSize,
     dragstop: function(layer) {
       var pol = cartesian2Polar(layer.x, layer.y);
       var dec = cartesian2Dec(pol.distance,pol.degr);
+
+      layer.label_radius = pol.distance/bigRadius;
+      layer.label_angle = pol.degr;
+      // console.log(layer.label_radius,layer.label_angle);
+
       updateCoordinateLabel(layer.data.circleId,layer.data.id,pol.distance/bigRadius,pol.degr);
       delRayNamePopUpAndCircleByLabel(layer.data.id);
     },
@@ -456,18 +476,76 @@ function createLabel(data) {
       Label.fillStyle = colorSelectLabel;
       delRayNamePopUpAndCircleAllLabels();
       rayAndCircleByLabel(layer,layer.data.id);
+      setLinkLabelsByRadiusAndAngle(layer.label_radius,layer.label_angle, layer.label_id);
       createNamePopUpLabel(layer.data.id,layer.x,layer.y,layer.data.name);
     },
     mouseout: function(layer) {
       var Label = $('canvas').getLayer(layer.name);
       Label.fillStyle = colorLabel;
       delRayNamePopUpAndCircleByLabel(layer.data.id);
+      removeLinkLabelsByRadiusAndAngle(layer.label_radius,layer.label_angle, layer.label_id);
     },
     dblclick: function(layer) {
       $('#pop_label_link').css('display','block').attr('href','/app_dev.php/notes/list/'+layer.data.circleId+'/'+layer.data.id+'/');
     },
   });
 }
+
+function setHightMoveLayerToLayer(){
+  // Returns an array containing all draggable layers
+  var dragLayers = $('canvas').getLayers(function(layer) {
+    return (layer.draggable === true);
+  });
+
+  function setMoveLayerToLayer(layer, index, array) {
+    $('canvas').moveLayer(layer.name, 100);
+  }
+  dragLayers.forEach(setMoveLayerToLayer);
+}
+
+function setLinkLabelsByRadiusAndAngle(radius, angle, label_id){
+  var labels = $('canvas').getLayerGroup('note_labels');
+  var radiusBorderMin = radius - 0.05;
+  var radiusBorderMax = radius + 0.05;
+  var angleBorderMin = angle - 10;
+  var angleBorderMax = angle + 10;
+  // console.log(radiusBorderMin,radiusBorderMax,angleBorderMin,angleBorderMax);
+
+  function setFillStyleToLayer(layer, index, array) {
+    if(layer.id !== label_id){
+      if((layer.label_angle > angleBorderMin && layer.label_angle < angleBorderMax)
+          || (layer.label_radius > radiusBorderMin && layer.label_radius < radiusBorderMax) ){
+        // console.log(layer.label_angle,layer.label_radius);
+        createNamePopUpLabel(layer.label_id,layer.x,layer.y,layer.data.name);
+        layer.fillStyle = colorSelectLabel;
+      }
+    }
+  }
+  labels.forEach(setFillStyleToLayer);
+}
+
+function removeLinkLabelsByRadiusAndAngle(radius, angle, label_id){
+  var labels = $('canvas').getLayerGroup('note_labels');
+  var radiusBorderMin = radius - 0.03;
+  var radiusBorderMax = radius + 0.03;
+  var angleBorderMin = angle - 10;
+  var angleBorderMax = angle + 10;
+  // console.log(radiusBorderMin,radiusBorderMax,angleBorderMin,angleBorderMax);
+
+  function deleteFillStyleToLayer(layer, index, array) {
+    if(layer.label_id !== label_id){
+      if((layer.label_angle > angleBorderMin && layer.label_angle < angleBorderMax)
+          || (layer.label_radius > radiusBorderMin && layer.label_radius < radiusBorderMax) ){
+        // console.log(layer.label_angle,layer.label_radius);
+        layer.fillStyle = colorLabel;
+        delNamePopUpByLabel(layer.label_id);
+      }
+    }
+  }
+  labels.forEach(deleteFillStyleToLayer);
+}
+
+
 
 function updateCoordinateLabel(circleId,labelId,radius,angle) {
   $.post(
@@ -483,73 +561,6 @@ function updateCoordinateLabel(circleId,labelId,radius,angle) {
 
       })
 }
-
-
-var numLayers = 4;
-
-var dataSector1 = {
-  id: 1,
-  numLayers: numLayers,
-  color: '#8FBC8F',
-  beginAngle: 10,
-  endAngle: 90,
-  name: 'Example1',
-  circle_id: 1,
-};
-
-var dataSector2 = {
-  id: 2,
-  numLayers: numLayers,
-  color: '#FFD700',
-  beginAngle: 90,
-  endAngle: 200,
-  name: 'Example2',
-  circle_id: 1,
-};
-var dataSector3 = {
-  id: 3,
-  numLayers: numLayers,
-  color: '#BA55D3',
-  beginAngle: 200,
-  endAngle: 10,
-  name: 'Example3',
-  circle_id: 1,
-};
-
-// createSectorNew(dataSector1);
-// createSectorNew(dataSector2);
-// createSectorNew(dataSector3);
-
-createSectorNew(dataSector1.id, dataSector1.beginAngle, dataSector1.endAngle, dataSector1.circle_id, dataSector1.numLayers, dataSector1.color)
-createSectorNew(dataSector2.id, dataSector2.beginAngle, dataSector2.endAngle, dataSector2.circle_id, dataSector2.numLayers, dataSector2.color)
-createSectorNew(dataSector3.id, dataSector3.beginAngle, dataSector3.endAngle, dataSector3.circle_id, dataSector3.numLayers, dataSector3.color)
-
-borderForSector(dataSector1.endAngle,dataSector1.id,dataSector2.id);
-borderForSector(dataSector2.endAngle,dataSector2.id,dataSector3.id);
-borderForSector(dataSector3.endAngle,dataSector3.id,dataSector1.id);
-
-var dataLabel1 = {
-  id: 1,
-  radius: 0.13,
-  degr: 56,
-  name: 'Note1'
-};
-
-var dataLabel2 = {
-  id: 2,
-  radius: 0.71,
-  degr: 230,
-  name: 'Note2'
-};
-
-$(document).ready(function () {
-  $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
-  $('canvas').triggerLayerEvent('slice11', 'click');
-});
-
-
-createLabel(dataLabel1);
-createLabel(dataLabel2);
 
 
 /*
@@ -598,3 +609,101 @@ function addField() {
 // Возвращаем false, чтобы не было перехода по сслыке
   return false;
 }
+
+
+
+
+
+
+
+
+var numLayers = 4;
+
+var dataSector1 = {
+  id: 1,
+  numLayers: numLayers,
+  color: '#8FBC8F',
+  beginAngle: 10,
+  endAngle: 90,
+  name: 'Example1',
+  circle_id: 1,
+};
+
+var dataSector2 = {
+  id: 2,
+  numLayers: numLayers,
+  color: '#FFD700',
+  beginAngle: 90,
+  endAngle: 200,
+  name: 'Example2',
+  circle_id: 1,
+};
+var dataSector3 = {
+  id: 3,
+  numLayers: numLayers,
+  color: '#BA55D3',
+  beginAngle: 200,
+  endAngle: 10,
+  name: 'Example3',
+  circle_id: 1,
+};
+
+// createSectorNew(dataSector1);
+// createSectorNew(dataSector2);
+// createSectorNew(dataSector3);
+
+createSectorNew(dataSector1.id, dataSector1.beginAngle, dataSector1.endAngle, dataSector1.circle_id, dataSector1.numLayers, dataSector1.color)
+createSectorNew(dataSector2.id, dataSector2.beginAngle, dataSector2.endAngle, dataSector2.circle_id, dataSector2.numLayers, dataSector2.color)
+createSectorNew(dataSector3.id, dataSector3.beginAngle, dataSector3.endAngle, dataSector3.circle_id, dataSector3.numLayers, dataSector3.color)
+
+borderForSector(dataSector1.endAngle,dataSector1.id,dataSector2.id, dataSector1.beginAngle,dataSector2.endAngle);
+borderForSector(dataSector2.endAngle,dataSector2.id,dataSector3.id, dataSector2.beginAngle,dataSector3.endAngle);
+borderForSector(dataSector3.endAngle,dataSector3.id,dataSector1.id, dataSector3.beginAngle,dataSector1.endAngle);
+
+var dataLabel1 = {
+  id: 1,
+  radius: 0.13,
+  degr: 56,
+  name: 'Note1'
+};
+
+var dataLabel2 = {
+  id: 2,
+  radius: 0.71,
+  degr: 230,
+  name: 'Note2'
+};
+
+var dataLabel3 = {
+  id: 3,
+  radius: 0.41,
+  degr: 10,
+  name: 'Note3'
+};
+
+var dataLabel4 = {
+  id: 4,
+  radius: 0.31,
+  degr: 170,
+  name: 'Note4'
+};
+
+var dataLabel5 = {
+  id: 5,
+  radius: 0.51,
+  degr: 300,
+  name: 'Note4'
+};
+
+
+createLabel(dataLabel1);
+createLabel(dataLabel2);
+createLabel(dataLabel3);
+createLabel(dataLabel4);
+createLabel(dataLabel5);
+
+
+$(document).ready(function () {
+  // $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
+  $('canvas').triggerLayerEvent('slice11', 'click');
+});

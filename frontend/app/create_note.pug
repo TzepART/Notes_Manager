@@ -7,7 +7,7 @@ block content
             .form-group.create_note
                 input.form-control(name="name" placeholder="Название заметки")
             .form-group
-                textarea.form-control(name="notes_body" placeholder="Текст заметки" rows="3")
+                textarea.form-control#create_note(name="notes_body" placeholder="Текст заметки" rows="3")
             h2(style="text-align: center") Размещение заметки
             mixin sectors(...names)
                 select.form-control(name=select_sector)
@@ -20,3 +20,17 @@ block content
                 input.form-control(name="layers_number" type="number" placeholder="Уровень срочности")
             .form-group.form_submit
                 input.btn.btn-success.btn-block(name="save" type="submit" value="Сохранить заметку" placeholder="Сохранить заметку")
+block adding_scripts
+    script
+        | $('#create_note').wysihtml5({
+        |  toolbar: {
+        |    "font-styles": false, //Font styling, e.g. h1, h2, etc. Default true
+        |    "emphasis": false, //Italics, bold, etc. Default true
+        |    "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+        |    "html": false, //Button which allows you to edit the generated HTML. Default false
+        |    "link": true, //Button to insert a link. Default true
+        |    "image": true, //Button to insert an image. Default true,
+        |    "color": false, //Button to change color of font
+        |    "blockquote": true, //Blockquote
+        |  }
+        | });

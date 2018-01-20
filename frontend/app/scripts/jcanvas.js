@@ -1297,13 +1297,40 @@
           var k = y1/x1;
 
           if(x1<0){
-            var newX = -Math.sqrt(Math.pow(r,2)/(1+Math.pow((k),2)));
+            var tempX = -Math.sqrt(Math.pow(r,2)/(1+Math.pow((k),2)));
           }else{
-            var newX = Math.sqrt(Math.pow(r,2)/(1+Math.pow((k),2)));
+            var tempX = Math.sqrt(Math.pow(r,2)/(1+Math.pow((k),2)));
           }
-          var newY = newX*k;
-          layer.x = newX + centerX;
-          layer.y = newY + centerY;
+          var tempY = tempX*k;
+
+          var px = layer.xMin;
+          var py = layer.yMin;
+          var qx = layer.xMax;
+          var qy = layer.yMax;
+          var rx = newX;
+          var ry = newY;
+          var Result = (Math.pow(px,2) + Math.pow(py,2)) * (qx * ry - qy * rx) -
+              (Math.pow(qx,2) + Math.pow(qy,2)) * (px * ry - py * rx) +
+              (Math.pow(rx,2) + Math.pow(ry,2)) * (px * qy - py * qx);
+
+          if(Result <= 0){
+            var absSumMin = Math.abs(layer.xMin - newX) + Math.abs(layer.yMin - newY);
+            var absSumMax = Math.abs(layer.xMax - newX) + Math.abs(layer.yMax - newY);
+            if(absSumMin < absSumMax){
+              tempX = layer.xMin - centerX;
+              tempY = layer.yMin - centerY;
+            }else{
+              tempX = layer.xMax - centerX;
+              tempY = layer.yMax - centerY;
+            }
+          }
+
+          var newX = tempX + centerX;
+          var newY = tempY + centerY;
+
+          layer.x = newX;
+          layer.y = newY;
+
         }
 
         // Trigger drag event
