@@ -3,7 +3,7 @@ var CenterY = 300;
 const bigRadius = 250;
 var colorRayAndCircleByLabel = '#48D1CC';
 var colorLabel = '#36c';
-var radiusLabel = 17;
+var radiusLabel = 15;
 var colorSelectLabel = "Red";
 var shadowLabelSize = 10;
 var shadowColor = "white";
@@ -389,7 +389,6 @@ function rayAndCircleByLabel(layer,id) {
   });
 }
 
-
 function createNamePopUpLabel(id,x,y,text) {
   var heightPopUp = 100;
   var widthPopUp = 200;
@@ -427,6 +426,11 @@ function delRayNamePopUpAndCircleByLabel(id) {
   $('canvas').removeLayer('nameLabelPopupText'+id);
 }
 
+function delNamePopUpByLabel(id) {
+  $('canvas').removeLayer('nameLabelPopup'+id);
+  $('canvas').removeLayer('nameLabelPopupText'+id);
+}
+
 function delRayNamePopUpAndCircleAllLabels() {
   $('canvas').removeLayerGroup('circleByLabel');
   $('canvas').removeLayerGroup('lineByLabel');
@@ -436,20 +440,30 @@ function delRayNamePopUpAndCircleAllLabels() {
 
 
 function createLabel(data) {
-  var LabelCoord = cartesian2Dec(data.radius*bigRadius, data.degr)
+  var LabelCoord = cartesian2Dec(data.radius*bigRadius, data.degr);
+  console.log(data.radius);
   $('canvas').drawArc({
     layer: true,
     draggable: true,
+    groups: ['note_labels'],
     name: 'myLabel'+data.id,
     fillStyle: colorLabel,
     x: LabelCoord.X, y: LabelCoord.Y,
     radius: radiusLabel,
     data: {'id' : data.id, 'name': data.name , 'circleId': data.circleId},
+    label_radius: data.radius,
+    label_angle: data.degr,
+    label_id: data.id,
     shadowColor: shadowColor,
     shadowBlur: shadowLabelSize,
     dragstop: function(layer) {
       var pol = cartesian2Polar(layer.x, layer.y);
       var dec = cartesian2Dec(pol.distance,pol.degr);
+
+      layer.label_radius = pol.distance/bigRadius;
+      layer.label_angle = pol.degr;
+      // console.log(layer.label_radius,layer.label_angle);
+
       updateCoordinateLabel(layer.data.circleId,layer.data.id,pol.distance/bigRadius,pol.degr);
       delRayNamePopUpAndCircleByLabel(layer.data.id);
     },
@@ -462,12 +476,14 @@ function createLabel(data) {
       Label.fillStyle = colorSelectLabel;
       delRayNamePopUpAndCircleAllLabels();
       rayAndCircleByLabel(layer,layer.data.id);
+      setLinkLabelsByRadiusAndAngle(layer.label_radius,layer.label_angle, layer.label_id);
       createNamePopUpLabel(layer.data.id,layer.x,layer.y,layer.data.name);
     },
     mouseout: function(layer) {
       var Label = $('canvas').getLayer(layer.name);
       Label.fillStyle = colorLabel;
       delRayNamePopUpAndCircleByLabel(layer.data.id);
+      removeLinkLabelsByRadiusAndAngle(layer.label_radius,layer.label_angle, layer.label_id);
     },
     dblclick: function(layer) {
       $('#pop_label_link').css('display','block').attr('href','/app_dev.php/notes/list/'+layer.data.circleId+'/'+layer.data.id+'/');
@@ -487,6 +503,50 @@ function setHightMoveLayerToLayer(){
   dragLayers.forEach(setMoveLayerToLayer);
 }
 
+function setLinkLabelsByRadiusAndAngle(radius, angle, label_id){
+  var labels = $('canvas').getLayerGroup('note_labels');
+  var radiusBorderMin = radius - 0.05;
+  var radiusBorderMax = radius + 0.05;
+  var angleBorderMin = angle - 10;
+  var angleBorderMax = angle + 10;
+  // console.log(radiusBorderMin,radiusBorderMax,angleBorderMin,angleBorderMax);
+
+  function setFillStyleToLayer(layer, index, array) {
+    if(layer.id !== label_id){
+      if((layer.label_angle > angleBorderMin && layer.label_angle < angleBorderMax)
+          || (layer.label_radius > radiusBorderMin && layer.label_radius < radiusBorderMax) ){
+        // console.log(layer.label_angle,layer.label_radius);
+        createNamePopUpLabel(layer.label_id,layer.x,layer.y,layer.data.name);
+        layer.fillStyle = colorSelectLabel;
+      }
+    }
+  }
+  labels.forEach(setFillStyleToLayer);
+}
+
+function removeLinkLabelsByRadiusAndAngle(radius, angle, label_id){
+  var labels = $('canvas').getLayerGroup('note_labels');
+  var radiusBorderMin = radius - 0.03;
+  var radiusBorderMax = radius + 0.03;
+  var angleBorderMin = angle - 10;
+  var angleBorderMax = angle + 10;
+  // console.log(radiusBorderMin,radiusBorderMax,angleBorderMin,angleBorderMax);
+
+  function deleteFillStyleToLayer(layer, index, array) {
+    if(layer.label_id !== label_id){
+      if((layer.label_angle > angleBorderMin && layer.label_angle < angleBorderMax)
+          || (layer.label_radius > radiusBorderMin && layer.label_radius < radiusBorderMax) ){
+        // console.log(layer.label_angle,layer.label_radius);
+        layer.fillStyle = colorLabel;
+        delNamePopUpByLabel(layer.label_id);
+      }
+    }
+  }
+  labels.forEach(deleteFillStyleToLayer);
+}
+
+
+
 function updateCoordinateLabel(circleId,labelId,radius,angle) {
   $.post(
       "/app_dev.php/circle/editLabelAjax",
@@ -501,6 +561,60 @@ function updateCoordinateLabel(circleId,labelId,radius,angle) {
 
       })
 }
+
+
+/*
+* block for creating sectors
+* */
+
+var countOfFields = 3; // Текущее число полей
+var curFieldNameId = 3; // Уникальное значение для атрибута name
+var maxFieldLimit = 12; // Максимальное число возможных полей
+function deleteField(a) {
+//if (countOfFields > 0) {
+  var arrInput = a.parentNode.getElementsByTagName('input');
+  var name = arrInput[0].value;
+
+//            BX.ajax.post(window.location.href, {delete_name : name} ,function(){});
+// Получаем доступ к ДИВу, содержащему поле
+  var contDiv = a.parentNode;
+// Удаляем этот ДИВ из DOM-дерева
+  contDiv.parentNode.removeChild(contDiv);
+// Уменьшаем значение текущего числа полей
+  countOfFields--;
+//}
+// Возвращаем false, чтобы не было перехода по сслыке
+  return false;
+}
+
+function addField() {
+// Проверяем, не достигло ли число полей максимума
+  if (countOfFields >= maxFieldLimit) {
+    alert("Число полей достигло своего максимума = " + maxFieldLimit);
+    return false;
+  }
+// Увеличиваем текущее значение числа полей
+  countOfFields++;
+// Увеличиваем ID
+  curFieldNameId++;
+// Создаем элемент ДИВ
+  var div = document.createElement("div");
+  div.setAttribute("class", "form-group create_sector");
+// Добавляем HTML-контент с пом. свойства innerHTML
+  div.innerHTML = "<input type=\"text\" placeholder=\"Название сектора\"  name=\"sector_name[" + curFieldNameId + "]\" class=\"form-control\" value=\"\" autocomplete=\"off\"/>" +
+      "<input type=\"color\" placeholder=\"Цвет сектора\"  name=\"sector_color[" + curFieldNameId + "]\" class=\"form-control\" value=\"#FFFAFA\" autocomplete=\"off\"/>" +
+      " <input type=\"button\" class=\"form-control\" onclick=\"return deleteField(this)\" href=\"#\" value=\"x\">";
+// Добавляем новый узел в конец списка полей
+  document.getElementById("formCircleCreate").appendChild(div);
+// Возвращаем false, чтобы не было перехода по сслыке
+  return false;
+}
+
+
+
+
+
+
 
 
 var numLayers = 4;
@@ -560,59 +674,36 @@ var dataLabel2 = {
   name: 'Note2'
 };
 
-$(document).ready(function () {
-  // $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
-  $('canvas').triggerLayerEvent('slice11', 'click');
-});
+var dataLabel3 = {
+  id: 3,
+  radius: 0.41,
+  degr: 10,
+  name: 'Note3'
+};
+
+var dataLabel4 = {
+  id: 4,
+  radius: 0.31,
+  degr: 170,
+  name: 'Note4'
+};
+
+var dataLabel5 = {
+  id: 5,
+  radius: 0.51,
+  degr: 300,
+  name: 'Note4'
+};
 
 
 createLabel(dataLabel1);
 createLabel(dataLabel2);
+createLabel(dataLabel3);
+createLabel(dataLabel4);
+createLabel(dataLabel5);
 
 
-/*
-* block for creating sectors
-* */
-
-var countOfFields = 3; // Текущее число полей
-var curFieldNameId = 3; // Уникальное значение для атрибута name
-var maxFieldLimit = 12; // Максимальное число возможных полей
-function deleteField(a) {
-//if (countOfFields > 0) {
-  var arrInput = a.parentNode.getElementsByTagName('input');
-  var name = arrInput[0].value;
-
-//            BX.ajax.post(window.location.href, {delete_name : name} ,function(){});
-// Получаем доступ к ДИВу, содержащему поле
-  var contDiv = a.parentNode;
-// Удаляем этот ДИВ из DOM-дерева
-  contDiv.parentNode.removeChild(contDiv);
-// Уменьшаем значение текущего числа полей
-  countOfFields--;
-//}
-// Возвращаем false, чтобы не было перехода по сслыке
-  return false;
-}
-
-function addField() {
-// Проверяем, не достигло ли число полей максимума
-  if (countOfFields >= maxFieldLimit) {
-    alert("Число полей достигло своего максимума = " + maxFieldLimit);
-    return false;
-  }
-// Увеличиваем текущее значение числа полей
-  countOfFields++;
-// Увеличиваем ID
-  curFieldNameId++;
-// Создаем элемент ДИВ
-  var div = document.createElement("div");
-  div.setAttribute("class", "form-group create_sector");
-// Добавляем HTML-контент с пом. свойства innerHTML
-  div.innerHTML = "<input type=\"text\" placeholder=\"Название сектора\"  name=\"sector_name[" + curFieldNameId + "]\" class=\"form-control\" value=\"\" autocomplete=\"off\"/>" +
-      "<input type=\"color\" placeholder=\"Цвет сектора\"  name=\"sector_color[" + curFieldNameId + "]\" class=\"form-control\" value=\"#FFFAFA\" autocomplete=\"off\"/>" +
-      " <input type=\"button\" class=\"form-control\" onclick=\"return deleteField(this)\" href=\"#\" value=\"x\">";
-// Добавляем новый узел в конец списка полей
-  document.getElementById("formCircleCreate").appendChild(div);
-// Возвращаем false, чтобы не было перехода по сслыке
-  return false;
-}
+$(document).ready(function () {
+  // $('canvas').triggerLayerEvent('myLabel1', 'mouseover');
+  $('canvas').triggerLayerEvent('slice11', 'click');
+});

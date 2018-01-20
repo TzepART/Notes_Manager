@@ -234,21 +234,21 @@ gulp.task('html-watcher', function () {
 
 //js-watcher
 gulp.task('js-watcher', function () {
-  gulp.watch(paths.scripts.js, ['scripts', 'clean_js', 'copy_js']);
+  gulp.watch(paths.scripts.js, ['clean_js','scripts']);
   gulp.watch("dist/scripts/*").on('change', browserSync.reload);
 });
 
 gulp.task('clean_js', () => del(['.tmp', 'dist/scripts/*', '!dist/.git'], {dot: true}));
 // Copy all files at the root and bootstrap level (app)
 
-gulp.task('copy_js', () =>
-    gulp.src([
-      'app/scripts/*',
-    ], {
-      dot: true
-    }).pipe(gulp.dest('dist'))
-        .pipe($.size({title: 'copy'}))
-);
+// gulp.task('copy_js', () =>
+//     gulp.src([
+//       'app/scripts/*',
+//     ], {
+//       dot: true
+//     }).pipe(gulp.dest('dist'))
+//         .pipe($.size({title: 'copy'}))
+// );
 
 
 
